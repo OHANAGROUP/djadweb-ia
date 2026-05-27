@@ -2,10 +2,25 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { createAdminClient } from '@/lib/supabase-server';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import { verificarTransicionEstado } from '@/lib/workflowGraph';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || '' });
 const supabase = createAdminClient();
+
+function getSystemPrompt(): string {
+  if (process.env.DJADWEB_CORE_PROMPT) return process.env.DJADWEB_CORE_PROMPT;
+  try {
+    const promptPath = path.join(process.cwd(), 'prompts', 'system.txt');
+    if (fs.existsSync(promptPath)) {
+      return fs.readFileSync(promptPath, 'utf8');
+    }
+  } catch (e: any) {
+    console.warn('Error al cargar prompts/system.txt de forma física:', e.message);
+  }
+  return `Eres DJADWEB-IA®, el copiloto cognitivo e institucional soberano diseñado para navegar y simplificar la burocracia chilena de los ciudadanos y empresas.`;
+}
 
 // A. TOOL PERMISSION MATRIX: Mitigación de la superficie de alucinación
 const TOOL_ACCESS_BY_WORKFLOW: Record<string, string[]> = {
@@ -145,7 +160,7 @@ export async function procesarTurnoCognitivoSoberano(
     let response = await anthropic.messages.create({
       model: modelName,
       max_tokens: 2000,
-      system: process.env.DJADWEB_CORE_PROMPT || 'Eres DJADWEB-IA, el asistente burocrático chileno soberano.',
+      system: getSystemPrompt(),
       messages: messages as any,
       tools: herramientasSistema as any
     });
@@ -252,7 +267,7 @@ export async function procesarTurnoCognitivoSoberano(
       response = await anthropic.messages.create({
         model: modelName,
         max_tokens: 2000,
-        system: process.env.DJADWEB_CORE_PROMPT || 'Eres DJADWEB-IA, el asistente burocrático chileno soberano.',
+        system: getSystemPrompt(),
         messages: activeMessages as any,
         tools: herramientasSistema as any
       });
