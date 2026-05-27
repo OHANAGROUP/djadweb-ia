@@ -185,11 +185,19 @@ export default function BuscarPage() {
           <div style={{ background: 'var(--red-light)', border: '1px solid #f5c6c6', color: 'var(--red)', borderRadius: 12, padding: '16px 18px', fontSize: 14, marginBottom: 24 }}>
             <div style={{ fontWeight: 700, marginBottom: 4 }}>⚠️ Error al consultar</div>
             <p style={{ margin: 0, lineHeight: 1.6 }}>{error}</p>
-            {error.includes('servicio') || error.includes('disponible') ? (
-              <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--gray-500)' }}>
-                El servicio de consultas judiciales puede estar en mantenimiento. Puedes intentar de nuevo en unos minutos o <a href="/contacto" style={{ color: 'var(--accent)' }}>contactar a soporte</a>.
+            
+            {/* Fallback de UI Degradada para robustez de experiencia de usuario */}
+            <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px dashed #f5c6c6', fontSize: 12, color: 'var(--gray-700)' }}>
+              <p style={{ fontWeight: 600, marginBottom: 6, color: 'var(--red)' }}>
+                🚨 ¿Los servidores estatales están caídos o lentos?
               </p>
-            ) : null}
+              <p style={{ margin: '0 0 10px', lineHeight: 1.5 }}>
+                Estamos experimentando una alta latencia en los portales del Estado chileno. Para evitar esperas innecesarias, puedes activar una <strong>alerta proactiva</strong>. Buscaremos de forma asíncrona y te notificaremos al correo tan pronto aparezca información relevante.
+              </p>
+              <a href="/dashboard/alertas" className="btn btn-sm btn-orange" style={{ textDecoration: 'none', display: 'inline-block', fontSize: 11, padding: '4px 10px' }}>
+                🔔 Agendar Alerta por Email
+              </a>
+            </div>
           </div>
         )}
 
