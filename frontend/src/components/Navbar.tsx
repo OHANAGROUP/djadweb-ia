@@ -40,8 +40,8 @@ export default function Navbar() {
     router.refresh()
   }
 
-  const navBg     = scrolled ? 'rgba(245,245,240,0.98)' : 'rgba(245,245,240,0.80)'
-  const navShadow = scrolled ? '0 1px 24px rgba(10,10,14,0.08)' : 'none'
+  const navBg     = scrolled ? 'rgba(5, 5, 8, 0.95)' : 'transparent'
+  const navShadow = scrolled ? '0 4px 30px rgba(0,0,0,0.5)' : 'none'
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function Navbar() {
         top: 0,
         zIndex: 100,
         background: navBg,
-        borderBottom: scrolled ? '1px solid var(--gray-200)' : '1px solid transparent',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
         backdropFilter: 'blur(14px)',
         WebkitBackdropFilter: 'blur(14px)',
         boxShadow: navShadow,
@@ -79,6 +79,7 @@ export default function Navbar() {
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }} className="hidden-mobile">
             <NavLink href="/#como-funciona">Cómo funciona</NavLink>
             <NavLink href="/#precios">Precios</NavLink>
+            <NavLink href="/seguridad">Seguridad</NavLink>
 
             {user ? (
               <>
@@ -100,8 +101,8 @@ export default function Navbar() {
                     transition: 'color 0.15s, background 0.15s',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.color = 'var(--brand-black)'
-                    e.currentTarget.style.background = 'rgba(10,10,14,0.04)'
+                    e.currentTarget.style.color = '#FFFFFF'
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.color = 'var(--gray-600)'
@@ -122,13 +123,14 @@ export default function Navbar() {
             className="show-mobile"
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
-              background: menuOpen ? 'var(--gray-100)' : 'none',
+              background: menuOpen ? 'rgba(255,255,255,0.06)' : 'none',
               border: '1px solid',
-              borderColor: menuOpen ? 'var(--gray-300)' : 'transparent',
+              borderColor: menuOpen ? 'rgba(255,255,255,0.1)' : 'transparent',
               cursor: 'pointer',
               padding: '6px 8px',
               borderRadius: 8,
               transition: 'all 0.15s',
+              color: '#FFFFFF'
             }}
             aria-label="Menú"
             aria-expanded={menuOpen}
@@ -153,28 +155,35 @@ export default function Navbar() {
         {menuOpen && (
           <div style={{
             padding: '16px 20px 24px',
-            borderTop: '1px solid var(--gray-200)',
+            borderTop: '1px solid rgba(255,255,255,0.06)',
             display: 'flex',
             flexDirection: 'column',
             gap: 10,
-            background: 'rgba(245,245,240,0.99)',
+            background: 'rgba(5, 5, 8, 0.98)',
             animation: 'slideDown 0.2s ease',
           }}>
             <Link
               href="/#como-funciona"
               onClick={() => setMenuOpen(false)}
-              style={{ fontWeight: 600, color: 'var(--gray-700)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
+              style={{ fontWeight: 600, color: 'var(--gray-600)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
             >
               Cómo funciona
             </Link>
             <Link
               href="/#precios"
               onClick={() => setMenuOpen(false)}
-              style={{ fontWeight: 600, color: 'var(--gray-700)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
+              style={{ fontWeight: 600, color: 'var(--gray-600)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
             >
               Precios
             </Link>
-            <div style={{ height: 1, background: 'var(--gray-200)', margin: '4px 0' }} />
+            <Link
+              href="/seguridad"
+              onClick={() => setMenuOpen(false)}
+              style={{ fontWeight: 600, color: 'var(--gray-600)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
+            >
+              Seguridad
+            </Link>
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '4px 0' }} />
             {user ? (
               <>
                 <Link href="/buscar"    onClick={() => setMenuOpen(false)} className="btn btn-ghost">Buscar</Link>
@@ -211,8 +220,8 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
         transition: 'color 0.15s, background 0.15s',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.color = 'var(--brand-black)'
-        e.currentTarget.style.background = 'rgba(10,10,14,0.04)'
+        e.currentTarget.style.color = '#FFFFFF'
+        e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
       }}
       onMouseLeave={e => {
         e.currentTarget.style.color = 'var(--gray-600)'
