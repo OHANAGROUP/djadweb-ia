@@ -75,7 +75,7 @@ export default function HomePage() {
               </div>
               {/* Badge datos ilustrativos */}
               <span style={{ fontSize: 9.5, background: '#FEF3C7', color: '#92400E', fontWeight: 800, padding: '3px 8px', borderRadius: 4, border: '1px solid #FDE68A', letterSpacing: '0.03em' }}>
-                VISTA PREVIA
+                DEMO REFERENCIAL
               </span>
             </div>
 
@@ -175,47 +175,64 @@ export default function HomePage() {
       <section style={{ padding: '80px 0 60px', background: '#FFFFFF', borderTop: '1px solid #F1F5F9' }}>
         <div style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 54 }}>
-            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Funcionalidades Activas</span>
+            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Capacidades de la Plataforma</span>
             <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.2rem)', fontWeight: 800, marginTop: 8, color: '#0F172A' }}>Consulta. Centraliza. Entiende.</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, maxWidth: 1000, margin: '0 auto' }}>
 
-            {/* Feature 1 */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
-              <div style={{ fontSize: 24, marginBottom: 14 }}>⚖️</div>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Causas Judiciales (PJUD)</h3>
-              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                Busca en segundos si un RUT tiene causas activas en Juzgados Civiles, Laborales, de Familia o Penales de Chile. Resultados con lenguaje claro.
-              </p>
-              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, background: '#2563EB', color: '#FFFFFF', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
-                Consultar PJUD
-              </Link>
+          <div style={{ marginBottom: 60 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', marginBottom: 24, borderBottom: '2px solid #E2E8F0', paddingBottom: 10 }}>Disponible Hoy</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+              
+              {/* Feature 1 */}
+              <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
+                <div style={{ fontSize: 24, marginBottom: 14 }}>⚖️</div>
+                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Monitoreo Judicial (PJUD)</h3>
+                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
+                  Busca en segundos si un RUT tiene causas activas en Juzgados Civiles, Laborales, de Familia o Penales de Chile. Resultados con lenguaje claro.
+                </p>
+                <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, background: '#2563EB', color: '#FFFFFF', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
+                  Consultar PJUD
+                </Link>
+              </div>
+
+              {/* Feature 2 */}
+              <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
+                <div style={{ fontSize: 24, marginBottom: 14 }}>🧾</div>
+                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Almacenamiento Seguro SII / TGR</h3>
+                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
+                  Conecta tus credenciales tributarias de manera segura con encriptación AES-256-GCM. El primer paso para centralizar tu cumplimiento.
+                </p>
+                <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', background: 'transparent', border: '1px solid #CBD5E1', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
+                  Conectar SII / TGR
+                </Link>
+              </div>
+
             </div>
+          </div>
 
-            {/* Feature 2 */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
-              <div style={{ fontSize: 24, marginBottom: 14 }}>🧾</div>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Estado SII y Tesorería</h3>
-              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                Consulta el estado tributario, actividades económicas y deudas fiscales con el SII y la TGR desde un solo formulario, sin navegar múltiples portales.
-              </p>
-              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', background: 'transparent', border: '1px solid #CBD5E1', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
-                Consultar SII / TGR
-              </Link>
+          <div>
+            <h3 style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', marginBottom: 24, borderBottom: '2px dashed #E2E8F0', paddingBottom: 10 }}>Próximamente</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, opacity: 0.8 }}>
+              
+              {/* Feature 3 */}
+              <div style={{ background: '#F1F5F9', border: '1px dashed #CBD5E1', padding: '32px 24px', borderRadius: 10 }}>
+                <div style={{ fontSize: 24, marginBottom: 14 }}>🔄</div>
+                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Sincronización Automática</h3>
+                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
+                  Workers en background revisarán tu estado tributario (F29, Deudas, Notificaciones) todos los días y mantendrán tu panel unificado y actualizado.
+                </p>
+              </div>
+
+              {/* Feature 4 */}
+              <div style={{ background: '#F1F5F9', border: '1px dashed #CBD5E1', padding: '32px 24px', borderRadius: 10 }}>
+                <div style={{ fontSize: 24, marginBottom: 14 }}>🔔</div>
+                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Alertas Tempranas</h3>
+                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
+                  Recibe correos electrónicos ante cualquier cambio en tu situación tributaria, desde nuevos giros emitidos hasta vencimientos próximos.
+                </p>
+              </div>
+
             </div>
-
-            {/* Feature 3 */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
-              <div style={{ fontSize: 24, marginBottom: 14 }}>🤖</div>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Asistente Tributario</h3>
-              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                Guía paso a paso para trámites del SII como inicio de actividades y consultas de estado. El asistente te explica en lenguaje claro qué significa cada resultado.
-              </p>
-              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', background: 'transparent', border: '1px solid #CBD5E1', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
-                Abrir asistente
-              </Link>
-            </div>
-
           </div>
         </div>
       </section>

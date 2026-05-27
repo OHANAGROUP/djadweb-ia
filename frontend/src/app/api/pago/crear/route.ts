@@ -1,47 +1,31 @@
-/**
- * Crea una preferencia de pago en MercadoPago y redirige al checkout.
- * GET /api/pago/crear?plan=basic|premium
- *
- * Los precios se leen exclusivamente desde plans.ts (fuente única de verdad).
- * El webhook /api/webhooks/mercadopago usa el mismo PRICE_TO_PLAN para resolver
- * qué plan activar — ambos extremos deben estar en sincronía.
- */
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
-import { PLAN_PRICES, PLANS } from '@/lib/plans'
 
 export const dynamic = 'force-dynamic'
-
 
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || ''
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'
 
+const PRO_PRICE = 14990
+
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const plan = searchParams.get('plan') as 'basic' | 'premium' | null
-
-    if (!plan || !PLAN_PRICES[plan]) {
-      return NextResponse.json({ error: 'Plan inválido.' }, { status: 400 })
-    }
-
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.redirect(new URL('/auth/login', request.url))
 
-    // Crear preferencia en MercadoPago
-    const planMeta = PLANS[plan]
+    // Crear preferencia en MercadoPago (Único Plan MVP)
     const preference = {
       items: [{
-        id: `tramita-${plan}`,
-        title: `Tramita — ${planMeta.displayName}`,
-        description: planMeta.tagline,
+        id: `tramita-pro`,
+        title: `Pase Tramita Pro`,
+        description: 'Desbloquea el Flow Engine para ejecutar trámites asistidos y guiados',
         quantity: 1,
-        unit_price: PLAN_PRICES[plan].clp,
+        unit_price: PRO_PRICE,
         currency_id: 'CLP',
       }],
       payer: { email: user.email },
-      metadata: { user_id: user.id, plan },
+      metadata: { user_id: user.id },
       back_urls: {
         success: `${APP_URL}/dashboard?pago=ok`,
         failure: `${APP_URL}/dashboard?pago=error`,

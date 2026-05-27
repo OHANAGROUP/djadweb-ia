@@ -1,298 +1,110 @@
 'use client'
 
-import { useState } from 'react'
 import Navbar from '@/components/Navbar'
-import type { BuscarResponse, Causa, Competencia } from '@/lib/types'
+import { getAllTramites } from '@/lib/registry/tramites'
+import Link from 'next/link'
+import { useState } from 'react'
 
-const COMPETENCIAS: { value: Competencia; label: string }[] = [
-  { value: 'civil',       label: 'Civil' },
-  { value: 'laboral',     label: 'Laboral' },
-  { value: 'familia',     label: 'Familia' },
-  { value: 'penal',       label: 'Penal' },
-  { value: 'cobranza',    label: 'Cobranza' },
-  { value: 'suprema',     label: 'Corte Suprema' },
-  { value: 'apelaciones', label: 'Corte de Apelaciones' },
+const TRAMITES = getAllTramites()
+
+const CATEGORIES = [
+  { id: 'empresa', label: 'Empresa y Emprendimiento', emoji: '🏢' },
+  { id: 'tributario', label: 'Tributario (SII y TGR)', emoji: '📄' },
+  { id: 'laboral', label: 'Laboral y Trabajadores', emoji: '👷' },
+  { id: 'legal', label: 'Legal y Judicial', emoji: '⚖️' },
+  { id: 'municipal', label: 'Municipalidades', emoji: '🏛️' },
 ]
 
-const CORTES = [
-  'C.A. de Santiago',
-  'C.A. de San Miguel',
-  'C.A. de Valparaíso',
-  'C.A. de Concepción',
-  'C.A. de La Serena',
-  'C.A. de Antofagasta',
-  'C.A. de Rancagua',
-  'C.A. de Talca',
-  'C.A. de Temuco',
-  'C.A. de Valdivia',
-  'C.A. de Puerto Montt',
-  'C.A. de Arica',
-  'C.A. de Iquique',
-  'C.A. de Copiapó',
-  'C.A. de Chillan',
-  'C.A. de Coyhaique',
-  'C.A. de Punta Arenas',
-]
+export default function CatalogoPage() {
+  const [searchTerm, setSearchTerm] = useState('')
 
-const LOADING_MSGS = [
-  '🔍 Conectando con el Poder Judicial...',
-  '⚖️ Buscando causas judiciales...',
-  '📋 Procesando resultados...',
-]
+  const filteredTramites = TRAMITES.filter(t => 
+    t.goal?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    t.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
-export default function BuscarPage() {
-  const [form, setForm] = useState({
-    nombre: '', apellidoPaterno: '', apellidoMaterno: '',
-    anio: '', competencia: 'civil' as Competencia, corte: '', tribunal: '',
-  })
-  const [loading, setLoading] = useState(false)
-  const [loadingMsg, setLoadingMsg] = useState(0)
-  const [data, setData] = useState<BuscarResponse | null>(null)
-  const [error, setError] = useState('')
-  const [quotaError, setQuotaError] = useState(false)
+  const renderTramites = (categoryId: string) => {
+    const list = filteredTramites.filter(t => t.category === categoryId)
+    if (list.length === 0) return null
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
-  async function handleSearch(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    setData(null)
-    setQuotaError(false)
-
-    // Rotar mensajes de carga mientras espera (el scraper tarda 15-30s)
-    const interval = setInterval(() => {
-      setLoadingMsg(prev => (prev + 1) % LOADING_MSGS.length)
-    }, 4000)
-
-    try {
-      const res = await fetch('/api/buscar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-
-      const json = await res.json()
-
-      if (res.status === 429) { setQuotaError(true); return }
-      if (!res.ok) throw new Error(json.error || 'Error al consultar')
-
-      setData(json)
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      clearInterval(interval)
-      setLoading(false)
-    }
+    return (
+      <div key={categoryId} style={{ marginBottom: 40 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+          {CATEGORIES.find(c => c.id === categoryId)?.emoji} 
+          {CATEGORIES.find(c => c.id === categoryId)?.label}
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+          {list.map(t => (
+            <div key={t.id} className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                <span className="badge badge-blue">{t.institution}</span>
+                {t.monetizationTier === 'pro' ? (
+                  <span className="badge" style={{ background: '#FEF3C7', color: '#92400E', border: '1px solid #FCD34D' }}>⭐ PRO</span>
+                ) : (
+                  <span className="badge" style={{ background: '#D1FAE5', color: '#065F46', border: '1px solid #6EE7B7' }}>Gratis</span>
+                )}
+              </div>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, lineHeight: 1.3 }}>{t.goal}</h3>
+              <p style={{ fontSize: 13, color: 'var(--gray-500)', flex: 1, marginBottom: 16, lineHeight: 1.5 }}>{t.description}</p>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--gray-200)', paddingTop: 16, marginTop: 'auto' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ fontSize: 12, color: 'var(--gray-500)' }}>Fricción:</span>
+                  <div style={{ display: 'flex', gap: 2 }}>
+                    {[...Array(5)].map((_, i) => (
+                      <div key={i} style={{ 
+                        width: 8, height: 8, borderRadius: '50%', 
+                        background: i < Math.ceil((t.frictionScore || 0) / 2) ? (t.frictionScore! >= 8 ? '#EF4444' : t.frictionScore! >= 5 ? '#F59E0B' : '#10B981') : '#E5E7EB' 
+                      }} />
+                    ))}
+                  </div>
+                </div>
+                <Link href={`/dashboard?tramite=${t.id}`} className="btn btn-primary btn-sm" style={{ padding: '6px 12px', fontSize: 12 }}>
+                  Iniciar Guía →
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
     <>
       <Navbar />
-      <div className="container" style={{ padding: '40px 20px', maxWidth: 760 }}>
-        <h1 style={{ fontWeight: 800, fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', marginBottom: 6 }}>
-          Buscar en el Poder Judicial
-        </h1>
-        <p style={{ fontSize: 14, color: 'var(--gray-500)', marginBottom: 32 }}>
-          Consulta causas judiciales por nombre de persona natural.
-        </p>
+      <div className="container" style={{ padding: '40px 20px', maxWidth: 1000 }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <h1 style={{ fontWeight: 800, fontSize: 'clamp(1.8rem, 4vw, 2.4rem)', marginBottom: 12 }}>
+            Catálogo Nacional de Trámites
+          </h1>
+          <p style={{ fontSize: 16, color: 'var(--gray-500)', maxWidth: 600, margin: '0 auto' }}>
+            Encuentra guías paso a paso para los trámites más engorrosos del Estado chileno. 
+            Tramita te acompaña para que no cometas errores costosos.
+          </p>
+        </div>
 
-        {/* ── FORMULARIO ── */}
-        <form onSubmit={handleSearch} className="card" style={{ padding: '28px 24px', marginBottom: 32 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 16 }}>
-            <div>
-              <label className="form-label">Nombre *</label>
-              <input className="form-input" name="nombre" value={form.nombre}
-                onChange={handleChange} placeholder="Juan" required />
-            </div>
-            <div>
-              <label className="form-label">Apellido paterno *</label>
-              <input className="form-input" name="apellidoPaterno" value={form.apellidoPaterno}
-                onChange={handleChange} placeholder="González" required />
-            </div>
-            <div>
-              <label className="form-label">Apellido materno</label>
-              <input className="form-input" name="apellidoMaterno" value={form.apellidoMaterno}
-                onChange={handleChange} placeholder="Opcional" />
-            </div>
-          </div>
+        <div style={{ marginBottom: 40, maxWidth: 600, margin: '0 auto 40px' }}>
+          <input 
+            type="text" 
+            className="form-input" 
+            placeholder="🔍 Buscar un trámite (ej: Término de Giro, SII, Patente)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ padding: '16px 20px', fontSize: 16, borderRadius: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}
+          />
+        </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 20 }}>
-            <div>
-              <label className="form-label">Competencia *</label>
-              <select className="form-select" name="competencia" value={form.competencia} onChange={handleChange}>
-                {COMPETENCIAS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="form-label">Año (opcional)</label>
-              <input className="form-input" name="anio" value={form.anio}
-                onChange={handleChange} placeholder="Ej: 2023" maxLength={4} />
-            </div>
-          </div>
-
-          {form.competencia !== 'suprema' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 20 }}>
-              <div>
-                <label className="form-label">Corte de Apelaciones *</label>
-                <select className="form-select" name="corte" value={form.corte} onChange={handleChange} required>
-                  <option value="">Selecciona una Corte...</option>
-                  {CORTES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              {form.competencia !== 'apelaciones' && (
-                <div>
-                  <label className="form-label">Tribunal (opcional)</label>
-                  <input className="form-input" name="tribunal" value={form.tribunal}
-                    onChange={handleChange} placeholder="Ej: 1º Juzgado Civil de Santiago" />
-                  <span style={{ fontSize: 11, color: 'var(--gray-400)', marginTop: 4, display: 'block' }}>
-                    Si se deja en blanco, se buscará en el tribunal principal de la corte.
-                  </span>
-                </div>
-              )}
+        <div>
+          {CATEGORIES.map(c => renderTramites(c.id))}
+          {filteredTramites.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--gray-400)' }}>
+              <div style={{ fontSize: 40, marginBottom: 16 }}>🔍</div>
+              <p style={{ fontSize: 16, fontWeight: 600 }}>No encontramos trámites con ese término.</p>
             </div>
           )}
-
-          <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', justifyContent: 'center' }}>
-            {loading
-              ? <><span className="spinner" style={{ width: 16, height: 16 }} /> {LOADING_MSGS[loadingMsg]}</>
-              : '🔍 Buscar en el Poder Judicial'}
-          </button>
-
-          {loading && (
-            <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--gray-400)', marginTop: 10 }}>
-              El portal del PJUD puede tardar 15–30 segundos. Por favor espera.
-            </p>
-          )}
-        </form>
-
-        {/* ── ERROR DE CUOTA ── */}
-        {quotaError && (
-          <div style={{ background: '#fff8f0', border: '1px solid #ffe0c0', borderRadius: 14, padding: '24px', textAlign: 'center', marginBottom: 24 }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>🔒</div>
-            <h3 style={{ fontWeight: 800, marginBottom: 8 }}>Cuota mensual alcanzada</h3>
-            <p style={{ fontSize: 14, color: 'var(--gray-500)', marginBottom: 20 }}>
-              El plan gratuito incluye 3 consultas por mes. Sube al plan Básico para consultas ilimitadas.
-            </p>
-            <a href="/dashboard#planes" className="btn btn-orange">Ver planes →</a>
-          </div>
-        )}
-
-        {/* ── ERROR GENERAL ── */}
-        {error && (
-          <div style={{ background: 'var(--red-light)', border: '1px solid #f5c6c6', color: 'var(--red)', borderRadius: 12, padding: '16px 18px', fontSize: 14, marginBottom: 24 }}>
-            <div style={{ fontWeight: 700, marginBottom: 4 }}>⚠️ Error al consultar</div>
-            <p style={{ margin: 0, lineHeight: 1.6 }}>{error}</p>
-            
-            {/* Fallback de UI Degradada para robustez de experiencia de usuario */}
-            <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px dashed #f5c6c6', fontSize: 12, color: 'var(--gray-700)' }}>
-              <p style={{ fontWeight: 600, marginBottom: 6, color: 'var(--red)' }}>
-                🚨 ¿Los servidores estatales están caídos o lentos?
-              </p>
-              <p style={{ margin: '0 0 10px', lineHeight: 1.5 }}>
-                Estamos experimentando una alta latencia en los portales del Estado chileno. Para evitar esperas innecesarias, puedes activar una <strong>alerta proactiva</strong>. Buscaremos de forma asíncrona y te notificaremos al correo tan pronto aparezca información relevante.
-              </p>
-              <a href="/dashboard/alertas" className="btn btn-sm btn-orange" style={{ textDecoration: 'none', display: 'inline-block', fontSize: 11, padding: '4px 10px' }}>
-                🔔 Agendar Alerta por Email
-              </a>
-            </div>
-          </div>
-        )}
-
-        {/* ── RESULTADOS ── */}
-        {data && (
-          <div>
-            {/* Header de resultados */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <div>
-                <span style={{ fontWeight: 700, fontSize: 16 }}>
-                  {data.result.total} {data.result.total === 1 ? 'causa encontrada' : 'causas encontradas'}
-                </span>
-                <span style={{ fontSize: 12, color: 'var(--gray-400)', marginLeft: 10 }}>
-                  Fuente: {data.result.fuente}
-                </span>
-              </div>
-              {data.quota_limit && (
-                <span style={{ fontSize: 12, color: 'var(--gray-400)' }}>
-                  {data.quota_used}/{data.quota_limit} consultas este mes
-                </span>
-              )}
-            </div>
-
-            {/* Resumen IA */}
-            {data.ai_summary && (
-              <div style={{ background: '#fff8f0', border: '1px solid #ffe0c0', borderRadius: 14, padding: '16px 18px', marginBottom: 20 }}>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: 20 }}>🤖</span>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--brand-orange)', marginBottom: 6 }}>
-                      Resumen IA
-                    </div>
-                    <p style={{ fontSize: 14, color: 'var(--gray-700)', lineHeight: 1.7, margin: 0 }}>
-                      {data.ai_summary}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Sin resultados */}
-            {data.result.total === 0 && (
-              <div className="card" style={{ padding: '40px 24px', textAlign: 'center' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
-                <h3 style={{ fontWeight: 700, marginBottom: 8 }}>Sin causas encontradas</h3>
-                <p style={{ fontSize: 14, color: 'var(--gray-500)' }}>
-                  No se encontraron causas para <strong>{form.nombre} {form.apellidoPaterno}</strong>{' '}
-                  en la competencia <strong>{form.competencia}</strong>.
-                </p>
-              </div>
-            )}
-
-            {/* Lista de causas */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {data.result.causas.map((causa, i) => (
-                <CausaCard key={i} causa={causa} />
-              ))}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </>
-  )
-}
-
-function CausaCard({ causa }: { causa: Causa }) {
-  const isActiva = /activ|tramit|vigent/i.test(causa.estado)
-  return (
-    <div className="card" style={{ padding: '20px 22px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
-        <div>
-          <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--judicial-dark)' }}>{causa.rit}</span>
-          <span className={`badge ${isActiva ? 'badge-activa' : 'badge-archivada'}`} style={{ marginLeft: 8 }}>
-            {causa.estado || 'Sin estado'}
-          </span>
-        </div>
-        {causa.urlDetalle && (
-          <a href={causa.urlDetalle} target="_blank" rel="noopener noreferrer"
-             style={{ fontSize: 12, color: 'var(--judicial-blue)', textDecoration: 'none', flexShrink: 0, fontWeight: 600 }}>
-            Ver expediente ↗
-          </a>
-        )}
-      </div>
-      {causa.caratulado && (
-        <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 6 }}>{causa.caratulado}</div>
-      )}
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-        {causa.tribunal && (
-          <span style={{ fontSize: 12, color: 'var(--gray-500)' }}>⚖️ {causa.tribunal}</span>
-        )}
-        {causa.fechaUltimaActuacion && (
-          <span style={{ fontSize: 12, color: 'var(--gray-400)' }}>📅 Última actuación: {causa.fechaUltimaActuacion}</span>
-        )}
-        <span className="badge badge-blue">{causa.competencia}</span>
-      </div>
-    </div>
   )
 }

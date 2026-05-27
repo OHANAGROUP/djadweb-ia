@@ -18,7 +18,7 @@ export default function PageContent() {
           ← Volver
         </button>
         <div style={{ background: 'var(--brand-card)', borderRadius: 16, padding: '40px 48px', border: '1px solid var(--gray-100)' }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>DEJAWEBEAR®</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Tramita®</div>
           <h1 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginBottom: 24 }}>Contacto</h1>
           <p style={{ color: 'var(--gray-400)', lineHeight: 1.8, marginBottom: 24 }}>¿Tienes dudas, sugerencias o necesitas ayuda? Escríbenos y te responderemos a la brevedad.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -32,7 +32,7 @@ export default function PageContent() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20, background: 'rgba(255,255,255,0.03)', borderRadius: 12, border: '1px solid var(--gray-100)' }}>
               <div style={{ fontSize: 24 }}>📱</div>
               <div>
-                <div style={{ color: '#fff', fontWeight: 600, marginBottom: 4 }}>WhatsApp</div>
+                <div style={{ color: '#fff', fontWeight: 600, marginBottom: 4 }}>Email</div>
                 <span style={{ color: 'var(--gray-400)' }}>+56 9 1234 5678</span>
               </div>
             </div>

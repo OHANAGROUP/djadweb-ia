@@ -116,7 +116,7 @@ export async function POST(request: Request) {
       clearTimeout(timeout)
     }
 
-    // ── 6. Resumen IA (solo plan premium) ─────────────────────────
+    // ── 6. Resumen automatización (solo plan premium) ─────────────────────────
     let aiSummary: string | null = null
     if (quota.ai && ANTHROPIC_KEY && scraperResult.total > 0) {
       try {
@@ -147,7 +147,7 @@ Responde en español, lenguaje directo y claro, en 2-3 oraciones.`,
         aiSummary = msg.content[0].type === 'text' ? msg.content[0].text : null
       } catch (aiErr) {
         console.error('[AI Summary] Error:', aiErr)
-        // No fallar la búsqueda si la IA falla
+        // No fallar la búsqueda si la automatización falla
       }
     }
 
@@ -180,4 +180,10 @@ Responde en español, lenguaje directo y claro, en 2-3 oraciones.`,
       { status: 500 }
     )
   }
+}
+us: 500 }
+    )
+  }
+}
+
 }

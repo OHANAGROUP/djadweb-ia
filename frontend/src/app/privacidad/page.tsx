@@ -3,14 +3,14 @@ import PageContent from './page-content'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidad',
-  description: 'Política de privacidad de DEJAWEBEAR. Conoce cómo protegemos tus datos personales según la Ley N°19.628 de Chile.',
+  description: 'Política de privacidad de Tramita. Conoce cómo protegemos tus datos personales según la Ley N°19.628 de Chile.',
   openGraph: {
-    title: 'Política de Privacidad · DEJAWEBEAR',
-    description: 'Política de privacidad de DEJAWEBEAR. Conoce cómo protegemos tus datos personales según la Ley N°19.628 de Chile.',
+    title: 'Política de Privacidad · Tramita',
+    description: 'Política de privacidad de Tramita. Conoce cómo protegemos tus datos personales según la Ley N°19.628 de Chile.',
   },
   twitter: {
-    title: 'Política de Privacidad · DEJAWEBEAR',
-    description: 'Política de privacidad de DEJAWEBEAR. Conoce cómo protegemos tus datos personales según la Ley N°19.628 de Chile.',
+    title: 'Política de Privacidad · Tramita',
+    description: 'Política de privacidad de Tramita. Conoce cómo protegemos tus datos personales según la Ley N°19.628 de Chile.',
   },
 }
 

@@ -54,7 +54,7 @@ export const PLANS: Record<Plan, PlanMeta> = {
     notFeatures: [
       'Consultas SII y TGR',
       'Alertas inmediatas',
-      'Resúmenes con IA',
+      'Resúmenes con automatización',
       'Soporte prioritario',
     ],
   },
@@ -80,7 +80,7 @@ export const PLANS: Record<Plan, PlanMeta> = {
       'Asistente tributario incluido',
     ],
     notFeatures: [
-      'Resúmenes con IA',
+      'Resúmenes con automatización',
       'Panel multi-cliente',
     ],
   },
@@ -100,7 +100,7 @@ export const PLANS: Record<Plan, PlanMeta> = {
     features: [
       'Hasta 15 RUTs activos',
       'Todos los portales',
-      'Resúmenes IA por consulta',
+      'Resúmenes automatización por consulta',
       'Alertas inmediatas por email',
       'Historial ilimitado',
       'Soporte prioritario',
@@ -136,4 +136,6 @@ export const PRICE_TO_PLAN: Record<number, Plan> = Object.fromEntries(
 export const PLAN_PRICES: Record<Exclude<Plan, 'free'>, { clp: number; label: string }> = {
   basic:   { clp: PLANS.basic.clp!,   label: `$${PLANS.basic.clp!.toLocaleString('es-CL')}/mes` },
   premium: { clp: PLANS.premium.clp!, label: `$${PLANS.premium.clp!.toLocaleString('es-CL')}/mes` },
+}
+clp!.toLocaleString('es-CL')}/mes` },
 }

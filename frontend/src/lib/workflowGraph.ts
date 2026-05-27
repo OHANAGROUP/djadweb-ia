@@ -8,7 +8,7 @@ const TRANSICIONES_PERMITIDAS: Record<string, string[]> = {
   'acreditacion_actividades': ['acreditacion_actividades', 'tramite_completo', 'verificar_requisitos'],
   'tramite_completo': ['tramite_completo', 'inicial'],
   
-  // Flujo F29
+  // Flujo Declaraciones
   'login_sii': ['login_sii', 'seleccionar_periodo', 'inicial'],
   'seleccionar_periodo': ['seleccionar_periodo', 'ingresar_codigos', 'login_sii'],
   'ingresar_codigos': ['ingresar_codigos', 'calcular_totales', 'seleccionar_periodo'],
@@ -39,4 +39,6 @@ export function verificarTransicionEstado(etapaActual: string, etapaPropuesta: s
   }
   
   return destinosValidos.includes(propuestaLower);
+}
+Lower)
 }

@@ -3,14 +3,14 @@ import PageContent from './page-content'
 
 export const metadata: Metadata = {
   title: 'Contacto',
-  description: 'Ponte en contacto con DEJAWEBEAR. Email, WhatsApp y dirección para soporte y consultas.',
+  description: 'Ponte en contacto con Tramita. Email, Email y dirección para soporte y consultas.',
   openGraph: {
-    title: 'Contacto · DEJAWEBEAR',
-    description: 'Ponte en contacto con DEJAWEBEAR. Email, WhatsApp y dirección para soporte y consultas.',
+    title: 'Contacto · Tramita',
+    description: 'Ponte en contacto con Tramita. Email, Email y dirección para soporte y consultas.',
   },
   twitter: {
-    title: 'Contacto · DEJAWEBEAR',
-    description: 'Ponte en contacto con DEJAWEBEAR. Email, WhatsApp y dirección para soporte y consultas.',
+    title: 'Contacto · Tramita',
+    description: 'Ponte en contacto con Tramita. Email, Email y dirección para soporte y consultas.',
   },
 }
 

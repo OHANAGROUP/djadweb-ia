@@ -6,22 +6,30 @@ import nextDynamic from 'next/dynamic'
 import type { SearchRecord, Subscription, Plan } from '@/lib/types'
 import { PLAN_QUOTAS, PLAN_PRICES } from '@/lib/types'
 
-const ChatWidget = nextDynamic(() => import('@/components/ChatWidget'), { ssr: false })
+const FlowWidget = nextDynamic(() => import('@/components/FlowWidget'), { ssr: false })
+import OutcomesList from '@/components/OutcomesList'
 
 async function getData() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const [{ data: profile }, { data: subscription }, { data: searches }, { data: quota }] = await Promise.all([
+  const [{ data: profile }, { data: subscription }, { data: searches }, { data: quota }, { data: outcomes }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
     supabase.from('searches').select('id, user_id, params, result, ai_summary, created_at')
       .eq('user_id', user.id).order('created_at', { ascending: false }).limit(20),
     supabase.rpc('get_monthly_search_count', { p_user_id: user.id }),
+    supabase.from('tramite_outcomes').select('status, total_steps')
+      .eq('user_id', user.id),
   ])
 
-  return { user, profile, subscription, searches: searches || [], monthlyCount: quota || 0 }
+  const completedCount = outcomes?.filter((o: any) => o.status === 'completed').length || 0
+  const inProgressCount = outcomes?.filter((o: any) => o.status === 'in_progress').length || 0
+  const totalStepsCompleted = outcomes?.filter((o: any) => o.status === 'completed').reduce((sum: number, o: any) => sum + (o.total_steps || 0), 0) || 0
+  const timeSavedMin = totalStepsCompleted * 8 // ~8 min por paso ahorrado
+
+  return { user, profile, subscription, searches: searches || [], monthlyCount: quota || 0, completedCount, inProgressCount, timeSavedMin }
 }
 
 const PLAN_LABELS: Record<Plan, { label: string; color: string }> = {
@@ -33,7 +41,7 @@ const PLAN_LABELS: Record<Plan, { label: string; color: string }> = {
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const { user, profile, subscription, searches, monthlyCount } = await getData()
+  const { user, profile, subscription, searches, monthlyCount, completedCount, inProgressCount, timeSavedMin } = await getData()
   const plan = (subscription?.plan || 'free') as Plan
   const quota = PLAN_QUOTAS[plan]
   const planLabel = PLAN_LABELS[plan]
@@ -64,25 +72,22 @@ export default async function DashboardPage() {
           </div>
 
           <div className="card" style={{ padding: '24px' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>Consultas este mes</div>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, marginBottom: 12 }}>
-              <span style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em' }}>{monthlyCount}</span>
-              {quota.searches !== null && (
-                <span style={{ fontSize: 16, color: 'var(--gray-400)', paddingBottom: 4 }}>/ {quota.searches}</span>
-              )}
-            </div>
-            {quota.searches !== null && (
-              <div style={{ height: 6, background: 'var(--gray-200)', borderRadius: 99, overflow: 'hidden' }}>
-                <div style={{
-                  height: '100%',
-                  width: `${Math.min((monthlyCount / quota.searches) * 100, 100)}%`,
-                  background: monthlyCount >= quota.searches ? 'var(--red)' : 'var(--brand-black)',
-                  borderRadius: 99,
-                  transition: 'width .3s',
-                }} />
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>Tu impacto con Tramita</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 16 }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#10B981' }}>{completedCount}</div>
+                <div style={{ fontSize: 11, color: 'var(--gray-500)' }}>Completados</div>
               </div>
-            )}
-            <Link href="/buscar" className="btn btn-ghost btn-sm" style={{ marginTop: 14 }}>Nueva búsqueda 🔎</Link>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#F59E0B' }}>{inProgressCount}</div>
+                <div style={{ fontSize: 11, color: 'var(--gray-500)' }}>En progreso</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#2563EB' }}>~{timeSavedMin}<span style={{ fontSize: 14 }}>m</span></div>
+                <div style={{ fontSize: 11, color: 'var(--gray-500)' }}>Tiempo ahorrado</div>
+              </div>
+            </div>
+            <Link href="/buscar" className="btn btn-ghost btn-sm" style={{ marginTop: 4 }}>Ir al catálogo 🔎</Link>
           </div>
 
           <div className="card" style={{ padding: '24px' }}>
@@ -107,18 +112,19 @@ export default async function DashboardPage() {
 
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <h2 style={{ fontWeight: 800, fontSize: 18 }}>Historial de búsquedas</h2>
-            <Link href="/buscar" className="btn btn-primary btn-sm">+ Nueva búsqueda</Link>
+            <h2 style={{ fontWeight: 800, fontSize: 18 }}>Mis Trámites</h2>
+            <Link href="/buscar" className="btn btn-primary btn-sm">Ver Catálogo</Link>
           </div>
 
+          {/* @ts-ignore - outcomes fetched from server */}
+          <OutcomesList userId={user.id} />
+
+          <h3 style={{ fontWeight: 700, fontSize: 15, marginTop: 32, marginBottom: 12 }}>Historial de búsquedas</h3>
           {searches.length === 0 ? (
-            <div className="card" style={{ padding: '48px 24px', textAlign: 'center' }}>
-              <div style={{ fontSize: 40, marginBottom: 16 }}>👋</div>
-              <h3 style={{ fontWeight: 700, marginBottom: 8 }}>Aún no tienes búsquedas</h3>
-              <p style={{ fontSize: 14, color: 'var(--gray-500)', marginBottom: 20 }}>
-                Consulta tus causas judiciales o deudas en segundos.
+            <div className="card" style={{ padding: '32px 24px', textAlign: 'center' }}>
+              <p style={{ fontSize: 14, color: 'var(--gray-500)', margin: 0 }}>
+                Aún no tienes búsquedas. Explora el <Link href="/buscar" style={{ color: 'var(--judicial-blue)' }}>Catálogo</Link> para empezar.
               </p>
-              <Link href="/buscar" className="btn btn-primary">Hacer primera búsqueda 🚀</Link>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -133,7 +139,7 @@ export default async function DashboardPage() {
           <div id="planes" className="card" style={{ padding: '32px 28px' }}>
             <h2 style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>Sube tu plan</h2>
             <p style={{ fontSize: 14, color: 'var(--gray-500)', marginBottom: 28 }}>
-              Desbloquea consultas ilimitadas, alertas y resúmenes con IA.
+              Desbloquea consultas ilimitadas, alertas y resúmenes con automatización.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
               {(['basic', 'premium'] as const).map(p => (
@@ -153,7 +159,7 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      <ChatWidget />
+      <FlowWidget />
     </>
   )
 }

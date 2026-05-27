@@ -22,7 +22,7 @@ export default function PageContent() {
           <h1 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginBottom: 24 }}>Política de Privacidad</h1>
           <p style={{ color: 'var(--gray-400)', lineHeight: 1.8, marginBottom: 16 }}>Última actualización: 26 de mayo de 2026</p>
           <h2 style={{ fontSize: 18, fontWeight: 600, color: '#fff', marginTop: 32, marginBottom: 12 }}>1. Datos que recopilamos</h2>
-          <p style={{ color: 'var(--gray-400)', lineHeight: 1.8, marginBottom: 16 }}>Recopilamos únicamente los datos necesarios para realizar consultas en portales del Estado chileno: RUT, nombres, y datos de contacto (email/WhatsApp) si eliges recibir alertas. No almacenamos claves ni credenciales de acceso a servicios públicos.</p>
+          <p style={{ color: 'var(--gray-400)', lineHeight: 1.8, marginBottom: 16 }}>Recopilamos únicamente los datos necesarios para realizar consultas en portales del Estado chileno: RUT, nombres, y datos de contacto (email/Email) si eliges recibir alertas. No almacenamos claves ni credenciales de acceso a servicios públicos.</p>
           <h2 style={{ fontSize: 18, fontWeight: 600, color: '#fff', marginTop: 32, marginBottom: 12 }}>2. Uso de la información</h2>
           <p style={{ color: 'var(--gray-400)', lineHeight: 1.8, marginBottom: 16 }}>Tus datos se utilizan exclusivamente para procesar las consultas que solicitas en los portales del Estado (PJUD, SII, TGR, etc.), enviarte alertas sobre cambios de estado, y mejorar nuestro servicio. No compartimos tus datos con terceros sin tu consentimiento explícito.</p>
           <h2 style={{ fontSize: 18, fontWeight: 600, color: '#fff', marginTop: 32, marginBottom: 12 }}>3. Almacenamiento y seguridad</h2>

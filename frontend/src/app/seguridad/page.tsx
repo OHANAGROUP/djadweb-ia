@@ -17,11 +17,11 @@ export default function SeguridadPage() {
     'BROWSER: Argumentos aplicados para contenedor seguro: --no-sandbox.',
     'CORRELATION: X-Correlation-ID: 7c2a9a2d-20be-4573-b26a-939e144f8ea0 generado.',
     'SII_PORTAL: Estableciendo sesión cifrada TLS 1.3 con sii.cl...',
-    'SII_PORTAL: Formulario F29 cargado exitosamente. Período: 05-2026.',
+    'SII_PORTAL: Formulario Declaraciones cargado exitosamente. Período: 05-2026.',
     'SII_PORTAL: Ejecutando verificación del Asistente RCV para compras y ventas...',
     'SII_PORTAL: Total a pagar calculado = $0 CLP (IVA sin movimiento).',
     'SII_PORTAL: Enviando declaración de forma segura en portal SII...',
-    'SII_PORTAL: Comprobante oficial de F29 recibido. Folio: 92831.',
+    'SII_PORTAL: Comprobante oficial de Declaraciones recibido. Folio: 92831.',
     'COMPLIANCE_LOG: Guardando traza inmutable en base de datos.',
     'COMPLIANCE_LOG: Registro bloqueado (operaciones de actualización/eliminación deshabilitadas por trigger).',
     'SYSTEM: Navegador cerrado de forma segura. Advisory lock liberado.'

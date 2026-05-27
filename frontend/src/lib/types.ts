@@ -92,7 +92,7 @@ export interface BuscarResponse {
   quota_limit?: number | null
 }
 
-// ===== Chat IA =====
+// ===== Chat automatización =====
 export interface ChatSession {
   id: string
   user_id: string
@@ -154,4 +154,6 @@ export interface UserCredentials {
   sii_locked: boolean
   sii_last_sync: string | null
   created_at: string
+}
+at: string
 }

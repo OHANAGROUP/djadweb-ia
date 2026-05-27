@@ -84,7 +84,7 @@ export default function Navbar() {
 
             {user ? (
               <>
-                <Link href="/buscar"    className="btn btn-ghost btn-sm" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569', fontSize: 12.5, fontWeight: 700, borderRadius: 6 }}>Buscar</Link>
+                <Link href="/buscar"    className="btn btn-ghost btn-sm" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569', fontSize: 12.5, fontWeight: 700, borderRadius: 6 }}>Catálogo</Link>
                 <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569', fontSize: 12.5, fontWeight: 700, borderRadius: 6 }}>Mi cuenta <AlertBadge /></Link>
                 <button onClick={handleLogout} className="btn btn-primary btn-sm" style={{ background: '#0F172A', color: '#FFFFFF', borderRadius: 6, fontSize: 12.5, fontWeight: 700 }}>Salir</button>
               </>
@@ -187,7 +187,7 @@ export default function Navbar() {
             <div style={{ height: 1, background: 'rgba(15,23,42,0.06)', margin: '4px 0' }} />
             {user ? (
               <>
-                <Link href="/buscar"    onClick={() => setMenuOpen(false)} className="btn btn-ghost" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569' }}>Buscar</Link>
+                <Link href="/buscar"    onClick={() => setMenuOpen(false)} className="btn btn-ghost" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569' }}>Catálogo</Link>
                 <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="btn btn-ghost" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569' }}>Mi cuenta <AlertBadge /></Link>
                 <button onClick={handleLogout} className="btn btn-primary" style={{ background: '#0F172A', color: '#FFFFFF' }}>Salir</button>
               </>
@@ -231,5 +231,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
     >
       {children}
     </Link>
+  )
+}
   )
 }

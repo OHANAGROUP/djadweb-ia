@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
-import { procesarMensajeChat } from '@/services/copilot';
+import { processFlowAction } from '@/services/flowEngine';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -14,10 +14,10 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { message, sessionId } = body;
+    const { action, sessionId } = body; // changed 'message' to 'action' to allow commands
 
-    if (!message || !message.trim()) {
-      return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 });
+    if (!action || !action.trim()) {
+      return NextResponse.json({ error: 'Acción requerida' }, { status: 400 });
     }
 
     // Buscar o inicializar la sesión en la DB si no existe
@@ -25,11 +25,11 @@ export async function POST(req: NextRequest) {
     if (!currentSessionId) {
       const { data: newSession, error: sError } = await supabase.from('chat_sessions').insert({
         user_id: user.id,
-        title: message.slice(0, 80),
-        workflow_type: 'inicio_actividades_sii',
+        title: action.slice(0, 80),
+        workflow_type: 'default',
         current_stage: 'inicial',
         confidence_score: 1.0,
-        workflow_version: 'v2'
+        workflow_version: 'v3-flow'
       }).select('id').single();
       
       if (sError || !newSession) {
@@ -38,18 +38,17 @@ export async function POST(req: NextRequest) {
       currentSessionId = newSession.id;
     }
 
-    // Invocar el procesador de turno del asistente tributario
-    const finalContent = await procesarMensajeChat(currentSessionId, user.id, message);
+    // Invocar el motor de flujo procedimental
+    const result = await processFlowAction(currentSessionId, user.id, action);
 
     return NextResponse.json({
-      content: finalContent,
-      role: 'assistant',
+      ...result,
       sessionId: currentSessionId
     });
   } catch (err: any) {
-    console.error('Chat API error:', err);
+    console.error('Flow API error:', err);
     return NextResponse.json({
-      error: 'Error interno del asistente',
+      error: 'Error interno del sistema',
       detail: process.env.NODE_ENV === 'development' ? err.message : undefined
     }, { status: 500 });
   }

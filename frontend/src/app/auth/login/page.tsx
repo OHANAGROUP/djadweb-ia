@@ -37,7 +37,7 @@ function LoginForm() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 20, background: 'var(--brand-bg)' }}>
       {/* Logo */}
       <Link href="/" style={{ marginBottom: 32, display: 'block' }}>
-        <img src="/djadwebia_logo_final.png" alt="Tramita" style={{ height: 42, width: 'auto', display: 'block' }} />
+        <img src="/Tramita_logo_final.png" alt="Tramita" style={{ height: 42, width: 'auto', display: 'block' }} />
       </Link>
 
       <div className="card" style={{ width: '100%', maxWidth: 400, padding: '40px 36px' }}>
@@ -89,6 +89,17 @@ function LoginForm() {
             Regístrate gratis
           </Link>
         </p>
+
+        <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--gray-100)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', gap: 8, fontSize: 11, color: 'var(--gray-400)', fontWeight: 600 }}>
+            <span>🔒 HTTPS / TLS</span>
+            <span>•</span>
+            <span>📋 Ley 19.628</span>
+          </div>
+          <p style={{ fontSize: 10, color: 'var(--gray-400)', margin: 0, textAlign: 'center', lineHeight: 1.4 }}>
+            Tus datos están protegidos y encriptados extremo a extremo.
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -96,11 +107,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--brand-bg)' }}>
-        <span className="spinner" style={{ width: 32, height: 32 }} />
-      </div>
-    }>
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--brand-bg)' }} />}>
       <LoginForm />
     </Suspense>
   )
