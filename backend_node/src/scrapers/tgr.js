@@ -40,6 +40,24 @@ async function consultarDeudaSimple(rut) {
   if (cached) { logger.info('TGR cache hit', { rut: rutNorm }); return cached; }
 
   try {
+    // === MOCK PARA MVP ===
+    // Si es el RUT de prueba, retornamos datos simulados instantáneamente
+    if (rutNorm === '13301638-4' || rutNorm === '133016384') {
+      logger.info('TGR Mock activado para RUT de prueba', { rut: rutNorm });
+      const mockResult = {
+        rut: rutNorm,
+        tieneDeuda: true,
+        totalDeuda: 254500,
+        deudas: [
+          { concepto: 'Contribuciones Bienes Raíces (Cuota 3)', monto: 104500, estado: 'Vencido' },
+          { concepto: 'Multa TAG No Pagado', monto: 150000, estado: 'Vencido' }
+        ]
+      };
+      cache.set(cacheKey, mockResult, 86400);
+      return mockResult;
+    }
+    // === FIN MOCK ===
+
     const resultado = await withRetry(async () => {
       let browser;
       try {
