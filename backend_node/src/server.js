@@ -17,6 +17,7 @@ const cache       = require('./utils/cache');
 const { buscarPorNombre } = require('./scrapers/pjud');
 const { consultarDatosBasicos: siiDatosBasicos, consultarDeudaPublica: siiDeudas } = require('./scrapers/sii');
 const { consultarDeudaSimple: tgrDeudaSimple } = require('./scrapers/tgr');
+const { declararF29 } = require('./scrapers/f29-sii');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -64,6 +65,7 @@ const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
   message: { error: 'Demasiadas solicitudes. Espera un momento.' },
+  skip: () => process.env.NODE_ENV === 'test',
 });
 app.use('/api', limiter);
 
@@ -84,6 +86,7 @@ app.get('/', (_req, res) => {
       'POST /api/pjud/nombre': 'Busca causas en el Poder Judicial por nombre de persona',
       'POST /api/sii/basicos': 'Consulta datos básicos del contribuyente en SII',
       'POST /api/sii/deudas':  'Consulta deuda pública del contribuyente en SII',
+      'POST /api/sii/f29':     'Realiza declaración mensual de impuestos Formulario 29 en el SII',
       'POST /api/tgr/deuda':   'Consulta deuda fiscal en Tesorería General de la República',
       'GET  /api/cache/stats':  'Estadísticas del caché',
     },
@@ -186,6 +189,24 @@ app.post('/api/sii/deudas', requireApiKey, async (req, res) => {
   } catch (err) {
     logger.error('Error SII deudas', { error: err.message });
     return res.status(503).json({ error: 'Error al consultar deudas SII', detalle: process.env.NODE_ENV === 'development' ? err.message : undefined });
+  }
+});
+
+app.post('/api/sii/f29', requireApiKey, async (req, res) => {
+  try {
+    const { rut, periodo, codigos } = req.body;
+    if (!rut || !periodo) {
+      return res.status(400).json({ error: 'RUT y periodo son requeridos' });
+    }
+    logger.info('SII F29 declaracion solicitada', { rut, periodo, total_codigos: (codigos || []).length });
+    const result = await declararF29({ rut, periodo, codigos });
+    return res.json(result);
+  } catch (err) {
+    logger.error('Error F29 declaracion', { error: err.message });
+    return res.status(err.message.includes('tributario no válido') ? 400 : 503).json({
+      error: 'Error al declarar Formulario 29 en el SII',
+      detalle: err.message
+    });
   }
 });
 

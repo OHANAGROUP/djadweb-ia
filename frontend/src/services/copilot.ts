@@ -25,7 +25,8 @@ function getSystemPrompt(): string {
 // A. TOOL PERMISSION MATRIX: Mitigación de la superficie de alucinación
 const TOOL_ACCESS_BY_WORKFLOW: Record<string, string[]> = {
   'inicio_actividades_sii': ['consultar_sii', 'update_workflow_state'],
-  'cobranza_tgr': ['consultar_tgr', 'update_workflow_state']
+  'cobranza_tgr': ['consultar_tgr', 'update_workflow_state'],
+  'f29_sii': ['consultar_f29_sii', 'update_workflow_state']
 };
 
 // B. CAPA DE POLÍTICAS Y SANITIZACIÓN (Tool Policy Layer)
@@ -66,6 +67,24 @@ async function consultarSII(rut: string, correlationId: string): Promise<any> {
   }
   const payload = await res.json();
   return payload.data || payload;
+}
+
+async function declararF29SII(rut: string, periodo: string, codigos: any[], correlationId: string): Promise<any> {
+  const res = await fetch(`${process.env.SCRAPER_URL}/api/sii/f29`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': process.env.SCRAPER_API_KEY || '',
+      'X-Correlation-ID': correlationId
+    },
+    body: JSON.stringify({ rut, periodo, codigos }),
+    signal: AbortSignal.timeout(30000)
+  });
+  if (!res.ok) {
+    const errorJson = await res.json().catch(() => ({}));
+    throw new Error(errorJson.detalle || `Error en scraper F29: ${res.statusText}`);
+  }
+  return await res.json();
 }
 
 export async function procesarTurnoCognitivoSoberano(
@@ -130,6 +149,30 @@ export async function procesarTurnoCognitivoSoberano(
           type: 'object',
           properties: { rut: { type: 'string', description: 'RUT chileno con guión (ej: 76001382-K)' } },
           required: ['rut']
+        }
+      },
+      {
+        name: 'consultar_f29_sii',
+        description: 'Realiza la declaración mensual Formulario 29 en el SII para el RUT, periodo y códigos indicados.',
+        input_schema: {
+          type: 'object',
+          properties: {
+            rut: { type: 'string', description: 'RUT chileno con guión (ej: 76001382-K)' },
+            periodo: { type: 'string', description: 'Periodo a declarar en formato MM-YYYY (ej: 04-2026)' },
+            codigos: {
+              type: 'array',
+              description: 'Códigos tributarios opcionales con sus montos (ej: [{ codigo: 538, monto: 15000 }])',
+              items: {
+                type: 'object',
+                properties: {
+                  codigo: { type: 'integer', description: 'Código F29 (ej: 538)' },
+                  monto: { type: 'integer', description: 'Monto en pesos chilenos (ej: 15000)' }
+                },
+                required: ['codigo', 'monto']
+              }
+            }
+          },
+          required: ['rut', 'periodo']
         }
       },
       {
@@ -232,6 +275,9 @@ export async function procesarTurnoCognitivoSoberano(
             } 
             else if (toolName === 'consultar_sii') {
               resultPayload = await consultarSII(sanitizedInput.rut, correlationId);
+            }
+            else if (toolName === 'consultar_f29_sii') {
+              resultPayload = await declararF29SII(sanitizedInput.rut, sanitizedInput.periodo, sanitizedInput.codigos || [], correlationId);
             }
 
             // 5. REGISTRO DE TELEMETRÍA Y COSTO DE TOKENS (Snapshot de la ejecución de la herramienta)

@@ -273,6 +273,57 @@ async function runTests() {
   }
   console.log();
 
+  // Test 10: POST /api/sii/f29 - exitoso con datos válidos de prueba (Modo Test)
+  try {
+    console.log('Test 10: POST /api/sii/f29 (flujo exitoso - Sin Movimiento)');
+    const f29Payload = {
+      rut: '76.001.382-K',
+      periodo: '04-2026',
+      codigos: []
+    };
+
+    const res = await makeRequest('POST', '/api/sii/f29', f29Payload);
+
+    if (res.status === 200 && res.body.comprobante && res.body.estado === 'Recibida sin pago') {
+      console.log('  ✅ Status: 200');
+      console.log(`  ✅ Comprobante generado: ${res.body.comprobante}`);
+      console.log(`  ✅ Estado de recepción: ${res.body.estado}`);
+      passed++;
+    } else {
+      console.log(`  ❌ Obtuvo status inesperado: ${res.status} o respuesta incorrecta`, res.body);
+      failed++;
+    }
+  } catch (err) {
+    console.log(`  ❌ Error: ${err.message}`);
+    failed++;
+  }
+  console.log();
+
+  // Test 11: POST /api/sii/f29 - periodo no válido
+  try {
+    console.log('Test 11: POST /api/sii/f29 (validación de período incorrecto)');
+    const f29Payload = {
+      rut: '76.001.382-K',
+      periodo: '13-2026',
+      codigos: []
+    };
+
+    const res = await makeRequest('POST', '/api/sii/f29', f29Payload);
+
+    if (res.status === 400 && res.body.detalle && res.body.detalle.includes('tributario no válido')) {
+      console.log('  ✅ Status: 400 (esperado por período inválido)');
+      console.log(`  ✅ Mensaje de error: ${res.body.detalle}`);
+      passed++;
+    } else {
+      console.log(`  ❌ Debería retornar 400 por período inválido, obtuvo ${res.status}`);
+      failed++;
+    }
+  } catch (err) {
+    console.log(`  ❌ Error: ${err.message}`);
+    failed++;
+  }
+  console.log();
+
   // ─── Resumen ───────────────────────────────────────────────────────────
   console.log('═'.repeat(60));
   console.log(`\n📊 Resultados: ${passed} passed, ${failed} failed\n`);
