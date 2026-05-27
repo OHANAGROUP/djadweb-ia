@@ -1,6 +1,6 @@
-# Handoff Spec — DJADWEB-IA® Brand Identity
+# Handoff Spec — Tramita® Brand Identity
 
-> **Producto:** DJADWEB-IA® — AutomatizAI  
+> **Producto:** Tramita® — AutomatizAI  
 > **Versión:** 1.0  
 > **Fecha:** 2026-05-23  
 > **Estado:** Aprobado para implementación
@@ -15,11 +15,11 @@ El nombre es un cuádruple juego de palabras:
 |------|-------------|
 | "Deja de webear" | Modismo chileno: deja de hacer perder el tiempo |
 | WEB | Tecnología web |
-| IA | Inteligencia Artificial |
+| automatización | Inteligencia Artificial |
 | ® | Irónico — se burla de la formalidad burocrática que combate |
-| `/WEB-IA` | Se lee como ruta URL — refuerza el stack tecnológico |
+| `/WEB-automatización` | Se lee como ruta URL — refuerza el stack tecnológico |
 
-**Tagline oficial:** *"La IA que termina con la burocracia"*
+**Tagline oficial:** *"La automatización que termina con la burocracia"*
 
 ---
 
@@ -30,7 +30,7 @@ El nombre es un cuádruple juego de palabras:
 | Token | Hex | RGB | Uso |
 |-------|-----|-----|-----|
 | `color-brand-black` | `#0A0A0E` | rgb(10, 10, 14) | Texto principal, brackets, D/JA monogram, fondo ícono |
-| `color-brand-orange` | `#E65100` | rgb(230, 81, 0) | Acento IA®, rayo del ícono |
+| `color-brand-orange` | `#E65100` | rgb(230, 81, 0) | Acento automatización®, rayo del ícono |
 | `color-brand-bg` | `#F5F5F0` | rgb(245, 245, 240) | Fondo de página, fondos claros |
 | `color-brand-white` | `#FFFFFF` | rgb(255, 255, 255) | JA invertido dentro del monograma D |
 
@@ -63,7 +63,7 @@ El nombre es un cuádruple juego de palabras:
 ### 3.1 Logo horizontal (uso principal)
 
 ```
-[ DJA /WEB-IA® ]
+[ DJA /WEB-automatización® ]
 ```
 
 **Estructura:**
@@ -71,7 +71,7 @@ El nombre es un cuádruple juego de palabras:
 - `D` — letra gigante (hero), Barlow Condensed Black, `color-brand-black`
 - `JA` — stacked verticalmente dentro/sobre la D, Barlow Condensed Black, `color-brand-white` (reversed out)
 - `/WEB-` — Barlow Condensed Black, `color-brand-black`
-- `IA` — Barlow Condensed Black, `color-brand-orange`
+- `automatización` — Barlow Condensed Black, `color-brand-orange`
 - `®` — superíndice, ~30% del tamaño del wordmark, `color-brand-orange`
 - `]` — bracket cierre, Barlow Condensed Black, `color-brand-black`
 
@@ -79,22 +79,22 @@ El nombre es un cuádruple juego de palabras:
 - Altura del logo: reference unit `H`
 - `D` monogram: `H × 1.0` (full height)
 - `JA` dentro del D: `H × 0.38` cada letra
-- `/WEB-` y `IA`: `H × 0.78`
+- `/WEB-` y `automatización`: `H × 0.78`
 - Brackets `[ ]`: `H × 1.05`
 - `®`: `H × 0.26`
 - Spacing mínimo alrededor del logo: `H × 0.25` en todos los lados
 
-**Letter-spacing:** `-0.03em` en el wordmark `/WEB-IA`
+**Letter-spacing:** `-0.03em` en el wordmark `/WEB-automatización`
 
 ### 3.2 Wordmark plano (uso secundario)
 
 ```
-DJADWEB-IA®
+Tramita®
 ```
 
 Sin brackets, sin monograma. Todo en mayúsculas.
 - `DJADWEB-` en `color-brand-black`
-- `IA®` en `color-brand-orange`
+- `automatización®` en `color-brand-orange`
 
 ### 3.3 Ícono standalone (favicon / app icon)
 
@@ -118,7 +118,7 @@ Logo horizontal en escala de grises:
 - `D` monogram: `#888888`
 - `JA` dentro del D: `#FFFFFF`
 - `/WEB-` : `#1A1A1A`
-- `IA®`: `#888888` (mantiene distinción por peso visual)
+- `automatización®`: `#888888` (mantiene distinción por peso visual)
 
 ### 3.5 Variante Reverchrome (sobre fondo oscuro)
 
@@ -127,7 +127,7 @@ Logo horizontal en escala de grises:
 - `D` monogram: `#AAAAAA`
 - `JA`: `#0A0A0E`
 - `/WEB-`: `#FFFFFF`
-- `IA®`: `color-brand-orange` (sin cambio)
+- `automatización®`: `color-brand-orange` (sin cambio)
 
 ---
 
@@ -197,12 +197,12 @@ Logo horizontal en escala de grises:
 ```html
 <!-- Logo horizontal -->
 <div class="logo-wordmark">
-  <span class="black">[DJA /WEB-</span><span class="orange">IA<sup class="reg">®</sup></span><span class="black">]</span>
+  <span class="black">[DJA /WEB-</span><span class="orange">automatización<sup class="reg">®</sup></span><span class="black">]</span>
 </div>
 
 <!-- Wordmark plano -->
 <div class="logo-wordmark">
-  <span class="black">DJADWEB-</span><span class="orange">IA<sup class="reg">®</sup></span>
+  <span class="black">DJADWEB-</span><span class="orange">automatización<sup class="reg">®</sup></span>
 </div>
 ```
 
@@ -228,8 +228,8 @@ Logo horizontal en escala de grises:
 
 | Elemento | Especificación |
 |----------|---------------|
-| Logo como imagen | `alt="DJADWEB-IA logo"` |
-| Logo como SVG inline | `role="img"` + `<title>DJADWEB-IA</title>` |
+| Logo como imagen | `alt="Tramita logo"` |
+| Logo como SVG inline | `role="img"` + `<title>Tramita</title>` |
 | Contraste negro sobre fondo | 19.7:1 — pasa AAA |
 | Contraste naranja sobre fondo claro | 3.4:1 — pasa AA para texto grande |
 | Contraste naranja sobre negro | 5.2:1 — pasa AA |
@@ -241,11 +241,11 @@ Logo horizontal en escala de grises:
 
 | Archivo | Formato | Uso |
 |---------|---------|-----|
-| `djadwebia_brand.png` | PNG 300dpi | Brand sheet completo |
-| `djadwebia_icon.png` | PNG 1024×1024 | App icon |
-| `djadwebia_logo_final.png` | PNG 1600×460 | Logo horizontal |
-| `DJADWEBIA_handoff.md` | Markdown | Este documento |
+| `Tramita_brand.png` | PNG 300dpi | Brand sheet completo |
+| `Tramita_icon.png` | PNG 1024×1024 | App icon |
+| `Tramita_logo_final.png` | PNG 1600×460 | Logo horizontal |
+| `Tramita_handoff.md` | Markdown | Este documento |
 
 ---
 
-*AutomatizAI · DJADWEB-IA® · 2026 — Todos los elementos de marca son propiedad de AutomatizAI.*
+*AutomatizAI · Tramita® · 2026 — Todos los elementos de marca son propiedad de AutomatizAI.*

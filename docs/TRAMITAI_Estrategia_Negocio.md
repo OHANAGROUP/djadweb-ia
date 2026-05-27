@@ -114,7 +114,7 @@ Lenguaje simple: nada de términos jurídicos sin explicación.
 
 Alertas proactivas: WhatsApp / email cuando aparece una nueva causa o deuda.
 
-Resumen IA: Claude genera un párrafo explicando qué significa cada resultado.
+Resumen automatización: Claude genera un párrafo explicando qué significa cada resultado.
 
 Historial: registra los cambios mes a mes para seguimiento.
 
@@ -176,7 +176,7 @@ Precio
 
 B2C?
 
-IA?
+automatización?
 
 Leida.cl
 
@@ -264,11 +264,11 @@ Historial 3 meses
 
 Historial ilimitado
 
-Sin resumen IA
+Sin resumen automatización
 
-Sin resumen IA
+Sin resumen automatización
 
-Resúmenes en lenguaje simple (IA)
+Resúmenes en lenguaje simple (automatización)
 
 ## 6.2 Ingresos adicionales (Año 2+)
 
@@ -284,7 +284,7 @@ Scraping + reCAPTCHA solver: ~$0.002 por consulta.
 
 Infraestructura (VPS / serverless): ~$0.001 por consulta.
 
-IA (Claude Haiku para resúmenes): ~$0.005 por consulta.
+automatización (Claude Haiku para resúmenes): ~$0.005 por consulta.
 
 Total costo variable: ~$0.008–0.01 por consulta.
 
@@ -322,7 +322,7 @@ Fase 3
 
 Meses 7–12
 
-Alertas WhatsApp. Resúmenes IA. Explorar B2B.
+Alertas WhatsApp. Resúmenes automatización. Explorar B2B.
 
 Meta Ads, referidos, prensa
 

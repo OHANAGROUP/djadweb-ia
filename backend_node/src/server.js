@@ -231,6 +231,52 @@ app.post('/api/tgr/deuda', requireApiKey, async (req, res) => {
   }
 });
 
+app.post('/api/buscar/tgr', limiter, async (req, res) => {
+  try {
+    const { rut } = req.body;
+    if (!rut) return res.status(400).json({ error: 'RUT es requerido' });
+    const result = await tgrScraper.consultarDeudaSimple(rut);
+    res.json({ success: true, result });
+  } catch (err) {
+    logger.error('POST /api/buscar/tgr error', { error: err.message });
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ==========================================
+// BACKGROUND WORKER (CRON) ENDPOINTS
+// ==========================================
+const syncRunner = require('./worker/syncRunner');
+
+// Autenticación simple para el cron interno
+const verifyCronSecret = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Falta token de autorización' });
+  }
+  const token = authHeader.split(' ')[1];
+  // Si no hay token configurado en env, se rechaza por seguridad
+  if (!process.env.CRON_SECRET || token !== process.env.CRON_SECRET) {
+    return res.status(403).json({ error: 'Token inválido' });
+  }
+  next();
+};
+
+app.post('/api/internal/sync', verifyCronSecret, async (req, res) => {
+  try {
+    // Se ejecuta asíncronamente y retorna 202 Accepted inmediatamente
+    // para evitar timeouts en el servicio que dispara el cron.
+    syncRunner.runAll().catch(err => {
+      logger.error('Error en syncRunner background task:', err.message);
+    });
+    
+    res.status(202).json({ success: true, message: 'Sync worker job started in background' });
+  } catch (err) {
+    logger.error('POST /api/internal/sync error', { error: err.message });
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 404
 app.use((_req, res) => {
   res.status(404).json({ error: 'Endpoint no encontrado' });

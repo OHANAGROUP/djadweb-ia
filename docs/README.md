@@ -1,6 +1,6 @@
 # 📖 GUÍA MAESTRA: Flujo de Cambio de Representante Legal
 
-Este módulo representa el workflow automático e independiente de **DJADWEB-IA®** diseñado para formalizar legalmente el cambio de representante legal para sociedades en Chile.
+Este módulo representa el workflow automático e independiente de **Tramita®** diseñado para formalizar legalmente el cambio de representante legal para sociedades en Chile.
 
 ---
 

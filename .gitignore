@@ -31,3 +31,6 @@ node_modules/
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Local scratch/test scripts (may contain secrets)
+frontend/scratch/

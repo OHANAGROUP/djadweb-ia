@@ -1,5 +1,5 @@
 # Mapa de proceso — "Crear Empresa en un Día" en Chile
-> Documentación en vivo para incorporar como feature en DJADWEB-IA®  
+> Documentación en vivo para incorporar como feature en Tramita®  
 > Iniciado: 2026-05-23 | Estado: 🔴 En investigación
 
 ---
@@ -97,7 +97,7 @@ Cuando Pablo vaya haciendo el proceso en vivo, documentar:
 
 ---
 
-## Feature idea para DJADWEB-IA®
+## Feature idea para Tramita®
 
 ### "Constituye tu empresa"
 Un wizard guiado paso a paso que:
@@ -107,7 +107,7 @@ Un wizard guiado paso a paso que:
 4. Guía el inicio de actividades en SII
 5. Genera checklist post-constitución (cuenta bancaria, timbre electrónico, etc.)
 
-**Diferenciador:** DJADWEB-IA® no reemplaza el portal del Estado (no puede) pero actúa como **copiloto inteligente** que elimina la confusión en cada paso.
+**Diferenciador:** Tramita® no reemplaza el portal del Estado (no puede) pero actúa como **asistente inteligente** que elimina la confusión en cada paso.
 
 ---
 
