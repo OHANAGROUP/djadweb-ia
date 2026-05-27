@@ -61,9 +61,6 @@ COMMENT ON TABLE public.searches IS 'Historial de búsquedas PJUD/SII del usuari
 CREATE INDEX IF NOT EXISTS searches_user_id_created_at_idx
   ON public.searches (user_id, created_at DESC);
 
-CREATE INDEX IF NOT EXISTS searches_user_month_idx
-  ON public.searches (user_id, date_trunc('month', created_at));
-
 -- 4. ALERTS (alertas proactivas)
 CREATE TABLE IF NOT EXISTS public.alerts (
   id                  uuid DEFAULT gen_random_uuid() PRIMARY KEY,
