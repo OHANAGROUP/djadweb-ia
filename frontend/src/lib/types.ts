@@ -108,6 +108,18 @@ export interface ChatSession {
   title: string
   summary?: string
   message_count: number
+  workflow_state?: any
+  workflow_type?: string
+  current_stage?: string
+  risk_flags?: any
+  missing_requirements?: any
+  last_tool_used?: string
+  completion_percentage?: number
+  confidence_score?: number
+  workflow_version?: string
+  event_history?: any
+  state_hash?: string
+  last_verified_at?: string
   created_at: string
   updated_at: string
 }
