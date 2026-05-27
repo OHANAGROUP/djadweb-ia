@@ -47,7 +47,7 @@ export default function SeguridadPage() {
             </div>
             
             <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 18, lineHeight: 1.2, color: '#0F172A' }}>
-              Seguridad y Auditoría Forense de Procesos
+              Seguridad y Auditoría de Procesos
             </h1>
             
             <p style={{ fontSize: 16, color: '#475569', lineHeight: 1.6, maxWidth: 700 }}>
@@ -97,7 +97,7 @@ export default function SeguridadPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10, textAlign: 'left' }}>
               <div>
                 <h3 style={{ fontSize: 15, fontWeight: 800, color: '#0F172A' }}>Consola de Auditoría de Procesos</h3>
-                <p style={{ fontSize: 12, color: '#475569', marginTop: 2 }}>Ejemplo del flujo de trazabilidad y logs forenses de un trámite F29 completado.</p>
+                <p style={{ fontSize: 12, color: '#475569', marginTop: 2 }}>Ejemplo del flujo de trazabilidad y registro de auditoría de una consulta completada.</p>
               </div>
               <span style={{ fontSize: 11, color: '#16A34A', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ display: 'inline-block', width: 6, height: 6, background: '#16A34A', borderRadius: '50%', boxShadow: '0 0 6px #16A34A' }} />

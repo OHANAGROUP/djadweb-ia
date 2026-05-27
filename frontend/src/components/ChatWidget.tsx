@@ -81,7 +81,7 @@ export default function ChatWidget() {
           zIndex: 1000,
           transition: 'transform 0.2s'
         }}
-        title="Asistente DJADWEB-IA"
+        title="Asistente Tramita"
       >
         {isOpen ? '✕' : '💬'}
       </button>
@@ -114,7 +114,7 @@ export default function ChatWidget() {
             fontWeight: 600,
             fontSize: '14px'
           }}>
-            <span style={{ color: '#E65100' }}>◆</span> DJADWEB-IA Asistente
+            <span style={{ color: '#E65100' }}>◆</span> Tramita · Asistente
           </div>
 
           {/* Messages */}

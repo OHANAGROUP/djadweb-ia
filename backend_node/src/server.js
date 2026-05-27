@@ -70,8 +70,14 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Logger de requests
+// ⚠️  NUNCA loguear body en producción — puede contener RUTs, credenciales o datos personales.
 app.use((req, _res, next) => {
-  logger.info(`${req.method} ${req.path}`, { ip: req.ip, body: req.body });
+  const logPayload = { ip: req.ip };
+  // En desarrollo, loguear solo el nombre de los campos presentes (no los valores)
+  if (process.env.NODE_ENV !== 'production' && req.body && typeof req.body === 'object') {
+    logPayload.fields = Object.keys(req.body);
+  }
+  logger.info(`${req.method} ${req.path}`, logPayload);
   next();
 });
 
@@ -160,7 +166,8 @@ app.post('/api/pjud/nombre', requireApiKey, async (req, res) => {
   }
 });
 
-app.get('/api/cache/stats', (_req, res) => {
+// Solo accesible con API Key — estadísticas internas no deben ser públicas
+app.get('/api/cache/stats', requireApiKey, (_req, res) => {
   res.json(cache.stats());
 });
 

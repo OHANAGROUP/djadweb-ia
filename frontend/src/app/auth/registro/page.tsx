@@ -66,7 +66,7 @@ function RegistroForm() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 20, background: 'var(--brand-bg)' }}>
       <Link href="/" style={{ marginBottom: 32, display: 'block' }}>
-        <img src="/djadwebia_logo_final.png" alt="DEJAWEBIAR®" style={{ height: 42, width: 'auto', display: 'block' }} />
+        <img src="/djadwebia_logo_final.png" alt="Tramita" style={{ height: 42, width: 'auto', display: 'block' }} />
       </Link>
 
       <div className="card" style={{ width: '100%', maxWidth: 420, padding: '40px 36px' }}>

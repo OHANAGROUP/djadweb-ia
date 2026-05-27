@@ -1,6 +1,9 @@
 // ── Planes ────────────────────────────────────────────────────────────────────
-export type Plan = 'free' | 'basic' | 'premium'
-export type SubscriptionStatus = 'active' | 'cancelled' | 'past_due' | 'trialing'
+// Re-exportamos los tipos y constantes desde plans.ts para mantener
+// retrocompatibilidad con imports existentes. La fuente canónica es plans.ts.
+import type { Plan, SubscriptionStatus } from '@/lib/plans'
+export type { Plan, SubscriptionStatus } from '@/lib/plans'
+export { PLAN_QUOTAS, PLAN_PRICES, PLANS, PRICE_TO_PLAN } from '@/lib/plans'
 
 export interface Subscription {
   id: string
@@ -78,18 +81,6 @@ export interface Alert {
   notify_email: boolean
   notify_whatsapp: boolean
   created_at: string
-}
-
-// ── Cuotas por plan ───────────────────────────────────────────────────────────
-export const PLAN_QUOTAS: Record<Plan, { searches: number | null; portales: string[]; alerts: boolean; ai: boolean }> = {
-  free:    { searches: 3,    portales: ['PJUD'],       alerts: false, ai: false },
-  basic:   { searches: null, portales: ['PJUD'],       alerts: false, ai: false },
-  premium: { searches: null, portales: ['PJUD', 'SII'], alerts: true,  ai: true  },
-}
-
-export const PLAN_PRICES: Record<Exclude<Plan, 'free'>, { clp: number; label: string }> = {
-  basic:   { clp: 3990,  label: '$3.990/mes' },
-  premium: { clp: 7990,  label: '$7.990/mes' },
 }
 
 // ── API response ──────────────────────────────────────────────────────────────

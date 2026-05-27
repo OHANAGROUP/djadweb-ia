@@ -18,7 +18,7 @@ export default function PageContent() {
           ← Volver
         </button>
         <div style={{ background: 'var(--brand-card)', borderRadius: 16, padding: '40px 48px', border: '1px solid var(--gray-100)' }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>DEJAWEBIAR®</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Tramita</div>
           <h1 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginBottom: 24 }}>Política de Privacidad</h1>
           <p style={{ color: 'var(--gray-400)', lineHeight: 1.8, marginBottom: 16 }}>Última actualización: 26 de mayo de 2026</p>
           <h2 style={{ fontSize: 18, fontWeight: 600, color: '#fff', marginTop: 32, marginBottom: 12 }}>1. Datos que recopilamos</h2>

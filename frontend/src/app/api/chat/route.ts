@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
-import { procesarTurnoCognitivoSoberano } from '@/services/copilot';
+import { procesarMensajeChat } from '@/services/copilot';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -38,8 +38,8 @@ export async function POST(req: NextRequest) {
       currentSessionId = newSession.id;
     }
 
-    // Invocar el Runtime Cognitivo Transaccional Soberano
-    const finalContent = await procesarTurnoCognitivoSoberano(currentSessionId, user.id, message);
+    // Invocar el procesador de turno del asistente tributario
+    const finalContent = await procesarMensajeChat(currentSessionId, user.id, message);
 
     return NextResponse.json({
       content: finalContent,

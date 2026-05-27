@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { createClient } from '@/lib/supabase'
+import { PLANS } from '@/lib/plans'
 import type { User } from '@supabase/supabase-js'
 
 export default function HomePage() {
@@ -18,48 +19,49 @@ export default function HomePage() {
     return () => listener.subscription.unsubscribe()
   }, [])
 
+  const ctaHref = user ? '/buscar' : '/auth/registro'
+
   return (
     <div style={{ background: '#FFFFFF', color: '#0F172A', minHeight: '100vh', overflowX: 'hidden', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Navbar />
 
-      {/* ─── 1. HERO SECTION: ANXIETY RELIEF & PREVENTION-FIRST ─── */}
-      <section style={{ padding: '80px 0 60px', position: 'relative', textAlign: 'center', background: 'radial-gradient(1200px circle at 50% -250px, rgba(37,99,235,0.025) 0%, transparent 80%)' }}>
-        <div className="container" style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          
-          {/* Trust Banner */}
+      {/* ─── 1. HERO ────────────────────────────────────────────────────────── */}
+      <section style={{ padding: '80px 0 60px', textAlign: 'center', background: 'radial-gradient(1200px circle at 50% -250px, rgba(37,99,235,0.025) 0%, transparent 80%)' }}>
+        <div style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
+
+          {/* Trust badge */}
           <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', color: '#475569', display: 'inline-flex', alignItems: 'center', gap: 10, padding: '6px 14px', borderRadius: 99, fontSize: 11, fontWeight: 700, marginBottom: 24, letterSpacing: '0.02em' }}>
-            <span style={{ display: 'inline-block', width: 6, height: 6, background: '#2563EB', borderRadius: '50%' }} />
+            <span style={{ width: 6, height: 6, background: '#2563EB', borderRadius: '50%', display: 'inline-block' }} />
             <span>OPERATIVO EN CHILE</span>
             <span style={{ color: '#E2E8F0' }}>|</span>
-            <span>SII • TGR • PODER JUDICIAL</span>
+            <span>SII · TGR · PODER JUDICIAL</span>
             <span style={{ color: '#E2E8F0' }}>|</span>
             <span style={{ color: '#16A34A' }}>CONEXIÓN ENCRIPTADA</span>
           </div>
 
-          <h1 style={{ fontSize: 'clamp(2.1rem, 5.5vw, 3.8rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 20, color: '#0F172A' }}>
-            Tu F29 mensual listo a tiempo,
+          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.6rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 20, color: '#0F172A' }}>
+            Consulta causas, deudas y obligaciones del Estado
             <br />
-            <span style={{ color: '#2563EB' }}>incluso si se te olvida.</span>
+            <span style={{ color: '#2563EB' }}>desde un solo lugar.</span>
           </h1>
 
-          <p style={{ fontSize: 'clamp(15px, 2vw, 17px)', color: '#475569', maxWidth: 660, margin: '0 auto 32px', lineHeight: 1.55, fontWeight: 400 }}>
-            Tramita prepara automáticamente tus borradores de IVA mensual, supervisa cobros pendientes en Tesorería y te notifica por WhatsApp para protegerte de multas y recargos del SII.
+          <p style={{ fontSize: 'clamp(15px, 2vw, 17px)', color: '#475569', maxWidth: 640, margin: '0 auto 32px', lineHeight: 1.6, fontWeight: 400 }}>
+            Tramita centraliza información del SII, Tesorería General y Poder Judicial para personas, pymes y contadores. Consultas en segundos, alertas automáticas y un asistente que explica todo en lenguaje simple.
           </p>
 
-          {/* Primary CTA */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 56 }}>
-            <Link href={user ? "/buscar" : "/auth/registro"} className="btn btn-lg" style={{ background: '#2563EB', color: '#FFFFFF', borderRadius: 6, padding: '14px 32px', fontSize: 14, fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 12px rgba(37,99,235,0.15)' }}>
-              Comenzar trámite gratis
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 60 }}>
+            <Link href={ctaHref} style={{ background: '#2563EB', color: '#FFFFFF', borderRadius: 6, padding: '14px 32px', fontSize: 14, fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 12px rgba(37,99,235,0.15)', display: 'inline-block' }}>
+              Comenzar gratis
             </Link>
-            <a href="#como-funciona" className="btn btn-lg" style={{ color: '#475569', border: '1px solid #CBD5E1', background: 'transparent', borderRadius: 6, padding: '14px 32px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
-              Ver funcionamiento
+            <a href="#como-funciona" style={{ color: '#475569', border: '1px solid #CBD5E1', background: 'transparent', borderRadius: 6, padding: '14px 32px', fontSize: 14, fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>
+              Ver cómo funciona
             </a>
           </div>
 
-          {/* ─── 2. P0: REAL PRODUCT DASHBOARD MOCKUP ─── */}
+          {/* ── Dashboard mockup (datos ilustrativos) ── */}
           <div style={{ maxWidth: 940, margin: '0 auto', background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 10, padding: 6, boxShadow: '0 20px 48px rgba(15,23,42,0.05)', position: 'relative' }}>
-            
-            {/* Header bar simulated */}
+
+            {/* Header bar */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8FAFC', padding: '12px 16px', borderRadius: '6px 6px 0 0', borderBottom: '1px solid #E2E8F0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ display: 'flex', gap: 5 }}>
@@ -68,233 +70,149 @@ export default function HomePage() {
                   <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981' }} />
                 </div>
                 <span style={{ fontSize: 11, color: '#475569', fontWeight: 700 }}>
-                  Inversiones Soto & Ruiz Ltda. • RUT: 76.982.104-K
+                  Panel de ejemplo · datos ilustrativos
                 </span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, color: '#16A34A', fontWeight: 700 }}>
-                <span style={{ display: 'inline-block', width: 6, height: 6, background: '#16A34A', borderRadius: '50%' }} />
-                SINCRONIZADO CON SII & TGR
-              </div>
+              {/* Badge datos ilustrativos */}
+              <span style={{ fontSize: 9.5, background: '#FEF3C7', color: '#92400E', fontWeight: 800, padding: '3px 8px', borderRadius: 4, border: '1px solid #FDE68A', letterSpacing: '0.03em' }}>
+                VISTA PREVIA
+              </span>
             </div>
 
-            {/* Split realistic dashboard grid */}
+            {/* Dashboard grid */}
             <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: '0 0 6px 6px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, textAlign: 'left' }}>
-              
-              {/* Left Column: Deadlines and calendar */}
+
+              {/* Left: Consultas recientes */}
               <div>
                 <div style={{ borderBottom: '1px solid #F1F5F9', paddingBottom: 10, marginBottom: 14 }}>
-                  <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Calendario de Obligaciones (2026)</h4>
+                  <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Historial de Consultas</h4>
                 </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  
-                  {/* Deadline 1 */}
-                  <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', padding: '10px 12px', borderRadius: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <div style={{ fontSize: 12.5, fontWeight: 800, color: '#92400E' }}>F29 IVA Mayo 2026</div>
-                      <div style={{ fontSize: 11, color: '#B45309', marginTop: 2 }}>Vence el 12 de Junio de 2026</div>
-                    </div>
-                    <span style={{ fontSize: 10, color: '#92400E', background: '#FEF3C7', padding: '3px 8px', borderRadius: 4, fontWeight: 800 }}>BORRADOR LISTO</span>
-                  </div>
-
-                  {/* Deadline 2 */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', padding: '10px 12px', borderRadius: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <div style={{ fontSize: 12.5, fontWeight: 800, color: '#166534' }}>F29 IVA Abril 2026</div>
-                      <div style={{ fontSize: 11, color: '#15803D', marginTop: 2 }}>Presentado el 12 de Mayo de 2026</div>
+                      <div style={{ fontSize: 12.5, fontWeight: 800, color: '#166534' }}>SII — RUT 76.123.456-7</div>
+                      <div style={{ fontSize: 11, color: '#15803D', marginTop: 2 }}>Datos básicos y estado tributario</div>
                     </div>
-                    <span style={{ fontSize: 10, color: '#166534', background: '#DCFCE7', padding: '3px 8px', borderRadius: 4, fontWeight: 800 }}>FOLIO 928310</span>
+                    <span style={{ fontSize: 10, color: '#166534', background: '#DCFCE7', padding: '3px 8px', borderRadius: 4, fontWeight: 800 }}>ACTIVO</span>
                   </div>
-
-                  {/* Deadline 3 */}
                   <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', padding: '10px 12px', borderRadius: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <div style={{ fontSize: 12.5, fontWeight: 800, color: '#166534' }}>F22 Renta Anual 2026</div>
-                      <div style={{ fontSize: 11, color: '#15803D', marginTop: 2 }}>Presentado el 28 de Abril de 2026</div>
+                      <div style={{ fontSize: 12.5, fontWeight: 800, color: '#166534' }}>TGR — Deuda fiscal</div>
+                      <div style={{ fontSize: 11, color: '#15803D', marginTop: 2 }}>Sin deudas registradas en Tesorería</div>
                     </div>
-                    <span style={{ fontSize: 10, color: '#166534', background: '#DCFCE7', padding: '3px 8px', borderRadius: 4, fontWeight: 800 }}>FOLIO 810293</span>
+                    <span style={{ fontSize: 10, color: '#166534', background: '#DCFCE7', padding: '3px 8px', borderRadius: 4, fontWeight: 800 }}>$0</span>
                   </div>
-
-                </div>
-
-                <div style={{ marginTop: 16, background: '#F8FAFC', borderRadius: 6, padding: '10px 12px', fontSize: 11, color: '#475569', border: '1px solid #E2E8F0' }}>
-                  🕒 <strong>Última verificación de deudas fiscales:</strong> hoy a las 09:12 AM.
+                  <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', padding: '10px 12px', borderRadius: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontSize: 12.5, fontWeight: 800, color: '#166534' }}>PJUD — Causas civiles</div>
+                      <div style={{ fontSize: 11, color: '#15803D', marginTop: 2 }}>Sin causas activas encontradas</div>
+                    </div>
+                    <span style={{ fontSize: 10, color: '#166534', background: '#DCFCE7', padding: '3px 8px', borderRadius: 4, fontWeight: 800 }}>LIMPIO</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Right Column: History and status */}
+              {/* Right: Asistente */}
               <div>
                 <div style={{ borderBottom: '1px solid #F1F5F9', paddingBottom: 10, marginBottom: 14 }}>
-                  <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Historial y Auditoría Reciente</h4>
+                  <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Asistente Tributario</h4>
                 </div>
-
-                {/* Simulated Table */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  
-                  {/* Row 1 */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F1F5F9', fontSize: 12 }}>
-                    <div>
-                      <span style={{ fontWeight: 800, color: '#1E293B' }}>F29 Período 04-2026</span>
-                      <span style={{ color: '#64748B', marginLeft: 8 }}>SII</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <span style={{ color: '#64748B' }}>12/05/2026</span>
-                      <span style={{ color: '#16A34A', fontWeight: 700 }}>Aceptada</span>
-                    </div>
+                <div style={{ background: '#F8FAFC', borderRadius: 8, padding: 14, border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '10px 12px', borderRadius: 6, fontSize: 12, color: '#1E40AF', lineHeight: 1.5 }}>
+                    <strong>Tramita:</strong> El RUT consultado tiene inicio de actividades vigente como "Servicios Profesionales". No registra deudas con el SII ni con Tesorería. No hay causas judiciales activas.
                   </div>
-
-                  {/* Row 2 */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F1F5F9', fontSize: 12 }}>
-                    <div>
-                      <span style={{ fontWeight: 800, color: '#1E293B' }}>F29 Período 03-2026</span>
-                      <span style={{ color: '#64748B', marginLeft: 8 }}>SII</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <span style={{ color: '#64748B' }}>14/04/2026</span>
-                      <span style={{ color: '#16A34A', fontWeight: 700 }}>Aceptada</span>
-                    </div>
-                  </div>
-
-                  {/* Row 3 */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F1F5F9', fontSize: 12 }}>
-                    <div>
-                      <span style={{ fontWeight: 800, color: '#1E293B' }}>F22 Declaración Renta</span>
-                      <span style={{ color: '#64748B', marginLeft: 8 }}>SII</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <span style={{ color: '#64748B' }}>28/04/2026</span>
-                      <span style={{ color: '#16A34A', fontWeight: 700 }}>Aprobada</span>
-                    </div>
-                  </div>
-
-                </div>
-
-                <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, color: '#475569' }}>
-                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#16A34A', borderRadius: '50%' }} />
-                    <strong>Tesorería (TGR):</strong> $0 CLP cobros o multas asociadas.
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, color: '#475569' }}>
-                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#16A34A', borderRadius: '50%' }} />
-                    <strong>Poder Judicial (PJUD):</strong> 0 causas civiles vigentes encontradas.
+                  <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '8px 12px', borderRadius: 6, fontSize: 11.5, color: '#475569' }}>
+                    💡 <em>Resúmenes automáticos disponibles en Plan Contadores</em>
                   </div>
                 </div>
-
+                <div style={{ marginTop: 12, background: '#F8FAFC', borderRadius: 6, padding: '8px 12px', fontSize: 11, color: '#475569', border: '1px solid #E2E8F0' }}>
+                  🕒 <strong>Última consulta:</strong> hace 3 minutos
+                </div>
               </div>
 
             </div>
-
-            {/* WhatsApp Notification overlay */}
-            <div style={{ position: 'absolute', bottom: -24, right: 18, background: '#FFFFFF', border: '1px solid #16A34A', borderRadius: 8, padding: '10px 16px', maxWidth: 350, boxShadow: '0 8px 24px rgba(15,23,42,0.06)', display: 'flex', gap: 10, alignItems: 'center', textAlign: 'left', zIndex: 10 }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
-                💬
-              </div>
-              <div>
-                <div style={{ fontSize: 10.5, fontWeight: 800, color: '#16A34A', display: 'flex', justifyContent: 'space-between' }}>
-                  <span>WhatsApp de Tramita</span>
-                  <span>hace 2 min</span>
-                </div>
-                <p style={{ fontSize: 11, color: '#1E293B', lineHeight: 1.4, marginTop: 2 }}>
-                  <strong>Tramita:</strong> Andrea, tu declaración F29 del periodo 05-2026 fue presentada en el SII. Comprobante Folio 928310 adjunto en PDF.
-                </p>
-              </div>
-            </div>
-
           </div>
 
         </div>
       </section>
 
-      {/* ─── 3. TRANSPARENCY: CREDENTIALS PROTECTION BLOCK (P1) ─── */}
+      {/* ─── 2. CONFIANZA ────────────────────────────────────────────────────── */}
       <section style={{ padding: '60px 0', borderTop: '1px solid #F1F5F9', background: '#F8FAFC' }}>
-        <div className="container" style={{ padding: '0 20px', maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ padding: '0 20px', maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 1.9rem)', fontWeight: 800, color: '#0F172A', marginBottom: 12 }}>
             ¿Por qué confiar en Tramita?
           </h2>
           <p style={{ color: '#475569', fontSize: 13.5, maxWidth: 540, margin: '0 auto 36px', lineHeight: 1.5 }}>
-            Entendemos la responsabilidad de proteger tus credenciales. Diseñamos la plataforma bajo estrictos estándares de seguridad bancaria.
+            Mantenemos tus datos bajo estrictos estándares de seguridad. Nada se comparte con terceros.
           </p>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20, textAlign: 'left' }}>
-            
             <div style={{ background: '#FFFFFF', padding: 20, borderRadius: 8, border: '1px solid #E2E8F0' }}>
               <div style={{ fontSize: 20, marginBottom: 10 }}>🔒</div>
-              <h4 style={{ fontSize: 13.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>Cifrado de Nivel Bancario</h4>
+              <h4 style={{ fontSize: 13.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>Conexión Segura</h4>
               <p style={{ fontSize: 12.5, color: '#475569', lineHeight: 1.45 }}>
-                Tus claves tributarias se almacenan cifradas en reposo mediante **AES-256-GCM**.
+                Toda comunicación se realiza bajo HTTPS con TLS. Tu sesión se mantiene con tokens seguros HttpOnly.
               </p>
             </div>
-
             <div style={{ background: '#FFFFFF', padding: 20, borderRadius: 8, border: '1px solid #E2E8F0' }}>
               <div style={{ fontSize: 20, marginBottom: 10 }}>👁️</div>
-              <h4 style={{ fontSize: 13.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>Acceso de Solo Consulta</h4>
+              <h4 style={{ fontSize: 13.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>Solo Lectura</h4>
               <p style={{ fontSize: 12.5, color: '#475569', lineHeight: 1.45 }}>
-                El sistema interactúa únicamente para descargar borradores y emitir declaraciones sin movimiento autorizadas.
+                Tramita consulta información que tú ya tienes derecho a ver. No modifica ni transmite datos sin tu autorización explícita.
               </p>
             </div>
-
             <div style={{ background: '#FFFFFF', padding: 20, borderRadius: 8, border: '1px solid #E2E8F0' }}>
-              <div style={{ fontSize: 20, marginBottom: 10 }}>🚫</div>
-              <h4 style={{ fontSize: 13.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>Revocación Directa</h4>
+              <div style={{ fontSize: 20, marginBottom: 10 }}>🚪</div>
+              <h4 style={{ fontSize: 13.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>Salida sin Amarre</h4>
               <p style={{ fontSize: 12.5, color: '#475569', lineHeight: 1.45 }}>
-                Puedes eliminar tus credenciales y revocar el acceso a nuestro sistema con un solo clic cuando lo decidas.
+                Puedes cancelar tu plan y eliminar tu cuenta en cualquier momento directamente desde el panel de control.
               </p>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* ─── 4. TAREAS REALES DIRECTAS ─── */}
+      {/* ─── 3. FEATURES ─────────────────────────────────────────────────────── */}
       <section style={{ padding: '80px 0 60px', background: '#FFFFFF', borderTop: '1px solid #F1F5F9' }}>
-        <div className="container" style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
-          
+        <div style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 54 }}>
-            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Herramientas Activas</span>
-            <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.2rem)', fontWeight: 800, marginTop: 8, color: '#0F172A' }}>Automatización Operacional e Impuestos</h2>
+            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Funcionalidades Activas</span>
+            <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.2rem)', fontWeight: 800, marginTop: 8, color: '#0F172A' }}>Consulta. Centraliza. Entiende.</h2>
           </div>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, maxWidth: 1000, margin: '0 auto' }}>
-            
-            {/* Task 1 */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ fontSize: 24, marginBottom: 14 }}>🧾</div>
-                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Declaración de IVA (F29)</h3>
-                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                  Preparamos y presentamos de forma automática tus borradores de Formulario 29 sin movimiento, resguardando tu cumplimiento contable sin esfuerzo.
-                </p>
-              </div>
-              <Link href={user ? "/buscar" : "/auth/registro"} className="btn" style={{ width: '100%', borderRadius: 6, background: '#2563EB', color: '#FFFFFF', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
-                Declarar F29
+
+            {/* Feature 1 */}
+            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
+              <div style={{ fontSize: 24, marginBottom: 14 }}>⚖️</div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Causas Judiciales (PJUD)</h3>
+              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
+                Busca en segundos si un RUT tiene causas activas en Juzgados Civiles, Laborales, de Familia o Penales de Chile. Resultados con lenguaje claro.
+              </p>
+              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, background: '#2563EB', color: '#FFFFFF', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
+                Consultar PJUD
               </Link>
             </div>
 
-            {/* Task 2 */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ fontSize: 24, marginBottom: 14 }}>💰</div>
-                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Supervisión de Deuda Fiscal</h3>
-                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                  Sincronizamos directamente con la Tesorería General para rastrear giros, contribuciones o multas pendientes asociadas a tu RUT.
-                </p>
-              </div>
-              <Link href={user ? "/buscar" : "/auth/registro"} className="btn btn-ghost" style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', background: 'transparent', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
-                Verificar Deuda
+            {/* Feature 2 */}
+            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
+              <div style={{ fontSize: 24, marginBottom: 14 }}>🧾</div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Estado SII y Tesorería</h3>
+              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
+                Consulta el estado tributario, actividades económicas y deudas fiscales con el SII y la TGR desde un solo formulario, sin navegar múltiples portales.
+              </p>
+              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', background: 'transparent', border: '1px solid #CBD5E1', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
+                Consultar SII / TGR
               </Link>
             </div>
 
-            {/* Task 3 */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ fontSize: 24, marginBottom: 14 }}>⚖️</div>
-                <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Monitoreo Judicial ROL</h3>
-                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                  Rastreamos a diario si tu RUT figura en causas de Juzgados Civiles o Laborales de la Oficina Judicial Virtual, traduciendo dictámenes complejos.
-                </p>
-              </div>
-              <Link href={user ? "/buscar" : "/auth/registro"} className="btn btn-ghost" style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', background: 'transparent', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
-                Monitorear Causas
+            {/* Feature 3 */}
+            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10 }}>
+              <div style={{ fontSize: 24, marginBottom: 14 }}>🤖</div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Asistente Tributario</h3>
+              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
+                Guía paso a paso para trámites del SII como inicio de actividades y consultas de estado. El asistente te explica en lenguaje claro qué significa cada resultado.
+              </p>
+              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', background: 'transparent', border: '1px solid #CBD5E1', fontWeight: 700, padding: '10px 0', textDecoration: 'none', display: 'block', textAlign: 'center', fontSize: 12.5 }}>
+                Abrir asistente
               </Link>
             </div>
 
@@ -302,225 +220,231 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── 5. CÓMO FUNCIONA (SIMPLE STEPS) ─── */}
+      {/* ─── 4. CÓMO FUNCIONA ────────────────────────────────────────────────── */}
       <section id="como-funciona" style={{ padding: '80px 0', background: '#F8FAFC', borderTop: '1px solid #F1F5F9' }}>
-        <div className="container" style={{ padding: '0 20px', maxWidth: 800, margin: '0 auto' }}>
-          
+        <div style={{ padding: '0 20px', maxWidth: 800, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 54 }}>
-            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Operación Directa</span>
-            <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.1rem)', fontWeight: 800, marginTop: 8, color: '#0F172A' }}>Cómo opera el servicio</h2>
+            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Simple por diseño</span>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.1rem)', fontWeight: 800, marginTop: 8, color: '#0F172A' }}>Cómo funciona</h2>
           </div>
-
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            
-            <div style={{ display: 'flex', gap: 16, background: '#FFFFFF', border: '1px solid #E2E8F0', padding: 20, borderRadius: 8, alignItems: 'center' }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(37,99,235,0.06)', color: '#2563EB', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>1</div>
-              <div>
-                <h4 style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', marginBottom: 2 }}>Ingresas tu RUT</h4>
-                <p style={{ fontSize: 12.5, color: '#475569', lineHeight: 1.45 }}>Configuras tus datos de forma confidencial y segura en pocos segundos.</p>
+            {[
+              {
+                n: 1,
+                title: 'Ingresa el RUT a consultar',
+                desc: 'Escribe el RUT de una persona o empresa y selecciona qué quieres revisar: causas judiciales, estado SII o deudas en Tesorería.',
+              },
+              {
+                n: 2,
+                title: 'Tramita consulta los portales del Estado',
+                desc: 'El sistema accede en tiempo real a los portales oficiales del Poder Judicial, SII y TGR, y unifica los resultados en una vista clara.',
+              },
+              {
+                n: 3,
+                title: 'Recibes los resultados y alertas por email',
+                desc: 'Los resultados se muestran en segundos con lenguaje simple. En planes de pago, te enviamos alertas por email cuando detectamos cambios o nuevas obligaciones.',
+              },
+            ].map(({ n, title, desc }) => (
+              <div key={n} style={{ display: 'flex', gap: 16, background: '#FFFFFF', border: '1px solid #E2E8F0', padding: 20, borderRadius: 8, alignItems: 'flex-start' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(37,99,235,0.06)', color: '#2563EB', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>{n}</div>
+                <div>
+                  <h4 style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', marginBottom: 4 }}>{title}</h4>
+                  <p style={{ fontSize: 12.5, color: '#475569', lineHeight: 1.5, margin: 0 }}>{desc}</p>
+                </div>
               </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: 16, background: '#FFFFFF', border: '1px solid #E2E8F0', padding: 20, borderRadius: 8, alignItems: 'center' }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(37,99,235,0.06)', color: '#2563EB', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>2</div>
-              <div>
-                <h4 style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', marginBottom: 2 }}>El Sistema Sincroniza</h4>
-                <p style={{ fontSize: 12.5, color: '#475569', lineHeight: 1.45 }}>Supervisamos diariamente tus obligaciones y giros de forma automática en background.</p>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: 16, background: '#FFFFFF', border: '1px solid #E2E8F0', padding: 20, borderRadius: 8, alignItems: 'center' }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(37,99,235,0.06)', color: '#2563EB', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>3</div>
-              <div>
-                <h4 style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', marginBottom: 2 }}>Recibes Comprobantes Oficiales</h4>
-                <p style={{ fontSize: 12.5, color: '#475569', lineHeight: 1.45 }}>Te enviamos los comprobantes del SII y alertas tributarias directamente a tu WhatsApp.</p>
-              </div>
-            </div>
-
+            ))}
           </div>
-
         </div>
       </section>
 
-      {/* ─── 6. PRECIOS TRANSPARENTES JUSTIFICADOS ─── */}
+      {/* ─── 5. PRECIOS ──────────────────────────────────────────────────────── */}
       <section id="precios" style={{ padding: '80px 0', background: '#FFFFFF' }}>
-        <div className="container" style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
-          
+        <div style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 54 }}>
-            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Costos del Servicio</span>
-            <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.2rem)', fontWeight: 800, marginTop: 8, color: '#0F172A' }}>Tarifas justificadas de cumplimiento</h2>
-            <p style={{ color: '#475569', fontSize: 14, marginTop: 6 }}>Precios diseñados para resguardar la salud fiscal de tu negocio o familia.</p>
+            <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Planes y Precios</span>
+            <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.2rem)', fontWeight: 800, marginTop: 8, color: '#0F172A' }}>Elige tu plan</h2>
+            <p style={{ color: '#475569', fontSize: 14, marginTop: 6 }}>Sin contratos. Sin permanencia mínima. Cancela cuando quieras.</p>
           </div>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', gap: 24, maxWidth: 1000, margin: '0 auto' }}>
-            
-            {/* Plan 1 */}
-            <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 6px rgba(15,23,42,0.01)' }}>
+
+            {/* Plan Ciudadano */}
+            <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Plan Ciudadano</h4>
+                <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{PLANS.free.displayName}</h4>
                 <div style={{ margin: '14px 0', display: 'flex', alignItems: 'baseline' }}>
                   <span style={{ fontSize: 30, fontWeight: 800, color: '#0F172A' }}>$0</span>
-                  <span style={{ fontSize: 12.5, color: '#475569', marginLeft: 4 }}>gratis siempre</span>
+                  <span style={{ fontSize: 12.5, color: '#475569', marginLeft: 6 }}>gratis siempre</span>
                 </div>
                 <p style={{ fontSize: 12, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                  <strong>Para personas naturales</strong> que desean monitoreo básico de causas del Poder Judicial y alerta mensual de deudas por correo.
+                  Para personas que quieren verificar su situación ante el Poder Judicial sin costo.
                 </p>
                 <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12, color: '#334155', borderTop: '1px solid #E2E8F0', paddingTop: 16, marginBottom: 24 }}>
-                  <li>✅ 1 RUT personal activo</li>
-                  <li>✅ Monitoreo de causas judiciales</li>
-                  <li>✅ Alertas mensuales por email</li>
-                  <li style={{ opacity: 0.4 }}>❌ Sin notificaciones WhatsApp</li>
+                  {PLANS.free.features.map(f => <li key={f}>✅ {f}</li>)}
+                  {PLANS.free.notFeatures.map(f => <li key={f} style={{ opacity: 0.45 }}>❌ {f}</li>)}
                 </ul>
               </div>
-              <Link href="/auth/registro" className="btn btn-ghost" style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', textDecoration: 'none', display: 'block', textAlign: 'center', padding: '10px 0', fontSize: 12.5, fontWeight: 700 }}>
+              <Link href="/auth/registro" style={{ width: '100%', borderRadius: 6, border: '1px solid #CBD5E1', color: '#475569', background: 'transparent', textDecoration: 'none', display: 'block', textAlign: 'center', padding: '10px 0', fontSize: 12.5, fontWeight: 700 }}>
                 Empezar gratis
               </Link>
             </div>
 
-            {/* Plan 2 */}
+            {/* Plan PYME */}
             <div style={{ background: '#FFFFFF', border: '2px solid #2563EB', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', boxShadow: '0 8px 24px rgba(37,99,235,0.06)' }}>
-              <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#2563EB', color: '#FFFFFF', padding: '3px 12px', borderRadius: 99, fontSize: 9.5, fontWeight: 800, letterSpacing: '0.04em' }}>MÁS ADOPTADO</div>
+              <div style={{ position: 'absolute', top: -13, left: '50%', transform: 'translateX(-50%)', background: '#2563EB', color: '#FFFFFF', padding: '4px 14px', borderRadius: 99, fontSize: 9.5, fontWeight: 800, letterSpacing: '0.04em', whiteSpace: 'nowrap' }}>MÁS POPULAR</div>
               <div>
-                <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Plan PYME</h4>
+                <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{PLANS.basic.displayName}</h4>
                 <div style={{ margin: '14px 0', display: 'flex', alignItems: 'baseline' }}>
-                  <span style={{ fontSize: 30, fontWeight: 800, color: '#0F172A' }}>$14.990</span>
-                  <span style={{ fontSize: 12.5, color: '#475569', marginLeft: 4 }}>/ mes (CLP)</span>
+                  <span style={{ fontSize: 30, fontWeight: 800, color: '#0F172A' }}>${PLANS.basic.clp!.toLocaleString('es-CL')}</span>
+                  <span style={{ fontSize: 12.5, color: '#475569', marginLeft: 6 }}>/mes (CLP)</span>
                 </div>
                 <p style={{ fontSize: 12, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                  <strong>Para empresas que declaran IVA mensual</strong>. Automatiza borradores sin movimiento y monitorea cobros. *Evita multas del SII por retraso de $62.000+ CLP.*
+                  Para pymes y emprendedores que quieren centralizar el monitoreo fiscal de hasta 3 empresas.
                 </p>
                 <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12, color: '#334155', borderTop: '1px solid #E2E8F0', paddingTop: 16, marginBottom: 24 }}>
-                  <li>✅ Hasta 3 RUTs activos</li>
-                  <li>✅ Borrador F29 automático</li>
-                  <li>✅ Monitoreo diario de SII y TGR</li>
-                  <li>✅ Notificaciones inmediatas en WhatsApp</li>
+                  {PLANS.basic.features.map(f => <li key={f}>✅ {f}</li>)}
+                  {PLANS.basic.notFeatures.map(f => <li key={f} style={{ opacity: 0.45 }}>❌ {f}</li>)}
                 </ul>
               </div>
-              <Link href="/auth/registro" className="btn" style={{ width: '100%', borderRadius: 6, background: '#2563EB', color: '#FFFFFF', textDecoration: 'none', display: 'block', textAlign: 'center', padding: '10px 0', fontSize: 12.5, fontWeight: 700 }}>
+              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, background: '#2563EB', color: '#FFFFFF', textDecoration: 'none', display: 'block', textAlign: 'center', padding: '10px 0', fontSize: 12.5, fontWeight: 700 }}>
                 Obtener Plan PYME
               </Link>
             </div>
 
-            {/* Plan 3 */}
-            <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 6px rgba(15,23,42,0.01)' }}>
+            {/* Plan Contadores */}
+            <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '32px 24px', borderRadius: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Plan Contadores</h4>
+                <h4 style={{ fontSize: 12.5, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{PLANS.premium.displayName}</h4>
                 <div style={{ margin: '14px 0', display: 'flex', alignItems: 'baseline' }}>
-                  <span style={{ fontSize: 30, fontWeight: 800, color: '#0F172A' }}>$39.990</span>
-                  <span style={{ fontSize: 12.5, color: '#475569', marginLeft: 4 }}>/ mes (CLP)</span>
+                  <span style={{ fontSize: 30, fontWeight: 800, color: '#0F172A' }}>${PLANS.premium.clp!.toLocaleString('es-CL')}</span>
+                  <span style={{ fontSize: 12.5, color: '#475569', marginLeft: 6 }}>/mes (CLP)</span>
                 </div>
                 <p style={{ fontSize: 12, color: '#475569', lineHeight: 1.5, marginBottom: 20 }}>
-                  <strong>Para contadores con cartera de clientes</strong>. Centraliza la auditoría de múltiples empresas. *Ahorro estimado: 25+ horas mensuales de ingreso manual.*
+                  Para contadores que administran una cartera de clientes y necesitan visibilidad consolidada. Ahorra más de 20 horas al mes de consultas manuales.
                 </p>
                 <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12, color: '#334155', borderTop: '1px solid #E2E8F0', paddingTop: 16, marginBottom: 24 }}>
-                  <li>✅ Hasta 15 RUTs activos</li>
-                  <li>✅ Panel multi-cliente consolidado</li>
-                  <li>✅ Historial e informes de declaraciones</li>
-                  <li>✅ Soporte prioritario permanente</li>
+                  {PLANS.premium.features.map(f => <li key={f}>✅ {f}</li>)}
                 </ul>
               </div>
-              <Link href="/auth/registro" className="btn btn-ghost" style={{ width: '100%', borderRadius: 6, borderColor: '#CBD5E1', color: '#475569', textDecoration: 'none', display: 'block', textAlign: 'center', padding: '10px 0', fontSize: 12.5, fontWeight: 700 }}>
+              <Link href={ctaHref} style={{ width: '100%', borderRadius: 6, border: '1px solid #CBD5E1', color: '#475569', background: 'transparent', textDecoration: 'none', display: 'block', textAlign: 'center', padding: '10px 0', fontSize: 12.5, fontWeight: 700 }}>
                 Obtener Plan Contadores
               </Link>
             </div>
 
           </div>
-
         </div>
       </section>
 
-      {/* ─── 7. HIGH-TRUST FAQS (PSYCHOLOGICAL BLOCKERS) ─── */}
+      {/* ─── 6. FAQS ─────────────────────────────────────────────────────────── */}
       <section style={{ padding: '80px 0', background: '#F8FAFC', borderTop: '1px solid #F1F5F9', borderBottom: '1px solid #F1F5F9' }}>
-        <div className="container" style={{ padding: '0 20px', maxWidth: 740, margin: '0 auto' }}>
-          
+        <div style={{ padding: '0 20px', maxWidth: 740, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.1rem)', fontWeight: 800, color: '#0F172A' }}>Preguntas Frecuentes</h2>
           </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, textAlign: 'left' }}>
-            
-            <div>
-              <h4 style={{ fontSize: 14.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>¿Es legal que Tramita acceda a mis portales?</h4>
-              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5 }}>
-                Sí. La información tributaria y judicial en Chile es accesible para el contribuyente o su mandatario técnico. Tramita actúa de forma desatendida y segura bajo tu consentimiento explícito para descargar comprobantes, consolidar deudas y ahorrarte horas de trabajo manual.
-              </p>
-            </div>
-
-            <div>
-              <h4 style={{ fontSize: 14.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>¿Cómo protegen mis claves tributarias?</h4>
-              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5 }}>
-                Tus claves de acceso nunca se exponen al navegador ni a terceros. Se encriptan inmediatamente en reposo con el algoritmo de grado bancario AES-256-GCM. El descifrado ocurre de manera estricta en servidores seguros aislados en el momento de realizar la verificación.
-              </p>
-            </div>
-
-            <div>
-              <h4 style={{ fontSize: 14.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>¿Puedo darme de baja en cualquier momento?</h4>
-              <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5 }}>
-                Sí. No existen plazos mínimos de permanencia ni contratos de amarre. Puedes pausar o revocar la suscripción y eliminar tus credenciales tributarias de nuestro sistema con un solo clic directamente desde tu panel de control.
-              </p>
-            </div>
-
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 28, textAlign: 'left' }}>
+            {[
+              {
+                q: '¿Es legal que Tramita consulte portales del Estado?',
+                a: 'Sí. La información del SII, TGR y Poder Judicial es accesible públicamente o para el propio contribuyente. Tramita actúa bajo tu consentimiento explícito para acceder a información que ya tienes derecho a ver, centralizándola en un solo lugar.',
+              },
+              {
+                q: '¿Tramita modifica algo en mis datos del SII o el Poder Judicial?',
+                a: 'No. Tramita realiza únicamente consultas de lectura. No realiza declaraciones, pagos ni modificaciones en ningún portal del Estado. Si en el futuro se agreguen funciones de escritura, serán comunicadas claramente y requerirán tu autorización explícita en cada operación.',
+              },
+              {
+                q: '¿Cómo protegen mi información personal?',
+                a: 'Todos los datos se transmiten bajo HTTPS con TLS. Las sesiones se manejan con tokens seguros HttpOnly. No almacenamos contraseñas de portales del Estado. Cumplimos con la Ley 19.628 de Protección de Datos Personales de Chile.',
+              },
+              {
+                q: '¿Puedo cancelar en cualquier momento?',
+                a: 'Sí, sin restricciones. No hay plazos mínimos ni contratos. Puedes cancelar tu suscripción y eliminar tu cuenta directamente desde el panel de control en cualquier momento.',
+              },
+              {
+                q: '¿Qué pasa si el portal del SII o el PJUD no responde?',
+                a: 'Tramita detecta cuando un portal oficial no está disponible y te lo informa claramente. Puedes reintentar en cualquier momento. Mantenemos un historial de consultas anteriores para que siempre tengas acceso al último resultado disponible.',
+              },
+            ].map(({ q, a }) => (
+              <div key={q}>
+                <h4 style={{ fontSize: 14.5, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>{q}</h4>
+                <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.6, margin: 0 }}>{a}</p>
+              </div>
+            ))}
           </div>
-
         </div>
       </section>
 
-      {/* ─── 8. FOOTER CORPORATIVO CHILENO COMPLIANCE ─── */}
-      <footer style={{ padding: '60px 0', background: '#FFFFFF', fontSize: 12, color: '#475569', textAlign: 'left' }}>
-        <div className="container" style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 32 }}>
-          
+      {/* ─── 7. CTA FINAL ────────────────────────────────────────────────────── */}
+      <section style={{ padding: '80px 0', background: '#FFFFFF', textAlign: 'center' }}>
+        <div style={{ padding: '0 20px', maxWidth: 600, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.1rem)', fontWeight: 800, color: '#0F172A', marginBottom: 14 }}>
+            Empieza hoy. Sin costo.
+          </h2>
+          <p style={{ fontSize: 14, color: '#475569', marginBottom: 32, lineHeight: 1.6 }}>
+            Crea tu cuenta en menos de un minuto y verifica tu situación judicial y tributaria gratis.
+          </p>
+          <Link href="/auth/registro" style={{ background: '#2563EB', color: '#FFFFFF', borderRadius: 6, padding: '16px 40px', fontSize: 15, fontWeight: 700, textDecoration: 'none', display: 'inline-block', boxShadow: '0 4px 12px rgba(37,99,235,0.2)' }}>
+            Crear cuenta gratuita
+          </Link>
+        </div>
+      </section>
+
+      {/* ─── 8. FOOTER ───────────────────────────────────────────────────────── */}
+      <footer style={{ padding: '60px 0', background: '#F8FAFC', borderTop: '1px solid #E2E8F0', fontSize: 12, color: '#475569' }}>
+        <div style={{ padding: '0 20px', maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 32 }}>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 36, borderBottom: '1px solid #E2E8F0', paddingBottom: 36 }}>
-            
-            {/* Col 1 */}
+
+            {/* Col 1: Marca */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 14 }}>
-                <div style={{ width: 26, height: 26, borderRadius: 6, background: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontWeight: 800, fontSize: 14 }}>
-                  T
-                </div>
-                <span style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
-                  Tramita
-                </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                <div style={{ width: 26, height: 26, borderRadius: 6, background: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontWeight: 800, fontSize: 14 }}>T</div>
+                <span style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>Tramita</span>
               </div>
-              <p style={{ fontSize: 11.5, color: '#475569', lineHeight: 1.5 }}>
-                Herramienta corporativa de automatización y cumplimiento tributario mensual para profesionales y pequeñas empresas en Chile.
+              <p style={{ fontSize: 11.5, lineHeight: 1.55 }}>
+                Centraliza la consulta de información del SII, Tesorería y Poder Judicial para personas, pymes y contadores en Chile.
               </p>
             </div>
 
-            {/* Col 2 */}
+            {/* Col 2: Producto */}
             <div>
-              <h5 style={{ fontSize: 11, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>Legitimidad Corporativa</h5>
-              <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6, fontSize: 11.5 }}>
-                <li><strong>Razón Social:</strong> DW Trámites y Tecnología SpA</li>
-                <li><strong>RUT Empresa:</strong> 76.982.104-K</li>
-                <li><strong>Oficina Central:</strong> Av. Vitacura 2670, Piso 15, Las Condes, Santiago</li>
-                <li><strong>Jurisdicción:</strong> República de Chile</li>
+              <h5 style={{ fontSize: 11, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>Producto</h5>
+              <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12 }}>
+                <li><a href="#como-funciona" style={{ color: '#475569', textDecoration: 'none' }}>Cómo funciona</a></li>
+                <li><a href="#precios" style={{ color: '#475569', textDecoration: 'none' }}>Precios</a></li>
+                <li><Link href="/auth/registro" style={{ color: '#475569', textDecoration: 'none' }}>Crear cuenta</Link></li>
+                <li><Link href="/contacto" style={{ color: '#475569', textDecoration: 'none' }}>Contacto</Link></li>
               </ul>
             </div>
 
-            {/* Col 3 */}
+            {/* Col 3: Legal */}
             <div>
-              <h5 style={{ fontSize: 11, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>Privacidad & SLA</h5>
+              <h5 style={{ fontSize: 11, fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>Legal y Soporte</h5>
               <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6, fontSize: 11.5 }}>
-                <li><strong>Cumplimiento de Privacidad:</strong> Ley 19.628 de Protección de Datos Personales</li>
-                <li><strong>SLA de Servicios:</strong> 99.9% de disponibilidad garantizada</li>
-                <li><strong>Soporte Técnico:</strong> soporte@dejadwebiar.cl</li>
-                <li><strong>Contacto:</strong> +56 2 2897 4500</li>
+                <li><strong>Cumplimiento:</strong> Ley 19.628 de Protección de Datos Personales</li>
+                <li><strong>Soporte:</strong> soporte@tramita.cl</li>
+                <li><strong>Disponibilidad SLA:</strong> 99% garantizado</li>
+                <li>
+                  <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                    <Link href="/terminos" style={{ color: '#475569', textDecoration: 'none' }}>Términos</Link>
+                    <Link href="/privacidad" style={{ color: '#475569', textDecoration: 'none' }}>Privacidad</Link>
+                    <Link href="/seguridad" style={{ color: '#475569', textDecoration: 'none' }}>Seguridad</Link>
+                  </div>
+                </li>
               </ul>
             </div>
 
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, fontSize: 11 }}>
-            <p>© {new Date().getFullYear()} DW Trámites y Tecnología SpA. Sometido estrictamente bajo la legislación de la República de Chile.</p>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <Link href="/terminos" style={{ color: '#475569', textDecoration: 'none' }}>Términos de servicio</Link>
-              <Link href="/privacidad" style={{ color: '#475569', textDecoration: 'none' }}>Política de privacidad</Link>
-              <Link href="/seguridad" style={{ color: '#475569', textDecoration: 'none' }}>Seguridad</Link>
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, fontSize: 11 }}>
+            <p style={{ margin: 0 }}>© {new Date().getFullYear()} Tramita · Herramienta de consulta tributaria y judicial para Chile.</p>
+            <p style={{ margin: 0, color: '#94A3B8' }}>Construido con cuidado en Santiago de Chile.</p>
           </div>
 
         </div>
       </footer>
+    </div>
+  )
+}
+
     </div>
   )
 }

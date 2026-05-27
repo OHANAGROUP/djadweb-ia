@@ -20,7 +20,7 @@ const TRANSICIONES_PERMITIDAS: Record<string, string[]> = {
 
 /**
  * Verifica si una transición entre dos etapas de la máquina de estados es legal.
- * Mitiga loops cognitivos no permitidos y desvíos semánticos.
+ * Mitiga transiciones no permitidas y desvíos semánticos.
  */
 export function verificarTransicionEstado(etapaActual: string, etapaPropuesta: string): boolean {
   if (!etapaActual || !etapaPropuesta) return false;

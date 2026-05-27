@@ -1,10 +1,14 @@
 /**
  * Crea una preferencia de pago en MercadoPago y redirige al checkout.
  * GET /api/pago/crear?plan=basic|premium
+ *
+ * Los precios se leen exclusivamente desde plans.ts (fuente única de verdad).
+ * El webhook /api/webhooks/mercadopago usa el mismo PRICE_TO_PLAN para resolver
+ * qué plan activar — ambos extremos deben estar en sincronía.
  */
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
-import { PLAN_PRICES } from '@/lib/types'
+import { PLAN_PRICES, PLANS } from '@/lib/plans'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,10 +30,12 @@ export async function GET(request: Request) {
     if (!user) return NextResponse.redirect(new URL('/auth/login', request.url))
 
     // Crear preferencia en MercadoPago
+    const planMeta = PLANS[plan]
     const preference = {
       items: [{
-        id: `djadwebia-${plan}`,
-        title: `DJADWEB-IA® Plan ${plan.charAt(0).toUpperCase() + plan.slice(1)}`,
+        id: `tramita-${plan}`,
+        title: `Tramita — ${planMeta.displayName}`,
+        description: planMeta.tagline,
         quantity: 1,
         unit_price: PLAN_PRICES[plan].clp,
         currency_id: 'CLP',
