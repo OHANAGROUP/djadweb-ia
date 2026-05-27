@@ -235,6 +235,44 @@ async function runTests() {
   }
   console.log();
 
+  // Test 8: POST /api/sii/basicos - invalid RUT structure
+  try {
+    console.log('Test 8: POST /api/sii/basicos (RUT structure validation)');
+    const res = await makeRequest('POST', '/api/sii/basicos', { rut: '123' });
+
+    if (res.status === 503 || res.status === 400) {
+      console.log(`  ✅ Status: ${res.status} (esperado para RUT inválido)`);
+      console.log(`  ✅ Error message: ${res.body.error || res.body}`);
+      passed++;
+    } else {
+      console.log(`  ❌ Obtuvo status inesperado: ${res.status}`);
+      failed++;
+    }
+  } catch (err) {
+    console.log(`  ❌ Error: ${err.message}`);
+    failed++;
+  }
+  console.log();
+
+  // Test 9: POST /api/tgr/deuda - invalid RUT structure
+  try {
+    console.log('Test 9: POST /api/tgr/deuda (RUT structure validation)');
+    const res = await makeRequest('POST', '/api/tgr/deuda', { rut: '' });
+
+    if (res.status === 400) {
+      console.log('  ✅ Status: 400 (esperado por RUT faltante)');
+      console.log(`  ✅ Error message: ${res.body.error}`);
+      passed++;
+    } else {
+      console.log(`  ❌ Obtuvo status inesperado: ${res.status}`);
+      failed++;
+    }
+  } catch (err) {
+    console.log(`  ❌ Error: ${err.message}`);
+    failed++;
+  }
+  console.log();
+
   // ─── Resumen ───────────────────────────────────────────────────────────
   console.log('═'.repeat(60));
   console.log(`\n📊 Resultados: ${passed} passed, ${failed} failed\n`);
