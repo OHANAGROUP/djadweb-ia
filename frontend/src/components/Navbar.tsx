@@ -40,8 +40,8 @@ export default function Navbar() {
     router.refresh()
   }
 
-  const navBg     = scrolled ? 'rgba(5, 5, 8, 0.95)' : 'transparent'
-  const navShadow = scrolled ? '0 4px 30px rgba(0,0,0,0.5)' : 'none'
+  const navBg     = scrolled ? 'rgba(255, 255, 255, 0.96)' : 'transparent'
+  const navShadow = scrolled ? '0 1px 12px rgba(15, 23, 42, 0.06)' : 'none'
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function Navbar() {
         top: 0,
         zIndex: 100,
         background: navBg,
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
+        borderBottom: scrolled ? '1px solid rgba(15, 23, 42, 0.06)' : '1px solid transparent',
         backdropFilter: 'blur(14px)',
         WebkitBackdropFilter: 'blur(14px)',
         boxShadow: navShadow,
@@ -67,51 +67,52 @@ export default function Navbar() {
         }}>
 
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <img
-              src="/djadwebia_logo_final.png"
-              alt="DEJAWEBIAR®"
-              style={{ height: 34, width: 'auto', display: 'block', transition: 'opacity 0.15s' }}
-            />
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+            <div style={{ width: 28, height: 28, borderRadius: 6, background: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontWeight: 800, fontSize: 15 }}>
+              T
+            </div>
+            <span style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', fontFamily: 'sans-serif' }}>
+              Tramita
+            </span>
           </Link>
 
           {/* Desktop nav */}
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }} className="hidden-mobile">
+          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }} className="hidden-mobile">
             <NavLink href="/#como-funciona">Cómo funciona</NavLink>
             <NavLink href="/#precios">Precios</NavLink>
             <NavLink href="/seguridad">Seguridad</NavLink>
 
             {user ? (
               <>
-                <Link href="/buscar"    className="btn btn-ghost btn-sm">Buscar</Link>
-                <Link href="/dashboard" className="btn btn-ghost btn-sm">Mi cuenta <AlertBadge /></Link>
-                <button onClick={handleLogout} className="btn btn-primary btn-sm">Salir</button>
+                <Link href="/buscar"    className="btn btn-ghost btn-sm" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569', fontSize: 12.5, fontWeight: 700, borderRadius: 6 }}>Buscar</Link>
+                <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569', fontSize: 12.5, fontWeight: 700, borderRadius: 6 }}>Mi cuenta <AlertBadge /></Link>
+                <button onClick={handleLogout} className="btn btn-primary btn-sm" style={{ background: '#0F172A', color: '#FFFFFF', borderRadius: 6, fontSize: 12.5, fontWeight: 700 }}>Salir</button>
               </>
             ) : (
               <>
                 <Link
                   href="/auth/login"
                   style={{
-                    fontSize: 13.5,
-                    fontWeight: 600,
-                    color: 'var(--gray-600)',
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: '#475569',
                     textDecoration: 'none',
                     padding: '6px 12px',
                     borderRadius: 8,
                     transition: 'color 0.15s, background 0.15s',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.color = '#FFFFFF'
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                    e.currentTarget.style.color = '#0F172A'
+                    e.currentTarget.style.background = 'rgba(15, 23, 42, 0.04)'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.color = 'var(--gray-600)'
+                    e.currentTarget.style.color = '#475569'
                     e.currentTarget.style.background = 'transparent'
                   }}
                 >
                   Iniciar sesión
                 </Link>
-                <Link href="/auth/registro" className="btn btn-primary btn-sm">
+                <Link href="/auth/registro" className="btn btn-sm" style={{ background: '#2563EB', color: '#FFFFFF', borderRadius: 6, fontSize: 12.5, fontWeight: 700, padding: '8px 16px', boxShadow: '0 2px 4px rgba(37,99,235,0.1)' }}>
                   Empezar gratis →
                 </Link>
               </>
@@ -123,14 +124,14 @@ export default function Navbar() {
             className="show-mobile"
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
-              background: menuOpen ? 'rgba(255,255,255,0.06)' : 'none',
+              background: menuOpen ? 'rgba(15,23,42,0.04)' : 'none',
               border: '1px solid',
-              borderColor: menuOpen ? 'rgba(255,255,255,0.1)' : 'transparent',
+              borderColor: menuOpen ? 'rgba(15,23,42,0.08)' : 'transparent',
               cursor: 'pointer',
               padding: '6px 8px',
               borderRadius: 8,
               transition: 'all 0.15s',
-              color: '#FFFFFF'
+              color: '#0F172A'
             }}
             aria-label="Menú"
             aria-expanded={menuOpen}
@@ -155,45 +156,45 @@ export default function Navbar() {
         {menuOpen && (
           <div style={{
             padding: '16px 20px 24px',
-            borderTop: '1px solid rgba(255,255,255,0.06)',
+            borderTop: '1px solid rgba(15,23,42,0.06)',
             display: 'flex',
             flexDirection: 'column',
             gap: 10,
-            background: 'rgba(5, 5, 8, 0.98)',
+            background: 'rgba(255, 255, 255, 0.98)',
             animation: 'slideDown 0.2s ease',
           }}>
             <Link
               href="/#como-funciona"
               onClick={() => setMenuOpen(false)}
-              style={{ fontWeight: 600, color: 'var(--gray-600)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
+              style={{ fontWeight: 700, color: '#475569', textDecoration: 'none', padding: '8px 4px', fontSize: 13.5 }}
             >
               Cómo funciona
             </Link>
             <Link
               href="/#precios"
               onClick={() => setMenuOpen(false)}
-              style={{ fontWeight: 600, color: 'var(--gray-600)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
+              style={{ fontWeight: 700, color: '#475569', textDecoration: 'none', padding: '8px 4px', fontSize: 13.5 }}
             >
               Precios
             </Link>
             <Link
               href="/seguridad"
               onClick={() => setMenuOpen(false)}
-              style={{ fontWeight: 600, color: 'var(--gray-600)', textDecoration: 'none', padding: '8px 4px', fontSize: 14 }}
+              style={{ fontWeight: 700, color: '#475569', textDecoration: 'none', padding: '8px 4px', fontSize: 13.5 }}
             >
               Seguridad
             </Link>
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '4px 0' }} />
+            <div style={{ height: 1, background: 'rgba(15,23,42,0.06)', margin: '4px 0' }} />
             {user ? (
               <>
-                <Link href="/buscar"    onClick={() => setMenuOpen(false)} className="btn btn-ghost">Buscar</Link>
-                <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="btn btn-ghost">Mi cuenta <AlertBadge /></Link>
-                <button onClick={handleLogout} className="btn btn-primary">Salir</button>
+                <Link href="/buscar"    onClick={() => setMenuOpen(false)} className="btn btn-ghost" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569' }}>Buscar</Link>
+                <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="btn btn-ghost" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569' }}>Mi cuenta <AlertBadge /></Link>
+                <button onClick={handleLogout} className="btn btn-primary" style={{ background: '#0F172A', color: '#FFFFFF' }}>Salir</button>
               </>
             ) : (
               <>
-                <Link href="/auth/login"    onClick={() => setMenuOpen(false)} className="btn btn-ghost">Iniciar sesión</Link>
-                <Link href="/auth/registro" onClick={() => setMenuOpen(false)} className="btn btn-primary" style={{ textAlign: 'center' }}>
+                <Link href="/auth/login"    onClick={() => setMenuOpen(false)} className="btn btn-ghost" style={{ borderColor: 'rgba(15,23,42,0.1)', color: '#475569' }}>Iniciar sesión</Link>
+                <Link href="/auth/registro" onClick={() => setMenuOpen(false)} className="btn" style={{ background: '#2563EB', color: '#FFFFFF', textAlign: 'center' }}>
                   Empezar gratis →
                 </Link>
               </>
@@ -211,20 +212,20 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
     <Link
       href={href}
       style={{
-        fontSize: 13.5,
-        fontWeight: 600,
-        color: 'var(--gray-600)',
+        fontSize: 13,
+        fontWeight: 700,
+        color: '#475569',
         textDecoration: 'none',
         padding: '6px 12px',
         borderRadius: 8,
         transition: 'color 0.15s, background 0.15s',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.color = '#FFFFFF'
-        e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+        e.currentTarget.style.color = '#0F172A'
+        e.currentTarget.style.background = 'rgba(15, 23, 42, 0.04)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.color = 'var(--gray-600)'
+        e.currentTarget.style.color = '#475569'
         e.currentTarget.style.background = 'transparent'
       }}
     >
