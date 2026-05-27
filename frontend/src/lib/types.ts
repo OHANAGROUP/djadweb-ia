@@ -155,5 +155,3 @@ export interface UserCredentials {
   sii_last_sync: string | null
   created_at: string
 }
-at: string
-}

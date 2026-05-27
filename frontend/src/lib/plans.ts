@@ -137,5 +137,3 @@ export const PLAN_PRICES: Record<Exclude<Plan, 'free'>, { clp: number; label: st
   basic:   { clp: PLANS.basic.clp!,   label: `$${PLANS.basic.clp!.toLocaleString('es-CL')}/mes` },
   premium: { clp: PLANS.premium.clp!, label: `$${PLANS.premium.clp!.toLocaleString('es-CL')}/mes` },
 }
-clp!.toLocaleString('es-CL')}/mes` },
-}

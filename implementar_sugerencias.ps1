@@ -1,6 +1,6 @@
 #Requires -Version 5.1
 $ErrorActionPreference='Stop'
-$F="C:\_AUTOMATIZAI\03_PRODUCTOS\dejadwebiar\frontend"
+$F="C:\_AUTOMATIZAI\03_PRODUCTOS\tramita\frontend"
 $S="$F\src\app"
 
 Write-Host "🚀 IMPLEMENTANDO SUGERENCIAS" -ForegroundColor Cyan

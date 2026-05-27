@@ -1,5 +1,5 @@
 {
-  "name": "Dejadwebiar — Cambio de Representante Legal Flow",
+  "name": "Tramita — Cambio de Representante Legal Flow",
   "description": "Blueprint de automatización para Make.com. Gestiona el ingreso del formulario, la creación de registros en Supabase, la confección del acta legal y el envío de notificaciones por correo.",
   "engine": "make-integration-engine-v1",
   "blueprint": {
@@ -75,7 +75,7 @@
           "variables": {
             "nombre_representante": "{{1.nombre_nuevo_rep}}",
             "nombre_empresa": "{{1.nombre_empresa}}",
-            "tracking_url": "https://tramitai.vercel.app/estado?id={{1.id}}"
+            "tracking_url": "https://tramita.vercel.app/estado?id={{1.id}}"
           }
         }
       },

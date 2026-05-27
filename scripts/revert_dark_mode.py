@@ -1,6 +1,6 @@
 import re
 
-with open('C:/_AUTOMATIZAI/03_PRODUCTOS/dejadwebiar/landing.html', 'r', encoding='utf-8') as f:
+with open('C:/_AUTOMATIZAI/03_PRODUCTOS/tramita/landing.html', 'r', encoding='utf-8') as f:
     html = f.read()
 
 original_style = """<style>
@@ -319,5 +319,5 @@ original_style = """<style>
 
 html = re.sub(r'<style>.*?</style>', original_style, html, flags=re.DOTALL)
 
-with open('C:/_AUTOMATIZAI/03_PRODUCTOS/dejadwebiar/landing.html', 'w', encoding='utf-8') as f:
+with open('C:/_AUTOMATIZAI/03_PRODUCTOS/tramita/landing.html', 'w', encoding='utf-8') as f:
     f.write(html)

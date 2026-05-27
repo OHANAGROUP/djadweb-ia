@@ -181,9 +181,3 @@ Responde en español, lenguaje directo y claro, en 2-3 oraciones.`,
     )
   }
 }
-us: 500 }
-    )
-  }
-}
-
-}

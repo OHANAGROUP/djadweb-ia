@@ -1,5 +1,5 @@
 // scripts/keepalive.js
-const URL = 'https://dejadwebiar.vercel.app/api/health?ping=true';
+const URL = 'https://tramita.vercel.app/api/health?ping=true';
 const INTERVAL = 10 * 60 * 1000; // 10 minutos
 
 console.log(`[Keep-Alive] Iniciando pinger para ${URL} cada 10 minutos...`);

@@ -1,10 +1,10 @@
 import re
 
-with open('C:/_AUTOMATIZAI/03_PRODUCTOS/dejadwebiar/landing.html', 'r', encoding='utf-8') as f:
+with open('C:/_AUTOMATIZAI/03_PRODUCTOS/tramita/landing.html', 'r', encoding='utf-8') as f:
     html = f.read()
 
-# 1. Replace logo_robot.png with djadwebia_logo_final.png
-html = html.replace('logo_robot.png', 'djadwebia_logo_final.png')
+# 1. Replace logo_robot.png with tramita_logo.png
+html = html.replace('logo_robot.png', 'tramita_logo.png')
 
 # 2. Fix typo "¿Dónde tenís que ir A?"
 html = html.replace('¿Dónde tenís que ir A?<br>', '¿Dónde tenís que ir?<br>')
@@ -326,5 +326,5 @@ new_style = """<style>
 
 html = re.sub(r'<style>.*?</style>', new_style, html, flags=re.DOTALL)
 
-with open('C:/_AUTOMATIZAI/03_PRODUCTOS/dejadwebiar/landing.html', 'w', encoding='utf-8') as f:
+with open('C:/_AUTOMATIZAI/03_PRODUCTOS/tramita/landing.html', 'w', encoding='utf-8') as f:
     f.write(html)

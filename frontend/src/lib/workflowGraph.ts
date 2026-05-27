@@ -40,5 +40,3 @@ export function verificarTransicionEstado(etapaActual: string, etapaPropuesta: s
   
   return destinosValidos.includes(propuestaLower);
 }
-Lower)
-}

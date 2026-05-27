@@ -26,7 +26,7 @@ El flujo está compuesto de la siguiente manera:
 Sigue rigurosamente este orden para habilitar el flujo completo:
 
 ### Paso 1: Configurar la Base de Datos en Supabase
-1. Ingresa a tu panel de **Supabase** -> Proyecto **DEJADWEBIAR**.
+1. Ingresa a tu panel de **Supabase** -> Proyecto **TRAMITA**.
 2. Dirígete a **SQL Editor** -> Abre una nueva consulta.
 3. Copia el contenido de `supabase/schema.sql` y ejecútalo para crear la tabla de tracking (`rep_legal_workflows`), el trigger de fecha de actualización y las políticas de Row Level Security (RLS).
 
@@ -35,7 +35,7 @@ Sigue rigurosamente este orden para habilitar el flujo completo:
 2. Haz clic en el menú de tres puntos (opciones) -> **Import Blueprint** -> Carga el archivo `make/blueprint_cambio_rep_legal.json`.
 3. Configura los módulos:
    * **Custom Webhook:** Crea un nuevo webhook y copia la URL generada.
-   * **Supabase Connection:** Vincula tu proyecto `DEJADWEBIAR` usando el Host `luuicelooavahedkhlsw.supabase.co` y las claves correspondientes.
+   * **Supabase Connection:** Vincula tu proyecto `TRAMITA` usando el Host `luuicelooavahedkhlsw.supabase.co` y las claves correspondientes.
    * **Generador de Documentos:** Enlaza el archivo de plantilla `templates/documentos/acta_accionistas_template.txt` para mapear las variables.
    * **SMTP / Resend:** Configura tu cuenta de correo y apunta a las plantillas de correo (`01_instrucciones.html`, `02_recordatorio.html` y `03_cierre.html`).
 

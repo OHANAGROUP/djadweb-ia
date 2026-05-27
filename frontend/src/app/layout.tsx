@@ -17,7 +17,7 @@ const syne = Syne({
   display: 'swap',
 })
 
-const BASE_URL = 'https://dejadwebiar.vercel.app'
+const BASE_URL = 'https://tramita.vercel.app'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -82,8 +82,8 @@ export const metadata: Metadata = {
     creator: '@automatizai',
   },
   icons: {
-    icon: '/dejawebiar_icon.png',
-    apple: '/dejawebiar_icon.png',
+    icon: '/tramita_icon.png',
+    apple: '/tramita_icon.png',
   },
 }
 
