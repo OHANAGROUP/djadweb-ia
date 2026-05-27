@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJADWEB-IA® — Cambio de Representante Legal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand-black:  #0A0A0E;
+      --brand-orange: #E65100;
+      --brand-bg:     #F5F5F0;
+      --brand-white:  #FFFFFF;
+      --font-brand:   'Barlow Condensed', Impact, sans-serif;
+      --font-ui:      'Syne', sans-serif;
+      --radius-card:  20px;
+      --radius-input: 12px;
+      --shadow-card:  0 8px 32px rgba(10, 10, 14, 0.04);
+      --shadow-hover: 0 16px 48px rgba(10, 10, 14, 0.08);
+      --red:          #E63946;
+      --green:        #2E7D32;
+    }
+    body {
+      font-family: var(--font-ui);
+      background-color: var(--brand-bg);
+      color: var(--brand-black);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+    .container {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .logo-header {
+      text-align: center;
+    }
+    .logo-wordmark {
+      font-family: var(--font-brand);
+      font-weight: 900;
+      font-size: clamp(2.5rem, 8vw, 3.8rem);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+      margin-bottom: 8px;
+    }
+    .logo-wordmark .black  { color: var(--brand-black); }
+    .logo-wordmark .orange { color: var(--brand-orange); }
+    .logo-wordmark .reg    { font-size: 0.3em; vertical-align: super; }
+    
+    .tagline {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brand-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .card {
+      background: var(--brand-white);
+      border-radius: var(--radius-card);
+      padding: 40px 36px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(10, 10, 14, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    h1 {
+      font-weight: 800;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .card-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label {
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--brand-black);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-input {
+      font-family: inherit;
+      font-size: 14px;
+      height: 48px;
+      padding: 0 16px;
+      border: 2px solid #E5E7EB;
+      border-radius: var(--radius-input);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.12);
+    }
+    
+    .validation-hint {
+      font-size: 11px;
+      font-weight: 600;
+      display: none;
+    }
+    .validation-hint.error {
+      color: var(--red);
+      display: block;
+    }
+    .validation-hint.success {
+      color: var(--green);
+      display: block;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 52px;
+      background: var(--brand-black);
+      color: var(--brand-white);
+      border: none;
+      border-radius: var(--radius-input);
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background-color 0.2s, transform 0.1s;
+      margin-top: 12px;
+    }
+    .btn-submit:hover {
+      background-color: #1a1a22;
+    }
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+    .btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: var(--brand-white);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #888;
+    }
+    .footer a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- LOGO HEADER -->
+  <div class="logo-header">
+    <img src="djadwebia_logo_final.png" alt="DEJAWEBIAR®" style="height: 64px; width: auto; max-width: 100%; object-fit: contain; display: inline-block; margin-bottom: 8px;" />
+    <div class="tagline">La IA que termina con la burocracia</div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="card">
+    <h1>Cambio de Representante Legal</h1>
+    <p class="card-subtitle">Inicia el trámite de formalización y acta de accionistas en 2 minutos.</p>
+
+    <form id="workflow-form" onsubmit="submitForm(event)">
+      <!-- RUT Empresa -->
+      <div class="form-group">
+        <label class="form-label" for="rut_empresa">RUT de la Empresa *</label>
+        <input class="form-input" type="text" id="rut_empresa" required placeholder="12.345.678-9" autocomplete="off" oninput="formatAndValidateRut(this, 'rut-empresa-hint')">
+        <span id="rut-empresa-hint" class="validation-hint"></span>
+      </div>
+
+      <!-- Nombre Empresa -->
+      <div class="form-group">
+        <label class="form-label" for="nombre_empresa">Razón Social / Nombre de la Empresa *</label>
+        <input class="form-input" type="text" id="nombre_empresa" required placeholder="Empresa de Tecnología SpA">
+      </div>
+
+      <!-- Nombre Nuevo Rep -->
+      <div class="form-group">
+        <label class="form-label" for="nombre_nuevo_rep">Nombre del Nuevo Representante *</label>
+        <input class="form-input" type="text" id="nombre_nuevo_rep" required placeholder="Carlos González Pérez">
+      </div>
+
+      <!-- RUT Nuevo Rep -->
+      <div class="form-group">
+        <label class="form-label" for="rut_nuevo_rep">RUT del Nuevo Representante *</label>
+        <input class="form-input" type="text" id="rut_nuevo_rep" required placeholder="12.345.678-9" autocomplete="off" oninput="formatAndValidateRut(this, 'rut-rep-hint')">
+        <span id="rut-rep-hint" class="validation-hint"></span>
+      </div>
+
+      <!-- Email Nuevo Rep -->
+      <div class="form-group">
+        <label class="form-label" for="email_nuevo_rep">Email de Contacto *</label>
+        <input class="form-input" type="email" id="email_nuevo_rep" required placeholder="carlos@empresa.cl">
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn-submit" type="submit" id="btn-submit">
+        <span class="spinner" id="btn-spinner"></span>
+        <span id="btn-text">🚀 Iniciar Trámite</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    © 2026 DJADWEB-IA® · AutomatizAI.
+    <br>
+    Los trámites legales y automatizaciones se procesan bajo altos estándares de encriptación.
+  </div>
+</div>
+
+<script>
+  // Configuración del Webhook de Make (reemplazar con el real tras la importación)
+  const MAKE_WEBHOOK_URL = 'REEMPLAZAR_MAKE_WEBHOOK_INTAKE_URL';
+
+  // Formatear y validar RUT Chileno
+  function formatAndValidateRut(input, hintId) {
+    let value = input.value.replace(/[^0-9kK]/g, '');
+    if (value.length > 9) value = value.slice(0, 9);
+    
+    // Formateo visual
+    let formatted = value;
+    if (value.length > 1) {
+      const dv = value.slice(-1);
+      const rest = value.slice(0, -1);
+      if (rest.length > 6) {
+        formatted = rest.slice(0, -6) + '.' + rest.slice(-6, -3) + '.' + rest.slice(-3) + '-' + dv;
+      } else if (rest.length > 3) {
+        formatted = rest.slice(0, -3) + '.' + rest.slice(-3) + '-' + dv;
+      } else {
+        formatted = rest + '-' + dv;
+      }
+    }
+    input.value = formatted.toUpperCase();
+
+    // Validación matemática
+    const hint = document.getElementById(hintId);
+    if (value.length >= 8) {
+      if (validateRutMath(value)) {
+        hint.textContent = '✓ RUT Válido';
+        hint.className = 'validation-hint success';
+      } else {
+        hint.textContent = '✗ RUT Inválido';
+        hint.className = 'validation-hint error';
+      }
+    } else {
+      hint.style.display = 'none';
+    }
+  }
+
+  function validateRutMath(rutCompleto) {
+    const clean = rutCompleto.replace(/[^0-9kK]/g, '');
+    if (clean.length < 8) return false;
+    const dv = clean.slice(-1).toLowerCase();
+    const rut = parseInt(clean.slice(0, -1), 10);
+    
+    let M = 0, S = 1;
+    let T = rut;
+    for (; T; T = Math.floor(T / 10)) {
+      S = (S + T % 10 * (9 - M++ % 6)) % 11;
+    }
+    const calculatedDv = S ? (S - 1).toString() : 'k';
+    return calculatedDv === dv;
+  }
+
+  // Enviar el formulario a Make.com
+  async function submitForm(e) {
+    e.preventDefault();
+
+    const rutEmpresa = document.getElementById('rut_empresa').value;
+    const rutRep = document.getElementById('rut_nuevo_rep').value;
+
+    // Verificar RUTs válidos antes de enviar
+    if (!validateRutMath(rutEmpresa.replace(/[^0-9kK]/g, '')) || !validateRutMath(rutRep.replace(/[^0-9kK]/g, ''))) {
+      alert('Por favor, ingresa RUTs válidos.');
+      return;
+    }
+
+    const btn = document.getElementById('btn-submit');
+    const text = document.getElementById('btn-text');
+    const spinner = document.getElementById('btn-spinner');
+
+    btn.disabled = true;
+    text.textContent = 'Procesando...';
+    spinner.style.display = 'block';
+
+    // Generar UUID de tracking en el cliente
+    const trackingId = self.crypto.randomUUID();
+
+    const payload = {
+      id: trackingId,
+      rut_empresa: rutEmpresa,
+      nombre_empresa: document.getElementById('nombre_empresa').value,
+      nombre_nuevo_rep: document.getElementById('nombre_nuevo_rep').value,
+      rut_nuevo_rep: rutRep,
+      email_nuevo_rep: document.getElementById('email_nuevo_rep').value,
+      estado: 'recibido'
+    };
+
+    try {
+      // Si la URL sigue siendo el placeholder, simular envío exitoso en local
+      if (MAKE_WEBHOOK_URL.includes('REEMPLAZAR_')) {
+        console.log('Modo local: Formulario enviado', payload);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        window.location.href = `./gracias.html?id=${trackingId}&nombre=${encodeURIComponent(payload.nombre_nuevo_rep)}`;
+        return;
+      }
+
+      // Envío real a Make.com
+      const res = await fetch(MAKE_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error('Error en el servidor de automatización');
+
+      window.location.href = `./gracias.html?id=${trackingId}&nombre=${encodeURIComponent(payload.nombre_nuevo_rep)}`;
+
+    } catch (err) {
+      console.error(err);
+      alert('Hubo un inconveniente al procesar tu solicitud. Por favor inténtalo de nuevo.');
+      btn.disabled = false;
+      text.textContent = '🚀 Iniciar Trámite';
+      spinner.style.display = 'none';
+    }
+  }
+</script>
+
+</body>
+</html>

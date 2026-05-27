@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJADWEB-IA® — La IA que termina con la burocracia</title>
+  <meta name="description" content="¿Dónde teni que ir? /WEB-IA® — Consulta tus trámites del Estado en segundos: causas judiciales, deudas SII, multas y más." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin crossOrigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Barlow+Condensed:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      /* ── Paleta AutomatizAI (de quenotekguen) ── */
+      --negro:        #0a0a0e;   /* primario CTA */
+      --negro-hover:  #1a1a22;
+      --fondo:        #f5f5f0;   /* background cálido */
+
+      /* Azul institucional — TramitAI / PJUD */
+      --blue:         #1565c0;
+      --blue-dark:    #0d47a1;
+      --blue-light:   #e3f2fd;
+      --blue-border:  #90caf9;
+
+      /* Grises de marca */
+      --gray-50:      #f5f5f0;
+      --gray-100:     #ececec;
+      --gray-200:     #e0e0e0;
+      --gray-300:     #cccccc;
+      --gray-400:     #888888;
+      --gray-500:     #666666;
+      --gray-600:     #444444;
+      --gray-700:     #2a2a2a;
+      --gray-800:     #1a1a1a;
+      --gray-900:     #0a0a0e;
+
+      /* Semáforo */
+      --green:        #2e7d32;
+      --green-light:  #e8f5e9;
+      --green-border: #a5d6a7;
+      --orange:       #e65100;
+      --orange-light: #fff3e0;
+      --red:          #e63946;
+
+      /* Geometría */
+      --radius:       12px;
+      --radius-lg:    20px;
+      --shadow-card:  0 2px 16px rgba(0,0,0,.06);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--gray-900);
+      background: var(--fondo);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── Layout helpers ─── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .text-center { text-align: center; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(245,245,240,.95);
+      border-bottom: 1px solid var(--gray-200);
+      backdrop-filter: blur(10px);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 20px;
+      height: 60px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { font-size: 14px; font-weight: 600; color: var(--gray-600); transition: color .15s; }
+    .nav-links a:hover { color: var(--negro); }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-ghost { background: none; border: none; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--gray-600); padding: 6px 12px; border-radius: var(--radius); transition: background .15s; }
+    .btn-ghost:hover { background: var(--gray-100); }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all .15s; text-decoration: none; letter-spacing: .01em; }
+    .btn-primary { background: var(--negro); color: #fff; }
+    .btn-primary:hover { background: var(--negro-hover); }
+    .btn-outline { background: var(--fondo); color: var(--gray-800); border: 2px solid var(--gray-200); }
+    .btn-outline:hover { background: var(--gray-100); border-color: var(--gray-300); }
+    .btn-lg { padding: 14px 32px; font-size: 16px; border-radius: var(--radius); }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; color: var(--gray-600); }
+    .mobile-menu { display: none; border-top: 1px solid var(--gray-100); padding: 16px 20px; flex-direction: column; gap: 12px; background: #fff; }
+    .mobile-menu a { font-size: 15px; color: var(--gray-700); padding: 6px 0; display: block; }
+    .mobile-menu.open { display: flex; }
+
+    /* ─── HERO ─── */
+    .hero { padding: 80px 0 96px; text-align: center; }
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200);
+      border-radius: 99px; padding: 5px 16px; font-size: 12px; font-weight: 700; margin-bottom: 24px;
+      letter-spacing: .03em; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.75rem);
+      font-weight: 900; line-height: 1.1; letter-spacing: -1.5px;
+      margin-bottom: 24px;
+    }
+    .hero-logo-img {
+      height: auto;
+      max-height: 80px;
+      width: auto;
+      max-width: 90vw;
+      margin-top: 10px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .inline-logo-img {
+      height: clamp(20px, 3vw, 30px);
+      width: auto;
+      vertical-align: middle;
+      display: inline-block;
+      margin-left: 6px;
+    }
+    .hero p { font-size: clamp(15px, 2vw, 18px); color: var(--gray-500); max-width: 560px; margin: 0 auto 36px; line-height: 1.7; }
+    .email-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; flex-wrap: wrap; }
+    .email-form input {
+      flex: 1; min-width: 0; height: 46px; border: 2px solid var(--gray-200); border-radius: var(--radius);
+      padding: 0 16px; font-size: 14px; font-family: inherit; outline: none;
+      background: #fff; transition: border-color .15s, box-shadow .15s;
+    }
+    .email-form input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(230,81,0,.15); }
+    .email-form .btn { height: 46px; white-space: nowrap; }
+    .success-msg {
+      display: none; align-items: center; gap: 8px;
+      color: var(--green); background: var(--green-light); border: 1px solid var(--green-border);
+      border-radius: var(--radius); padding: 10px 20px; font-size: 14px; font-weight: 700; margin: 0 auto;
+      max-width: fit-content;
+    }
+    .hero-note { font-size: 12px; color: var(--gray-400); margin-top: 10px; }
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 56px; flex-wrap: wrap; }
+    .stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .stat-num { font-size: 28px; font-weight: 800; color: var(--gray-900); }
+    .stat-label { font-size: 13px; color: var(--gray-500); }
+    .stats-divider { width: 1px; background: var(--gray-200); align-self: stretch; }
+
+    /* ─── DEMO ─── */
+    .demo-section { background: var(--gray-100); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); padding: 72px 0; }
+    .browser-window { max-width: 720px; margin: 0 auto; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); background: #fff; box-shadow: 0 4px 32px rgba(0,0,0,.08); overflow: hidden; }
+    .browser-bar { background: var(--gray-100); padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--gray-200); }
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red { background: #fc5c5c; }
+    .dot.yellow { background: #fdbc40; }
+    .dot.green { background: #34c749; }
+    .url-bar { flex: 1; background: #fff; border: 1px solid var(--gray-200); border-radius: 6px; padding: 4px 12px; font-size: 12px; color: var(--gray-400); margin-left: 8px; }
+    .browser-content { padding: 24px; }
+    .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .demo-header h3 { font-size: 15px; font-weight: 600; }
+    .tag-green { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+    
+    .causa-row {
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid var(--gray-100); border-radius: 8px; padding: 11px 16px; margin-bottom: 8px;
+      font-size: 13px; cursor: pointer; transition: background .1s;
+    }
+    .causa-row:hover { background: var(--gray-50); }
+    .causa-left .causa-rit { font-family: 'SF Mono', 'Courier New', monospace; font-weight: 600; color: var(--gray-800); }
+    .causa-left .causa-sep { color: var(--gray-300); margin: 0 8px; }
+    .causa-left .causa-tribunal { font-size: 12px; color: var(--gray-500); }
+    .causa-right { display: flex; align-items: center; gap: 8px; }
+    .tag-type { border: 1px solid var(--gray-300); color: var(--gray-600); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+    .causa-estado { font-size: 12px; font-weight: 600; }
+    .causa-estado.active { color: var(--orange); }
+    .causa-estado.done { color: var(--gray-400); }
+
+    /* ─── HOW IT WORKS ─── */
+    .section { padding: 96px 0; }
+    .section-alt { background: var(--gray-100); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
+    .section-head { text-align: center; margin-bottom: 56px; }
+    .section-head h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 10px; letter-spacing: -.5px; }
+    .section-head p { color: var(--gray-500); font-size: 15px; max-width: 480px; margin: 0 auto; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .step { display: flex; gap: 16px; }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--negro); color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: inherit; }
+    .step-body h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .step-body p { font-size: 13px; color: var(--gray-500); line-height: 1.65; }
+
+    /* ─── FEATURES ─── */
+    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .feature-card { border: 1px solid rgba(10, 10, 14, 0.05); border-radius: 20px; padding: 28px 24px; background: #fff; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 30px -10px rgba(10, 10, 14, 0.04), 0 1px 3px rgba(10, 10, 14, 0.02); }
+    .feature-card:hover { box-shadow: 0 24px 48px -15px rgba(10, 10, 14, 0.08); transform: translateY(-4px); border-color: rgba(10, 10, 14, 0.12); }
+    .feature-icon { width: 42px; height: 42px; background: rgba(230, 81, 0, 0.08); color: var(--orange); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .feature-card h3 { font-size: 15px; font-weight: 700; color: var(--negro); margin-bottom: 10px; }
+    .feature-card p { font-size: 13.5px; color: var(--gray-500); line-height: 1.6; }
+
+    /* ─── SOURCES ─── */
+    .sources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .source-card { display: flex; align-items: flex-start; gap: 16px; border: 1px solid rgba(10, 10, 14, 0.05); border-radius: 16px; padding: 20px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); background: #fff; box-shadow: 0 10px 30px -10px rgba(10, 10, 14, 0.03); }
+    .source-card:hover { border-color: var(--orange); transform: translateY(-3px); box-shadow: 0 20px 40px -15px rgba(10, 10, 14, 0.07); }
+    .source-icon { width: 40px; height: 40px; background: var(--negro); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; flex-shrink: 0; }
+    .source-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .tag-available { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+    .tag-soon { background: var(--gray-100); color: var(--gray-500); border: 1px solid var(--gray-200); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+    .source-desc { font-size: 12.5px; color: var(--gray-500); line-height: 1.5; }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials-section { background: var(--negro); padding: 96px 0; }
+    .testimonials-section h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; text-align: center; margin-bottom: 56px; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .testimonial { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 32px; transition: all 0.3s ease; }
+    .testimonial:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.15); }
+    .testimonial-quote { color: rgba(255,255,255,.85); font-size: 14.5px; line-height: 1.7; margin-bottom: 24px; font-style: italic; }
+    .testimonial-author { color: #fff; font-size: 14px; font-weight: 700; }
+    .testimonial-loc { color: rgba(255,255,255,.45); font-size: 12px; margin-top: 4px; }
+
+    /* ─── PRICING ─── */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
+    .plan-card { border: 1px solid rgba(10, 10, 14, 0.05); border-radius: 24px; padding: 36px 32px; position: relative; background: #fff; box-shadow: 0 10px 30px -10px rgba(10, 10, 14, 0.04), 0 1px 3px rgba(10, 10, 14, 0.02); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .plan-card:hover { transform: translateY(-4px); box-shadow: 0 24px 48px -15px rgba(10, 10, 14, 0.08); }
+    .plan-card.popular { border: 2px solid var(--negro); box-shadow: 0 20px 40px -15px rgba(10,10,14,.12); }
+    .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--negro); color: #fff; border-radius: 99px; padding: 6px 18px; font-size: 11px; font-weight: 800; white-space: nowrap; letter-spacing: .05em; text-transform: uppercase; }
+    .plan-name { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .plan-desc { font-size: 12px; color: var(--gray-500); margin-bottom: 16px; }
+    .plan-price { display: flex; align-items: flex-end; gap: 4px; margin-bottom: 24px; }
+    .price-currency { font-size: 13px; color: var(--gray-500); margin-bottom: 4px; }
+    .price-amount { font-size: 2.2rem; font-weight: 900; line-height: 1; letter-spacing: -1px; }
+    .price-period { font-size: 12px; color: var(--gray-400); margin-bottom: 4px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+    .plan-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--gray-600); }
+    .check { color: var(--green); flex-shrink: 0; margin-top: 1px; }
+
+    /* ─── FINAL CTA ─── */
+    .cta-section { background: var(--negro); padding: 88px 0; text-align: center; }
+    .cta-section h2 { color: #fff; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 14px; }
+    .cta-section p { color: var(--gray-400); font-size: 15px; max-width: 480px; margin: 0 auto 32px; }
+
+    /* ─── FOOTER ─── */
+    footer { border-top: 1px solid var(--gray-100); padding: 40px 0; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--gray-400); }
+    .footer-logo { display: flex; align-items: center; gap: 8px; }
+    .logo-sm { width: 20px; height: 20px; background: var(--negro); border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 800; }
+    .footer-logo span { font-weight: 700; color: var(--gray-600); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a:hover { color: var(--gray-700); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .nav-links, .nav-actions { display: none; }
+      .hamburger { display: block; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .sources-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .stats-divider { display: none; }
+      .stat-cards { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .hero { padding: 80px 0 70px; }
+      .hero h1 { font-size: 2.2rem; }
+      .email-form { flex-direction: column; }
+      .email-form input, .email-form .btn { width: 100%; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .search-row { flex-direction: column; gap: 16px; }
+      .search-field { min-width: 100%; }
+    }
+
+    /* ─── SVG icons ─── */
+    svg { display: inline-block; vertical-align: middle; }
+
+    /* ─── BUSCAR (LIVE) ─── */
+    .search-form {
+      max-width: 720px; margin: 0 auto 32px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .search-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .search-field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 140px; }
+    .search-field label { font-size: 12px; font-weight: 600; color: var(--gray-500); }
+    .search-field input, .search-field select {
+      height: 44px; border: 2px solid var(--gray-200); border-radius: var(--radius);
+      padding: 0 14px; font-size: 14px; font-family: inherit; font-weight: 500;
+      outline: none; background: #fff; color: var(--negro);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .search-field input:focus, .search-field select:focus {
+      border-color: var(--orange); box-shadow: 0 0 0 3px rgba(230,81,0,.15);
+    }
+    .search-actions { display: flex; justify-content: center; margin-top: 4px; }
+    .btn-search {
+      padding: 13px 36px; background: var(--negro); color: #fff; border: none;
+      border-radius: var(--radius); font-size: 15px; font-weight: 800; font-family: inherit;
+      cursor: pointer; transition: background .15s, transform .15s;
+      display: flex; align-items: center; gap: 8px; letter-spacing: .01em;
+    }
+    .btn-search:hover { background: var(--negro-hover); transform: translateY(-1px); }
+    .btn-search:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    /* Loading spinner */
+    .spinner {
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .7s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Results */
+    #results-window { display: none; max-width: 720px; margin: 0 auto; }
+    .results-summary {
+      display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .result-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--gray-100); color: var(--gray-700);
+      border: 1px solid var(--gray-200); border-radius: 99px;
+      padding: 5px 14px; font-size: 12px; font-weight: 700; letter-spacing: .02em;
+    }
+    .result-badge.green { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+    .result-badge.orange { background: var(--orange-light); color: var(--orange); border-color: #ffccbc; }
+    .causas-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .error-box {
+      background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px;
+      padding: 16px 20px; color: #be123c; font-size: 14px; text-align: center;
+    }
+    .empty-box {
+      background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 10px;
+      padding: 32px; text-align: center; color: var(--gray-500); font-size: 14px;
+    }
+    .empty-box strong { display: block; color: var(--gray-700); font-size: 15px; margin-bottom: 6px; }
+    .url-bar-live { color: var(--gray-700) !important; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="djadwebia_logo_final.png" alt="DEJAWEBIAR®" style="height: 36px; width: auto; display: block;" />
+    </a>
+    <div class="nav-links">
+      <a href="#buscar">Buscar</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#fuentes">Fuentes</a>
+      <a href="#precios">Precios</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-ghost">Iniciar sesión</button>
+      <a href="#hero" class="btn btn-primary">Empezar gratis</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menú" style="padding: 4px; border: none; background: none; cursor: pointer; color: var(--gray-600);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="menu-icon">
+        <line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#como-funciona" onclick="closeMenu()">Cómo funciona</a>
+    <a href="#fuentes" onclick="closeMenu()">Fuentes</a>
+    <a href="#precios" onclick="closeMenu()">Precios</a>
+    <a href="#hero" class="btn btn-primary" style="margin-top:4px;justify-content:center" onclick="closeMenu()">Empezar gratis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="badge-pill">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+      Beta abierta · Chile 2025
+    </div>
+    <h1>¿Dónde teni que ir?<br><img src="djadwebia_logo_final.png" alt="DEJAWEBIAR®" class="hero-logo-img" /></h1>
+    <p>Consulta tus causas judiciales en segundos — sin entrar al portal del PJUD. Más fuentes del Estado en camino.</p>
+
+    <!-- Portales strip -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px 0 8px;">
+
+      <!-- PJUD — activo -->
+      <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--green-border);border-radius:10px;padding:7px 14px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <span style="font-weight:700;font-size:13px;color:#1b5e20;letter-spacing:.01em;">Poder Judicial</span>
+        <span style="font-size:11px;font-weight:600;color:var(--green);background:var(--green-light);padding:2px 8px;border-radius:99px;">Activo</span>
+      </div>
+
+      <!-- SII -->
+      <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;padding:7px 14px;opacity:.65;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span style="font-weight:700;font-size:13px;color:var(--gray-600);">SII</span>
+        <span style="font-size:11px;font-weight:600;color:var(--gray-400);background:var(--gray-100);padding:2px 8px;border-radius:99px;">Próximo</span>
+      </div>
+
+      <!-- TGR -->
+      <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;padding:7px 14px;opacity:.65;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span style="font-weight:700;font-size:13px;color:var(--gray-600);">Tesorería</span>
+        <span style="font-size:11px;font-weight:600;color:var(--gray-400);background:var(--gray-100);padding:2px 8px;border-radius:99px;">Próximo</span>
+      </div>
+
+      <!-- Registro Civil -->
+      <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;padding:7px 14px;opacity:.65;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span style="font-weight:700;font-size:13px;color:var(--gray-600);">Reg. Civil</span>
+        <span style="font-size:11px;font-weight:600;color:var(--gray-400);background:var(--gray-100);padding:2px 8px;border-radius:99px;">Próximo</span>
+      </div>
+
+      <!-- ChileAtiende -->
+      <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;padding:7px 14px;opacity:.65;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span style="font-weight:700;font-size:13px;color:var(--gray-600);">ChileAtiende</span>
+        <span style="font-size:11px;font-weight:600;color:var(--gray-400);background:var(--gray-100);padding:2px 8px;border-radius:99px;">Próximo</span>
+      </div>
+
+    </div>
+
+    <form class="email-form" id="email-form" onsubmit="handleSubmit(event)">
+      <input type="email" placeholder="tu@email.cl" id="email-input" required />
+      <button type="submit" class="btn btn-primary">Acceso anticipado</button>
+    </form>
+    <div class="success-msg" id="success-msg">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      ¡Listo! Te avisamos cuando abramos tu acceso.
+    </div>
+    <p class="hero-note">Sin tarjeta de crédito · Cancela cuando quieras</p>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-num">3M+</span>
+        <span class="stat-label">causas activas en el PJUD</span>
+      </div>
+      <div class="stats-divider"></div>
+      <div class="stat">
+        <span class="stat-num">6</span>
+        <span class="stat-label">portales del Estado integrados</span>
+      </div>
+      <div class="stats-divider"></div>
+      <div class="stat">
+        <span class="stat-num">&lt;30s</span>
+        <span class="stat-label">para obtener tu resumen completo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSCAR (LIVE) -->
+<section class="demo-section" id="buscar">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:32px">
+      <h2 style="font-size:clamp(1.4rem,3vw,1.9rem)">Pruébalo ahora — Busca en el Poder Judicial</h2>
+      <p>Consulta causas civiles, laborales, de familia o penales en tiempo real.</p>
+    </div>
+
+    <!-- Formulario de búsqueda -->
+    <form class="search-form" id="search-form" onsubmit="buscarCausas(event)">
+      <div class="search-row">
+        <div class="search-field" style="flex:1.2">
+          <label for="s-nombre">Nombre *</label>
+          <input id="s-nombre" type="text" placeholder="Ej: Juan" required autocomplete="off" />
+        </div>
+        <div class="search-field" style="flex:1.5">
+          <label for="s-apellido-p">Apellido Paterno *</label>
+          <input id="s-apellido-p" type="text" placeholder="Ej: González" required autocomplete="off" />
+        </div>
+        <div class="search-field" style="flex:1.5">
+          <label for="s-apellido-m">Apellido Materno</label>
+          <input id="s-apellido-m" type="text" placeholder="Opcional" autocomplete="off" />
+        </div>
+      </div>
+      <div class="search-row">
+        <div class="search-field" style="flex:2">
+          <label for="s-competencia">Competencia</label>
+          <select id="s-competencia">
+            <option value="civil">Civil</option>
+            <option value="laboral">Laboral</option>
+            <option value="familia">Familia</option>
+            <option value="penal">Penal</option>
+            <option value="cobranza">Cobranza</option>
+            <option value="suprema">Corte Suprema</option>
+            <option value="apelaciones">Corte de Apelaciones</option>
+          </select>
+        </div>
+        <div class="search-field" style="flex:1">
+          <label for="s-anio">Año (opcional)</label>
+          <input id="s-anio" type="text" placeholder="Ej: 2023" maxlength="4" />
+        </div>
+      </div>
+      <div class="search-actions">
+        <button type="submit" class="btn-search" id="btn-buscar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span id="btn-text">Buscar causas</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+      </div>
+    </form>
+
+    <!-- Ventana de resultados -->
+    <div class="browser-window" id="results-window">
+      <div class="browser-bar">
+        <div class="dots">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <div class="url-bar url-bar-live" id="url-bar-text">oficinajudicialvirtual.pjud.cl</div>
+      </div>
+      <div class="browser-content">
+        <div id="results-content"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="como-funciona">
+  <div class="container">
+    <div class="section-head">
+      <h2>Tan fácil como buscar en Google</h2>
+      <p>Sin claves especiales, sin navegar portales del gobierno. Solo tu nombre o RUT.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>Ingresa tu RUT o nombre</h3>
+          <p>No necesitas ClaveÚnica ni crear contraseñas complicadas para la consulta básica.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>Consultamos por ti</h3>
+          <p>Accedemos a los portales del Poder Judicial, SII y TGR en segundos y agregamos la información.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>Recibe tu resumen</h3>
+          <p>Te mostramos todo en un panel claro con lenguaje simple. Activa alertas para novedades futuras.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Por qué <img src="djadwebia_logo_final.png" alt="DEJAWEBIAR®" class="inline-logo-img" /></h2>
+      <p>El Estado tiene tu información. Nosotros te la entregamos en el formato que mereces.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <h3>Un solo lugar</h3>
+        <p>Ingresa tu RUT y ve en segundos tus causas del Poder Judicial, deudas en SII y TGR, y más.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        </div>
+        <h3>Alertas automáticas</h3>
+        <p>Te avisamos por WhatsApp o email cuando aparece una nueva causa o cambia el estado de una existente.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+        </div>
+        <h3>Lenguaje simple</h3>
+        <p>Nada de lenguaje jurídico incomprensible. Te explicamos qué significa cada resultado.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </div>
+        <h3>Privacidad garantizada</h3>
+        <p>No almacenamos tus datos más de lo necesario. Cumplimos con la Ley 19.628 de protección de datos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section class="section" id="fuentes">
+  <div class="container">
+    <div class="section-head">
+      <h2>Portales integrados</h2>
+      <p>Consultamos directamente los sistemas oficiales del Estado chileno.</p>
+    </div>
+    <div class="sources-grid">
+      <div class="source-card">
+        <div class="source-icon">P</div>
+        <div>
+          <div class="source-name">Poder Judicial <span class="tag-available">Disponible</span></div>
+          <div class="source-desc">Causas civiles, laborales, familia, penal</div>
+        </div>
+      </div>
+      <div class="source-card">
+        <div class="source-icon">S</div>
+        <div>
+          <div class="source-name">SII <span class="tag-available">Disponible</span></div>
+          <div class="source-desc">Deudas tributarias y declaraciones</div>
+        </div>
+      </div>
+      <div class="source-card">
+        <div class="source-icon">T</div>
+        <div>
+          <div class="source-name">TGR <span class="tag-soon">Próximamente</span></div>
+          <div class="source-desc">Deudas fiscales y contribuciones</div>
+        </div>
+      </div>
+      <div class="source-card">
+        <div class="source-icon">C</div>
+        <div>
+          <div class="source-name">CMF / DICOM <span class="tag-soon">Próximamente</span></div>
+          <div class="source-desc">Historial crediticio y protestos</div>
+        </div>
+      </div>
+      <div class="source-card">
+        <div class="source-icon">R</div>
+        <div>
+          <div class="source-name">Registro Civil <span class="tag-soon">2025</span></div>
+          <div class="source-desc">Vigencia cédula y antecedentes</div>
+        </div>
+      </div>
+      <div class="source-card">
+        <div class="source-icon">E</div>
+        <div>
+          <div class="source-name">Extranjería <span class="tag-soon">2025</span></div>
+          <div class="source-desc">Estado trámites migratorios</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <h2>Lo que dicen nuestros usuarios</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <p class="testimonial-quote">"Me enteré que tenía una demanda de cobranza de hace dos años. Sin /WEB-IA® nunca lo habría sabido."</p>
+        <div class="testimonial-author">Rodrigo M.</div>
+        <div class="testimonial-loc">Santiago</div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">"Mi mamá es mayor y no sabe usar los portales del Estado. Con esto puedo revisar sus trámites en minutos."</p>
+        <div class="testimonial-author">Valentina C.</div>
+        <div class="testimonial-loc">Viña del Mar</div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">"Trabajo como gestor de trámites y esto me ahorra horas cada semana."</p>
+        <div class="testimonial-author">Felipe A.</div>
+        <div class="testimonial-loc">Concepción</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="precios">
+  <div class="container">
+    <div class="section-head">
+      <h2>Precios simples</h2>
+      <p>Empieza gratis. Actualiza cuando lo necesites. Sin sorpresas.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="plan-card">
+        <div class="plan-name">Gratuito</div>
+        <div class="plan-desc">Para explorar el servicio</div>
+        <div class="plan-price">
+          <span class="price-currency">$</span>
+          <span class="price-amount">0</span>
+          <span class="price-period">para siempre</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%">Empezar gratis</button>
+        <ul class="plan-features">
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 3 consultas por mes</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Poder Judicial</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Resultados en texto simple</li>
+        </ul>
+      </div>
+      <!-- Basic -->
+      <div class="plan-card popular">
+        <div class="popular-badge">Más popular</div>
+        <div class="plan-name">Básico</div>
+        <div class="plan-desc">Para el ciudadano activo</div>
+        <div class="plan-price">
+          <span class="price-currency">$</span>
+          <span class="price-amount">3.990</span>
+          <span class="price-period">al mes</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%">Comenzar ahora</button>
+        <ul class="plan-features">
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Consultas ilimitadas</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Poder Judicial + SII + TGR</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Alertas por email</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Historial 3 meses</li>
+        </ul>
+      </div>
+      <!-- Premium -->
+      <div class="plan-card">
+        <div class="plan-name">Premium</div>
+        <div class="plan-desc">Todo incluido</div>
+        <div class="plan-price">
+          <span class="price-currency">$</span>
+          <span class="price-amount">7.990</span>
+          <span class="price-period">al mes</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%">Obtener Premium</button>
+        <ul class="plan-features">
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Todo lo del plan Básico</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Todos los portales</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Alertas por WhatsApp</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Historial ilimitado</li>
+          <li><svg class="check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Resúmenes con IA</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>¿Sabes qué dice el Estado sobre ti?</h2>
+    <p>Más de 2 millones de chilenos tienen deudas o causas activas que desconocen. Revísalo ahora gratis.</p>
+    <a href="#hero" class="btn btn-primary btn-lg">
+      Consultar ahora, gratis
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo" style="display: flex; align-items: center; gap: 8px;">
+        <img src="logo_robot.png" alt="DEJAWEBIAR®" style="height: 32px; width: auto; vertical-align: middle;" />
+        <span style="color: var(--gray-400); font-size: 12px; margin-left: 8px;">· Hecho en Chile 🇨🇱</span>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+        <a href="mailto:hola@tramitai.cl">Contacto</a>
+      </div>
+      <span>© 2026 DEJAWEBIAR® · AutomatizAI. Todos los derechos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ─── Config ───────────────────────────────────────────────────────────────
+  // Cambiar a la URL de producción cuando se despliegue el backend.
+  const API_URL = 'http://localhost:3000';
+
+  // ─── Nav / Mobile ─────────────────────────────────────────────────────────
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+  }
+
+  // ─── Waitlist form ────────────────────────────────────────────────────────
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('email-form').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'inline-flex';
+  }
+
+  // ─── Búsqueda PJUD ────────────────────────────────────────────────────────
+  async function buscarCausas(e) {
+    e.preventDefault();
+
+    const nombre        = document.getElementById('s-nombre').value.trim();
+    const apellidoPat   = document.getElementById('s-apellido-p').value.trim();
+    const apellidoMat   = document.getElementById('s-apellido-m').value.trim();
+    const competencia   = document.getElementById('s-competencia').value;
+    const anio          = document.getElementById('s-anio').value.trim();
+
+    // UI → estado cargando
+    setLoading(true);
+    document.getElementById('results-window').style.display = 'block';
+    document.getElementById('url-bar-text').textContent = `oficinajudicialvirtual.pjud.cl — buscando ${nombre} ${apellidoPat}…`;
+    document.getElementById('results-content').innerHTML = renderLoading();
+
+    try {
+      const body = { nombre, apellidoPaterno: apellidoPat, competencia };
+      if (apellidoMat) body.apellidoMaterno = apellidoMat;
+      if (anio)        body.anio = anio;
+
+      const res = await fetch(`${API_URL}/api/pjud/nombre`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(35_000),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || `Error ${res.status}`);
+      }
+
+      document.getElementById('url-bar-text').textContent =
+        `Poder Judicial · ${nombre} ${apellidoPat} · ${competencia}${data._cache ? ' (caché)' : ''}`;
+      document.getElementById('results-content').innerHTML = renderResultados(data, nombre, apellidoPat, competencia);
+
+    } catch (err) {
+      const msg = err.name === 'TimeoutError'
+        ? 'La búsqueda tardó más de 35 segundos. El portal del PJUD puede estar lento — intenta nuevamente.'
+        : err.name === 'TypeError' && err.message.includes('fetch')
+          ? 'No se pudo conectar al servidor. Asegúrate de que el backend esté corriendo en localhost:3000.'
+          : err.message;
+      document.getElementById('url-bar-text').textContent = 'oficinajudicialvirtual.pjud.cl — error';
+      document.getElementById('results-content').innerHTML = renderError(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function setLoading(on) {
+    document.getElementById('btn-buscar').disabled = on;
+    document.getElementById('spinner').style.display = on ? 'block' : 'none';
+    document.getElementById('btn-text').textContent  = on ? 'Buscando…' : 'Buscar causas';
+  }
+
+  function renderLoading() {
+    return `
+      <div style="text-align:center;padding:40px 20px;color:var(--gray-400)">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin .9s linear infinite;margin-bottom:12px"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <div style="font-size:14px;font-weight:600;color:var(--gray-600)">Consultando el Poder Judicial…</div>
+        <div style="font-size:12px;margin-top:6px">Esto puede tomar hasta 30 segundos</div>
+      </div>`;
+  }
+
+  function renderError(msg) {
+    return `<div class="error-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+      ${escHtml(msg)}
+    </div>`;
+  }
+
+  function renderResultados(data, nombre, apellidoPat, competencia) {
+    const { causas = [], total = 0, consultadoEn } = data;
+    const fecha = consultadoEn ? new Date(consultadoEn).toLocaleString('es-CL') : '';
+
+    let html = `
+      <div class="demo-header" style="margin-bottom:16px">
+        <h3 style="font-size:15px">Resultados para <strong>${escHtml(nombre)} ${escHtml(apellidoPat)}</strong></h3>
+        ${fecha ? `<span class="tag-green">Consultado ${fecha}</span>` : ''}
+      </div>
+      <div class="results-summary">
+        <span class="result-badge ${total > 0 ? 'orange' : 'green'}">
+          ${total === 0 ? '✓' : '⚠'} ${total} causa${total !== 1 ? 's' : ''} encontrada${total !== 1 ? 's' : ''}
+        </span>
+        <span class="result-badge">${capitalizar(competencia)}</span>
+      </div>`;
+
+    if (total === 0) {
+      html += `<div class="empty-box">
+        <strong>Sin causas registradas</strong>
+        No se encontraron causas en el área <strong>${capitalizar(competencia)}</strong> para este nombre.
+      </div>`;
+    } else {
+      html += `<div class="causas-list">`;
+      causas.forEach(c => {
+        const estadoClass = /termin|resuel|archivo/i.test(c.estado) ? 'done' : 'active';
+        html += `
+          <div class="causa-row" ${c.urlDetalle ? `onclick="window.open('${escHtml(c.urlDetalle)}','_blank')" title="Ver detalle en PJUD"` : ''}>
+            <div class="causa-left">
+              <span class="causa-rit">${escHtml(c.rit || '—')}</span>
+              <span class="causa-sep">·</span>
+              <span class="causa-tribunal">${escHtml(c.tribunal || c.caratulado || '')}</span>
+            </div>
+            <div class="causa-right">
+              <span class="tag-type">${capitalizar(competencia)}</span>
+              ${c.estado ? `<span class="causa-estado ${estadoClass}">${escHtml(c.estado)}</span>` : ''}
+            </div>
+          </div>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `<div style="font-size:11px;color:var(--gray-400);text-align:right;margin-top:4px">
+      Fuente: Poder Judicial de Chile · Datos públicos
+    </div>`;
+
+    return html;
+  }
+
+  function escHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function capitalizar(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  // ─── Smooth scroll ────────────────────────────────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

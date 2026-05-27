@@ -1,0 +1,21 @@
+{
+  "name": "tramitai",
+  "version": "0.1.0",
+  "description": "Consulta inteligente de trámites para personas en Chile",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test:scraper": "node src/scrapers/pjud.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "playwright": "^1.44.0",
+    "node-cache": "^5.1.2",
+    "winston": "^3.11.0",
+    "express-rate-limit": "^7.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}

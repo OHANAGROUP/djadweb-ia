@@ -1,0 +1,39 @@
+ACTA DE JUNTA EXTRAORDINARIA DE ACCIONISTAS
+DE LA SOCIEDAD "{{nombre_empresa}}"
+
+En Concepción, Chile, a 25 de Mayo de 2026, siendo las 10:00 horas, se reúne la totalidad de los accionistas de la sociedad "{{nombre_empresa}}", en su domicilio social, con el objeto de celebrar una Junta Extraordinaria de Accionistas.
+
+Asisten los accionistas representantes del 100% del capital social con derecho a voto de la compañía. Preside la sesión el Presidente del Directorio o Administrador, actuando como Secretario el accionista mayoritario.
+
+Los asistentes acuerdan unánimemente prescindir de las formalidades de citación previa, por encontrarse representada la totalidad de las acciones de la sociedad, declarando válidamente constituida la Junta.
+
+🎯 TABLA DE LA SESIÓN:
+Único Punto: Revocación de representación legal vigente y designación de un nuevo Representante Legal de la sociedad.
+
+ACUERDOS ALCANZADOS POR UNANIMIDAD:
+
+1. REVOCACIÓN DE ADMINISTRACIÓN VIGENTE:
+Los accionistas acuerdan unánimemente revocar con efecto inmediato todos los poderes, mandatos y facultades de administración, representación y uso de firma social otorgados anteriormente a cualquier persona, dejando dichos poderes sin valor alguno a partir de esta fecha.
+
+2. DESIGNACIÓN DEL NUEVO REPRESENTANTE LEGAL:
+Los accionistas aprueban por unanimidad designar como nuevo y único Administrador y Representante Legal de la sociedad a don(a) {{nombre_nuevo_rep}}, de nacionalidad chilena, con Cédula de Identidad Número {{rut_nuevo_rep}}, quien acepta el cargo en este mismo acto, asumiendo la representación legal con las más amplias facultades de administración y disposición detalladas en los estatutos sociales vigentes de la compañía.
+
+3. FACULTADES CONFERIDAS:
+El nuevo representante legal, don(a) {{nombre_nuevo_rep}}, tendrá, entre otras, las siguientes facultades en nombre de la sociedad:
+- Representar a la sociedad ante el Servicio de Impuestos Internos (SII), Tesorería General de la República (TGR) y Administradoras de Fondos.
+- Abrir, cerrar y operar cuentas corrientes bancarias, contratar créditos y firmar pagarés o letras de cambio en cualquier institución financiera de Chile.
+- Suscribir contratos civiles y comerciales, contratar y despedir personal, y otorgar o revocar poderes específicos de cualquier clase.
+
+4. DELEGACIÓN DE FACULTADES PARA FORMALIZACIÓN:
+Se faculta al portador de copia autorizada de esta acta para requerir y firmar las escrituras públicas que sean necesarias para la formalización del cambio, realizar las publicaciones correspondientes en el Diario Oficial, y proceder a las inscripciones y anotaciones marginales pertinentes en el Registro de Comercio correspondiente del Conservador de Bienes Raíces (CBRS).
+
+Sin haber otros asuntos que tratar, y previa redacción, lectura y aprobación unánime de los comparecientes, se firma la presente acta por todos los asistentes en señal de conformidad, levantándose la sesión a las 11:30 horas.
+
+firmas_accionistas:
+__________________________
+Firma Accionista 1
+RUT: [RUT]
+
+__________________________
+Firma Accionista 2 / Representante
+RUT: [RUT]

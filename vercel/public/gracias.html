@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Solicitud Recibida! — DJADWEB-IA®</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand-black:  #0A0A0E;
+      --brand-orange: #E65100;
+      --brand-bg:     #F5F5F0;
+      --brand-white:  #FFFFFF;
+      --font-brand:   'Barlow Condensed', Impact, sans-serif;
+      --font-ui:      'Syne', sans-serif;
+      --radius-card:  20px;
+      --radius-input: 12px;
+      --shadow-card:  0 8px 32px rgba(10, 10, 14, 0.04);
+      --shadow-hover: 0 16px 48px rgba(10, 10, 14, 0.08);
+      --green:        #2E7D32;
+    }
+    body {
+      font-family: var(--font-ui);
+      background-color: var(--brand-bg);
+      color: var(--brand-black);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+    .container {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .card {
+      background: var(--brand-white);
+      border-radius: var(--radius-card);
+      padding: 48px 40px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(10, 10, 14, 0.04);
+      text-align: center;
+    }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(46, 125, 50, 0.08);
+      color: var(--green);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-weight: 800;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .tracking-box {
+      background: var(--brand-bg);
+      border: 1px dashed #DDD;
+      border-radius: var(--radius-input);
+      padding: 16px;
+      margin-bottom: 32px;
+    }
+    .tracking-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .tracking-id {
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand-black);
+    }
+    .btn-track {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 50px;
+      background: var(--brand-black);
+      color: var(--brand-white);
+      text-decoration: none;
+      border-radius: var(--radius-input);
+      font-weight: 800;
+      font-size: 14px;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .btn-track:hover {
+      background-color: #1a1a22;
+    }
+    .btn-track:active {
+      transform: scale(0.98);
+    }
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #888;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <div class="success-icon">✓</div>
+    <h1 id="welcome-title">¡Solicitud Recibida!</h1>
+    <p>Hemos iniciado el trámite de cambio de representante legal. En breve, recibirás un correo electrónico con el borrador del acta de accionistas y las instrucciones para la firma electrónica.</p>
+    
+    <div class="tracking-box">
+      <div class="tracking-label">Código de Seguimiento (Tracking ID)</div>
+      <div class="tracking-id" id="tracking-id-display">00000000-0000-0000-0000-000000000000</div>
+    </div>
+
+    <a href="./estado.html" class="btn-track" id="link-track">
+      🔍 Seguir Trámite en Tiempo Real
+    </a>
+  </div>
+
+  <div class="footer">
+    © 2026 DJADWEB-IA® · AutomatizAI.
+  </div>
+</div>
+
+<script>
+  // Obtener parámetros de la URL
+  const params = new URLSearchParams(window.location.search);
+  const nombre = params.get('nombre');
+  const trackingId = params.get('id');
+
+  if (nombre) {
+    document.getElementById('welcome-title').textContent = `¡Excelente, ${decodeURIComponent(nombre)}!`;
+  }
+  if (trackingId) {
+    document.getElementById('tracking-id-display').textContent = trackingId;
+    document.getElementById('link-track').href = `./estado.html?id=${trackingId}`;
+  }
+
+  // Fuego de confeti dinámico al cargar la página
+  window.addEventListener('DOMContentLoaded', () => {
+    const duration = 2 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#0A0A0E', '#E65100', '#2E7D32']
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#0A0A0E', '#E65100', '#2E7D32']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+  });
+</script>
+
+</body>
+</html>

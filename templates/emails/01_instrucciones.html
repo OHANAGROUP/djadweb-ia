@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borrador de Acta y Firma Electrónica — DJADWEB-IA®</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #F5F5F0;
+      color: #0A0A0E;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      width: 100%;
+      table-layout: fixed;
+      background-color: #F5F5F0;
+      padding: 40px 0;
+    }
+    .main-table {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      border-collapse: collapse;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(10, 10, 14, 0.03);
+    }
+    .header {
+      background-color: #0A0A0E;
+      padding: 32px;
+      text-align: center;
+    }
+    .logo {
+      font-family: 'Arial Black', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      letter-spacing: -1px;
+      color: #FFFFFF;
+    }
+    .logo-orange {
+      color: #E65100;
+    }
+    .content {
+      padding: 48px 40px;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 0;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #444444;
+      margin-bottom: 24px;
+    }
+    .step-list {
+      margin-bottom: 32px;
+      padding-left: 0;
+      list-style-type: none;
+    }
+    .step-item {
+      display: flex;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      background-color: #E65100;
+      color: #FFFFFF;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .step-text {
+      color: #333333;
+    }
+    .step-text strong {
+      color: #0A0A0E;
+    }
+    .cta-container {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .btn-cta {
+      display: inline-block;
+      padding: 14px 32px;
+      background-color: #0A0A0E;
+      color: #FFFFFF !important;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+    .footer {
+      background-color: #FAFAFA;
+      padding: 24px 40px;
+      text-align: center;
+      font-size: 11px;
+      color: #888888;
+      border-top: 1px solid #EEEEEE;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <table class="main-table">
+    <!-- Header -->
+    <tr>
+      <td class="header">
+        <div class="logo">
+          [DJA /WEB-<span class="logo-orange">IA®</span>]
+        </div>
+      </td>
+    </tr>
+    
+    <!-- Content -->
+    <tr>
+      <td class="content">
+        <h1>Borrador de Acta Generado</h1>
+        <p>Hola {{nombre_representante}},</p>
+        <p>Hemos procesado la solicitud para iniciar el cambio de representante legal de <strong>{{nombre_empresa}}</strong>. Hemos confeccionado el borrador oficial de la Junta de Accionistas SpA para que procedas con su revisión y firma electrónica.</p>
+        
+        <p>Sigue estos tres sencillos pasos para formalizar el proceso:</p>
+        
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-text"><strong>Revisión del Borrador:</strong> Ingresa a nuestro panel seguro para verificar que el RUT corporativo y los datos del nuevo representante sean correctos.</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-text"><strong>Firma Electrónica:</strong> Completa la firma con tu Clave Única o Certificado Digital desde el enlace oficial que verás en el panel.</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-text"><strong>Legalización:</strong> Una vez firmado por todos los socios, nuestro Hub legal ingresará automáticamente el acta a notaría e inscribirá el cambio en el Conservador de Comercio (CBRS).</span>
+          </div>
+        </div>
+
+        <div class="cta-container">
+          <a href="{{tracking_url}}" class="btn-cta">
+            ✍️ Revisar y Firmar Acta
+          </a>
+        </div>
+
+        <p>Si tienes alguna consulta, puedes seguir el estado de tu trámite en tiempo real desde el mismo panel de seguimiento.</p>
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td class="footer">
+        © 2026 DJADWEB-IA® · AutomatizAI.
+        <br>
+        Este correo contiene información confidencial relacionada con tu organización.
+      </td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

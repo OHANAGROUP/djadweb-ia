@@ -1,0 +1,112 @@
+{
+  "blueprint": "Cambio Representante Legal - Flujo Completo",
+  "version": "2.0",
+  "estado": "COMPLETO",
+  "descripcion": "Automatización completa del cambio de representante legal incluyendo cierre y notificaciones",
+  
+  "modulos": [
+    {
+      "id": "webhook_entrada",
+      "tipo": "Webhook",
+      "trigger": "Pago exitoso + Inicio de trámite desde DJADWEB-IA",
+      "datos_entrada": {
+        "user_id": "UUID",
+        "tramite": "cambio_rep_legal",
+        "datos_empresa": {
+          "rut_empresa": "string",
+          "razon_social": "string",
+          "nuevo_representante": {
+            "rut": "string",
+            "nombre_completo": "string",
+            "nacionalidad": "string",
+            "estado_civil": "string",
+            "profesion": "string",
+            "domicilio": "string"
+          },
+          "rep_legal_actual": {
+            "nombre": "string",
+            "rut": "string"
+          },
+          "capital_suscrito": "string",
+          "capital_pagado": "string"
+        }
+      }
+    },
+    {
+      "id": "generar_acta",
+      "tipo": "Google Docs",
+      "funcion": "Generar Acta de Accionistas con datos de entrada",
+      "plantilla": "acta_accionistas_template.txt",
+      "variables": ["RUT_EMPRESA", "RAZON_SOCIAL", "REP_LEGAL_NOMBRE", "REP_LEGAL_RUT", "NOMBRE_COMPLETO", "NACIONALIDAD", "ESTADO_CIVIL", "PROFESION", "DOMICILIO", "CAPITAL_SUSCRITO", "CAPITAL_PAGADO", "FECHA_ACTUAL"],
+      "salida": "URL del documento generado"
+    },
+    {
+      "id": "notificar_instrucciones",
+      "tipo": "Email (Resend/SendGrid)",
+      "funcion": "Enviar instrucciones de firma al usuario",
+      "plantilla": "01_instrucciones.html",
+      "variables": ["NOMBRE_USUARIO", "URL_DOCUMENTO", "INSTRUCCIONES_FIRMA", "PLAZO_FIRMA"],
+      "trigger": "Despues de generar acta"
+    },
+    {
+      "id": "agendar_recordatorio",
+      "tipo": "Schedule/Timer",
+      "funcion": "Esperar 5 días o hasta que se complete el trámite",
+      "duracion": "5 dias",
+      "accion": "Enviar recordatorio si no se ha completado"
+    },
+    {
+      "id": "enviar_recordatorio",
+      "tipo": "Email (Resend/SendGrid)",
+      "funcion": "Enviar recordatorio de firma pendiente",
+      "plantilla": "02_recordatorio.html",
+      "variables": ["NOMBRE_USUARIO", "URL_DOCUMENTO", "DIAS_RESTANTES"],
+      "trigger": "Timer de 5 días si estado != completado"
+    },
+    {
+      "id": "notificar_cierre",
+      "tipo": "Email (Resend/SendGrid)",
+      "funcion": "Enviar notificación de cierre y resumen del trámite",
+      "plantilla": "03_cierre.html",
+      "variables": ["NOMBRE_USUARIO", "RUT_EMPRESA", "RAZON_SOCIAL", "NUEVO_REP_LEGAL", "FECHA_CIERRE", "URL_CONSULTA_PJUD"],
+      "trigger": "Cuando webhook de cierre es recibido o estado = completado",
+      "descripcion": "Email final que confirma la finalización exitosa del trámite, incluye resumen de lo realizado y enlaces a seguimiento"
+    },
+    {
+      "id": "actualizar_estado",
+      "tipo": "Supabase Update",
+      "funcion": "Actualizar estado del workflow en Supabase",
+      "tabla": "rep_legal_workflows",
+      "campo_estado": "status",
+      "valores": ["pending", "document_generated", "instructions_sent", "reminder_sent", "completed", "cancelled"]
+    }
+  ],
+
+  "flujo_completo": {
+    "paso_1": {
+      "accion": "Webhook recibe datos del pago exitoso + formulario",
+      "estado": "pending"
+    },
+    "paso_2": {
+      "accion": "Generar acta en Google Docs usando plantilla",
+      "estado": "document_generated"
+    },
+    "paso_3": {
+      "accion": "Enviar email con instrucciones de firma (plantilla 01)",
+      "estado": "instructions_sent"
+    },
+    "paso_4": {
+      "accion": "Iniciar timer de 5 días para recordatorio",
+      "estado": "instructions_sent"
+    },
+    "paso_5": {
+      "accion": "[Opcional] Si no se completa en 5 días, enviar recordatorio (plantilla 02)",
+      "estado": "reminder_sent"
+    },
+    "paso_6": {
+      "accion": "[Final] Webhook de cierre o marcado manual como completado",
+      "estado": "completed",
+      "email_cierre": "Enviar email de cierre (plantilla 03) con resumen final"
+    }
+  }
+}

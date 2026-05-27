@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: djadwebia-scraper
+    runtime: node
+    repo: https://github.com/ohanagroup/djadweb-ia
+    branch: main
+    rootDir: backend_node
+    buildCommand: npm install --production && npx playwright install chromium
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: SCRAPER_API_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://tramitai.vercel.app

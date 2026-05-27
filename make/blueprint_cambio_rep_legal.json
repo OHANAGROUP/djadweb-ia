@@ -1,0 +1,95 @@
+{
+  "name": "Dejadwebiar — Cambio de Representante Legal Flow",
+  "description": "Blueprint de automatización para Make.com. Gestiona el ingreso del formulario, la creación de registros en Supabase, la confección del acta legal y el envío de notificaciones por correo.",
+  "engine": "make-integration-engine-v1",
+  "blueprint": {
+    "flow": [
+      {
+        "id": 1,
+        "module": "gateway:CustomWebhook",
+        "name": "Intake Webhook (index.html POST)",
+        "parameters": {
+          "webhook_id": "REEMPLAZAR_CON_TU_MAKE_WEBHOOK_ID"
+        },
+        "output": {
+          "id": "String (UUID)",
+          "rut_empresa": "String",
+          "nombre_empresa": "String",
+          "nombre_nuevo_rep": "String",
+          "rut_nuevo_rep": "String",
+          "email_nuevo_rep": "String",
+          "estado": "String"
+        }
+      },
+      {
+        "id": 2,
+        "module": "supabase:InsertRow",
+        "name": "Registrar Trámite en Supabase",
+        "parameters": {
+          "connection": "Supabase Connection (luuicelooavahedkhlsw)",
+          "table": "rep_legal_workflows",
+          "data": {
+            "id": "{{1.id}}",
+            "rut_empresa": "{{1.rut_empresa}}",
+            "nombre_empresa": "{{1.nombre_empresa}}",
+            "nombre_nuevo_rep": "{{1.nombre_nuevo_rep}}",
+            "rut_nuevo_rep": "{{1.rut_nuevo_rep}}",
+            "email_nuevo_rep": "{{1.email_nuevo_rep}}",
+            "estado": "recibido"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "module": "google-docs:CreateDocumentFromTemplate",
+        "name": "Generar Acta de Accionistas SpA",
+        "parameters": {
+          "template_file_path": "templates/documentos/acta_accionistas_template.txt",
+          "values": {
+            "nombre_empresa": "{{1.nombre_empresa}}",
+            "rut_empresa": "{{1.rut_empresa}}",
+            "nombre_nuevo_rep": "{{1.nombre_nuevo_rep}}",
+            "rut_nuevo_rep": "{{1.rut_nuevo_rep}}"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "module": "supabase:UpdateRow",
+        "name": "Actualizar Estado: acta_generada",
+        "parameters": {
+          "row_id": "{{1.id}}",
+          "data": {
+            "estado": "acta_generada"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "module": "smtp:SendEmail",
+        "name": "Enviar Correo 01: Instrucciones de Firma",
+        "parameters": {
+          "to": "{{1.email_nuevo_rep}}",
+          "subject": "📝 Firma pendiente: Cambio de Representante Legal — {{1.nombre_empresa}}",
+          "html_body_file": "templates/emails/01_instrucciones.html",
+          "variables": {
+            "nombre_representante": "{{1.nombre_nuevo_rep}}",
+            "nombre_empresa": "{{1.nombre_empresa}}",
+            "tracking_url": "https://tramitai.vercel.app/estado?id={{1.id}}"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "module": "supabase:UpdateRow",
+        "name": "Actualizar Estado: pendiente_firma",
+        "parameters": {
+          "row_id": "{{1.id}}",
+          "data": {
+            "estado": "pendiente_firma"
+          }
+        }
+      }
+    ]
+  }
+}

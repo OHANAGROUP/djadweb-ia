@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estado del Trámite — DJADWEB-IA®</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand-black:  #0A0A0E;
+      --brand-orange: #E65100;
+      --brand-bg:     #F5F5F0;
+      --brand-white:  #FFFFFF;
+      --font-brand:   'Barlow Condensed', Impact, sans-serif;
+      --font-ui:      'Syne', sans-serif;
+      --radius-card:  20px;
+      --radius-input: 12px;
+      --shadow-card:  0 8px 32px rgba(10, 10, 14, 0.04);
+      --shadow-hover: 0 16px 48px rgba(10, 10, 14, 0.08);
+      --gray-light:   #E5E7EB;
+      --green:        #2E7D32;
+    }
+    body {
+      font-family: var(--font-ui);
+      background-color: var(--brand-bg);
+      color: var(--brand-black);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+    .container {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .logo-header {
+      text-align: center;
+    }
+    .logo-wordmark {
+      font-family: var(--font-brand);
+      font-weight: 900;
+      font-size: clamp(2rem, 6vw, 3rem);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+      margin-bottom: 8px;
+    }
+    .logo-wordmark .black  { color: var(--brand-black); }
+    .logo-wordmark .orange { color: var(--brand-orange); }
+    
+    .card {
+      background: var(--brand-white);
+      border-radius: var(--radius-card);
+      padding: 40px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(10, 10, 14, 0.04);
+    }
+    
+    h1 {
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .tracking-details {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 36px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--gray-light);
+      padding-bottom: 12px;
+    }
+
+    /* Stepper Vertical */
+    .stepper {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 32px;
+    }
+    .step-item {
+      display: flex;
+      gap: 24px;
+      position: relative;
+    }
+    .step-item::after {
+      content: '';
+      position: absolute;
+      left: 17px;
+      top: 36px;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--gray-light);
+      z-index: 1;
+    }
+    .step-item:last-child::after {
+      display: none;
+    }
+    
+    .step-icon-wrapper {
+      position: relative;
+      z-index: 2;
+      padding-bottom: 36px;
+    }
+    .step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--brand-bg);
+      border: 2px solid var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #888;
+      transition: all 0.3s ease;
+    }
+    
+    /* Estados del Step */
+    .step-item.active .step-icon {
+      border-color: var(--brand-orange);
+      background: var(--brand-orange);
+      color: var(--brand-white);
+      box-shadow: 0 0 0 4px rgba(230, 81, 0, 0.16);
+    }
+    .step-item.completed .step-icon {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--brand-white);
+    }
+    .step-item.completed::after {
+      background-color: var(--green);
+    }
+
+    .step-content {
+      padding-top: 5px;
+    }
+    .step-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: #555;
+    }
+    .step-item.active .step-title {
+      color: var(--brand-black);
+      font-weight: 800;
+    }
+    .step-item.completed .step-title {
+      color: var(--green);
+    }
+    
+    .step-desc {
+      font-size: 13px;
+      color: #888;
+      margin-top: 4px;
+    }
+    .step-item.active .step-desc {
+      color: #555;
+    }
+
+    .info-summary {
+      background: var(--brand-bg);
+      border-radius: var(--radius-input);
+      padding: 20px;
+      margin-top: 28px;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .info-label {
+      font-weight: 700;
+      color: #666;
+    }
+    .info-value {
+      font-weight: 800;
+      color: var(--brand-black);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #888;
+    }
+
+    /* Buscador manual */
+    .search-box {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .search-input {
+      flex: 1;
+      height: 48px;
+      border: 2px solid var(--gray-light);
+      border-radius: var(--radius-input);
+      padding: 0 16px;
+      font-family: inherit;
+      outline: none;
+      font-size: 13px;
+    }
+    .search-input:focus {
+      border-color: var(--brand-black);
+    }
+    .btn-search {
+      padding: 0 24px;
+      background: var(--brand-black);
+      color: var(--brand-white);
+      border: none;
+      border-radius: var(--radius-input);
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="container">
+  <!-- LOGO HEADER -->
+  <div class="logo-header">
+    <img src="djadwebia_logo_final.png" alt="DEJAWEBIAR®" style="height: 60px; width: auto; max-width: 100%; object-fit: contain; display: inline-block; margin-bottom: 8px;" />
+  </div>
+
+  <!-- SEARCH BOX (Si se accede sin ID) -->
+  <div class="card" id="search-card" style="display:none; padding:32px;">
+    <h1 style="margin-bottom:16px;">Seguimiento de Trámite</h1>
+    <div class="search-box">
+      <input type="text" id="manual-id-input" class="search-input" placeholder="Ingresa tu Tracking ID (UUID)...">
+      <button class="btn-search" onclick="loadManualId()">Buscar</button>
+    </div>
+    <p style="font-size:12px; color:#888; margin:0;">El Tracking ID te fue entregado al finalizar el registro en la landing page y vía correo electrónico.</p>
+  </div>
+
+  <!-- TRACKING CARD -->
+  <div class="card" id="tracking-card">
+    <h1 id="company-name-title">Seguimiento de Trámite</h1>
+    <div class="tracking-details">
+      <div>ID: <span id="tracking-id-text" style="font-family:monospace; font-weight:700;">-</span></div>
+      <div>Actualizado: <span id="updated-at-text" style="font-weight:700;">-</span></div>
+    </div>
+
+    <!-- STEPPER -->
+    <div class="stepper">
+      <!-- Step 1 -->
+      <div class="step-item" id="step-recibido">
+        <div class="step-icon-wrapper">
+          <div class="step-icon">1</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Formulario Recibido</div>
+          <div class="step-desc">Tus datos ingresaron correctamente al Hub de DJADWEB-IA®.</div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-item" id="step-acta_generada">
+        <div class="step-icon-wrapper">
+          <div class="step-icon">2</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Confección de Acta</div>
+          <div class="step-desc">Se generó el borrador del acta de accionistas corporativa de tu SpA.</div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-item" id="step-pendiente_firma">
+        <div class="step-icon-wrapper">
+          <div class="step-icon">3</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Firma Electrónica</div>
+          <div class="step-desc">El acta se encuentra en tu correo electrónico esperando la firma de los accionistas.</div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-item" id="step-notaria_aprobada">
+        <div class="step-icon-wrapper">
+          <div class="step-icon">4</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Legalización / Notaría</div>
+          <div class="step-desc">El documento firmado está siendo visado o ingresado a notaría pública.</div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-item" id="step-completado">
+        <div class="step-icon-wrapper">
+          <div class="step-icon">5</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Completado</div>
+          <div class="step-desc">El trámite finalizó. Tienes tus plantillas de cierre para SII, bancos y proveedores en tu email.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO SUMMARY -->
+    <div class="info-summary">
+      <div class="info-grid">
+        <div>
+          <div class="info-label">RUT Empresa</div>
+          <div class="info-value" id="info-rut-empresa">-</div>
+        </div>
+        <div>
+          <div class="info-label">Nuevo Representante</div>
+          <div class="info-value" id="info-nuevo-rep">-</div>
+        </div>
+        <div>
+          <div class="info-label">RUT Representante</div>
+          <div class="info-value" id="info-rut-rep">-</div>
+        </div>
+        <div>
+          <div class="info-label">Email de Notificaciones</div>
+          <div class="info-value" id="info-email">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    © 2026 DJADWEB-IA® · AutomatizAI.
+  </div>
+</div>
+
+<script>
+  // Inicialización de Supabase con las credenciales de producción de luuicelooavahedkhlsw
+  const SUPABASE_URL = 'https://luuicelooavahedkhlsw.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1dWljZWxvb2F2YWhlZGtobHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MDU5MTIsImV4cCI6MjA5NTI4MTkxMn0.50tjwEiFqzsv9Tw8IIpuJ3_igcdKcJ6CxP1FFvYN6-E';
+  
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Mapeo ordenado de estados
+  const STATES_ORDER = ['recibido', 'acta_generada', 'pendiente_firma', 'notaria_aprobada', 'completado'];
+
+  async function loadTracking(id) {
+    if (!id) {
+      document.getElementById('tracking-card').style.display = 'none';
+      document.getElementById('search-card').style.display = 'block';
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('rep_legal_workflows')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error || !data) {
+        throw new Error('ID no encontrado');
+      }
+
+      // Renderizar datos del trámite
+      document.getElementById('company-name-title').textContent = data.nombre_empresa;
+      document.getElementById('tracking-id-text').textContent = data.id;
+      document.getElementById('updated-at-text').textContent = new Date(data.updated_at).toLocaleString('es-CL');
+      
+      document.getElementById('info-rut-empresa').textContent = data.rut_empresa;
+      document.getElementById('info-nuevo-rep').textContent = data.nombre_nuevo_rep;
+      document.getElementById('info-rut-rep').textContent = data.rut_nuevo_rep;
+      document.getElementById('info-email').textContent = data.email_nuevo_rep;
+
+      // Actualizar Stepper
+      const currentIdx = STATES_ORDER.indexOf(data.estado);
+      
+      STATES_ORDER.forEach((state, idx) => {
+        const element = document.getElementById(`step-${state}`);
+        if (!element) return;
+
+        element.classList.remove('active', 'completed');
+        if (idx < currentIdx) {
+          element.classList.add('completed');
+        } else if (idx === currentIdx) {
+          element.classList.add('active');
+        }
+      });
+
+    } catch (err) {
+      console.warn('ID no encontrado en Supabase o error de conexión. Usando datos de prueba interactivos.', err);
+      // Datos demo por si no existe conexión o el ID es de prueba
+      renderDemoData(id);
+    }
+  }
+
+  function renderDemoData(id) {
+    document.getElementById('company-name-title').textContent = 'Empresa de Prueba SpA (Demo Local)';
+    document.getElementById('tracking-id-text').textContent = id;
+    document.getElementById('updated-at-text').textContent = new Date().toLocaleString('es-CL');
+    
+    document.getElementById('info-rut-empresa').textContent = '76.543.210-K';
+    document.getElementById('info-nuevo-rep').textContent = 'Carlos González Pérez';
+    document.getElementById('info-rut-rep').textContent = '15.987.654-3';
+    document.getElementById('info-email').textContent = 'carlos@empresa.cl';
+
+    // Para la demo local, marcar el paso 3 ("pendiente_firma") como activo
+    const demoIdx = 2; // pendiente_firma
+    STATES_ORDER.forEach((state, idx) => {
+      const element = document.getElementById(`step-${state}`);
+      if (!element) return;
+      element.classList.remove('active', 'completed');
+      if (idx < demoIdx) {
+        element.classList.add('completed');
+      } else if (idx === demoIdx) {
+        element.classList.add('active');
+      }
+    });
+  }
+
+  function loadManualId() {
+    const input = document.getElementById('manual-id-input').value.trim();
+    if (input) {
+      window.location.search = `?id=${input}`;
+    }
+  }
+
+  // Cargar al inicializar
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  loadTracking(id);
+</script>
+
+</body>
+</html>
