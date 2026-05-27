@@ -4,51 +4,51 @@
 
 /* ── Design Tokens DJADWEB-IA® ─────────────────────────────────────────────── */
 :root {
-  --brand-black:  #0A0A0E;
-  --brand-hover:  #1A1A22;
-  --brand-orange: #E65100;
-  --brand-orange-hover: #BF360C;
-  --brand-bg:     #F5F5F0;
-  --brand-white:  #FFFFFF;
+  --brand-black:  #FFFFFF;
+  --brand-hover:  #ECEFF1;
+  --brand-orange: #FF6D00;
+  --brand-orange-hover: #FFAB40;
+  --brand-bg:     #050508;
+  --brand-white:  #0B0B0F;
 
-  --judicial-blue:   #1565C0;
-  --judicial-dark:   #0D47A1;
-  --judicial-light:  #E3F2FD;
-  --judicial-border: #90CAF9;
+  --judicial-blue:   #2979FF;
+  --judicial-dark:   #1565C0;
+  --judicial-light:  rgba(41, 121, 255, 0.08);
+  --judicial-border: rgba(41, 121, 255, 0.25);
 
-  --gray-50:  #F5F5F0;
-  --gray-100: #ECECEC;
-  --gray-200: #E0E0E0;
-  --gray-300: #CCCCCC;
-  --gray-400: #888888;
-  --gray-500: #666666;
-  --gray-600: #444444;
-  --gray-700: #2A2A2A;
-  --gray-800: #1A1A1A;
-  --gray-900: #0A0A0E;
+  --gray-50:  #0C0C12;
+  --gray-100: #0E0E16;
+  --gray-200: #191926;
+  --gray-300: #2C2C3D;
+  --gray-400: #5C5C70;
+  --gray-500: #8A8A9E;
+  --gray-600: #B0B0C4;
+  --gray-700: #D1D1E0;
+  --gray-800: #E6E6FA;
+  --gray-900: #FFFFFF;
 
-  --green:         #2E7D32;
-  --green-light:   #E8F5E9;
-  --green-border:  #A5D6A7;
-  --red:           #E63946;
-  --red-light:     #FFEBEE;
+  --green:         #00E676;
+  --green-light:   rgba(0, 230, 118, 0.08);
+  --green-border:  rgba(0, 230, 118, 0.25);
+  --red:           #FF1744;
+  --red-light:     rgba(255, 23, 68, 0.08);
 
   /* Variables faltantes — ahora definidas */
-  --orange-light:  #FFF3E0;
-  --orange-border: #FFCCBC;
+  --orange-light:  rgba(255, 109, 0, 0.08);
+  --orange-border: rgba(255, 109, 0, 0.25);
 
-  --radius:    12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --shadow:    0 2px 16px rgba(0,0,0,.06);
-  --shadow-md: 0 8px 24px rgba(0,0,0,.08);
-  --shadow-lg: 0 24px 48px -15px rgba(10,10,14,.08);
-  --shadow-xl: 0 32px 64px -20px rgba(10,10,14,.12);
+  --radius:    10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --shadow:    0 4px 20px rgba(0,0,0,.4);
+  --shadow-md: 0 10px 30px rgba(0,0,0,.6);
+  --shadow-lg: 0 24px 64px rgba(0,0,0,.8);
+  --shadow-xl: 0 40px 96px rgba(0,0,0,.9);
 
   /* Glassmorphism */
-  --glass-bg:     rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-blur:   blur(16px);
+  --glass-bg:     rgba(11, 11, 15, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-blur:   blur(20px);
 }
 
 /* ── Animaciones ────────────────────────────────────────────────────────────── */
@@ -126,18 +126,18 @@ body {
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-primary {
-  background: var(--brand-black);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(10,10,14,0.18);
+  background: #FFFFFF;
+  color: #050508;
+  box-shadow: 0 4px 14px rgba(255,255,255,0.15);
 }
 .btn-primary:hover:not(:disabled) {
   background: var(--brand-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(10,10,14,0.22);
+  box-shadow: 0 6px 20px rgba(255,255,255,0.25);
 }
 .btn-primary:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(10,10,14,0.18);
+  box-shadow: 0 2px 8px rgba(255,255,255,0.15);
 }
 
 .btn-orange {
