@@ -94,8 +94,12 @@ export async function processFlowAction(
   action: string, // Comandos internos (__ACTION__*) o chat del usuario
   payload?: any
 ) {
-  // 1. Rehidratar la sesión y su historial
-  const { session, events } = await sessionEngine.resumeSession(sessionId)
+  // 1. Rehidratar la sesión y aplicar contrato de continuidad multi-día
+  const { ContinuityEngine } = await import('@/core/session-engine/continuityEngine')
+  const continuityEngine = new ContinuityEngine(supabase)
+  
+  const { session, events, revalidated, changesDetected, log } = 
+    await continuityEngine.rehydrateAndValidateSession(sessionId, userId)
 
   if (!session) {
     throw new Error('Sesión no encontrada.')

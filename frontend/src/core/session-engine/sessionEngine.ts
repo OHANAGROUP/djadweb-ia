@@ -23,6 +23,8 @@ export interface Session {
   expires_at?: string
   session_metadata: any
   created_at: string
+  last_external_check?: string
+  requires_revalidation?: boolean
 }
 
 export interface SessionEvent {
