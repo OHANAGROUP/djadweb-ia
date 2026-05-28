@@ -6,11 +6,13 @@ export class MockSupabaseDatabase {
   public sessions: Map<string, Session> = new Map()
   public events: Map<string, SessionEvent[]> = new Map()
   public credentials: Map<string, any[]> = new Map()
+  public executionLogs: Set<string> = new Set() // Track event execution logs in memory!
 
   public reset() {
     this.sessions.clear()
     this.events.clear()
     this.credentials.clear()
+    this.executionLogs.clear()
   }
 }
 
@@ -52,6 +54,18 @@ export function createMockSupabaseClient(db: MockSupabaseDatabase) {
                     resolve({ data: sorted, error: null })
                   }
                 }
+              },
+              limit: (lim: number) => {
+                return {
+                  async then(resolve: any) {
+                    if (table === 'event_execution_log') {
+                      const hasLog = db.executionLogs.has(value)
+                      resolve({ data: hasLog ? [{ event_id: value }] : [], error: null })
+                      return
+                    }
+                    resolve({ data: [], error: null })
+                  }
+                }
               }
             }
           },
@@ -80,49 +94,63 @@ export function createMockSupabaseClient(db: MockSupabaseDatabase) {
       }
 
       chain.insert = (values: any[]) => {
+        const executeInsert = () => {
+          if (table === 'tramite_sessions') {
+            const session = {
+              id: values[0].id || 'e3e8f815-321a-4c28-9844-f805d0f784a9',
+              user_id: values[0].user_id,
+              tramite_id: values[0].tramite_id,
+              status: values[0].status || 'active',
+              current_step: values[0].current_step,
+              progress: values[0].progress || 0,
+              started_at: new Date().toISOString(),
+              last_active_at: new Date().toISOString(),
+              session_metadata: values[0].session_metadata || {},
+              created_at: new Date().toISOString()
+            } as Session
+            db.sessions.set(session.id, session)
+            return session
+          }
+
+          if (table === 'tramite_session_events') {
+            const event = {
+              id: values[0].id || 'evt-' + Math.random().toString(36).substr(2, 9),
+              session_id: values[0].session_id,
+              user_id: values[0].user_id,
+              type: values[0].type,
+              payload: values[0].payload || {},
+              event_index: values[0].event_index,
+              previous_hash: values[0].previous_hash,
+              hash: values[0].hash,
+              timestamp: values[0].timestamp || new Date().toISOString()
+            } as SessionEvent
+
+            const existing = db.events.get(event.session_id) || []
+            existing.push(event)
+            db.events.set(event.session_id, existing)
+            return event
+          }
+
+          if (table === 'event_execution_log') {
+            const log = values[0]
+            db.executionLogs.add(log.event_id)
+            return log
+          }
+          return null
+        }
+
         return {
           select: () => {
             return {
               single: async () => {
-                if (table === 'tramite_sessions') {
-                  const session = {
-                    id: values[0].id || 'e3e8f815-321a-4c28-9844-f805d0f784a9',
-                    user_id: values[0].user_id,
-                    tramite_id: values[0].tramite_id,
-                    status: values[0].status || 'active',
-                    current_step: values[0].current_step,
-                    progress: values[0].progress || 0,
-                    started_at: new Date().toISOString(),
-                    last_active_at: new Date().toISOString(),
-                    session_metadata: values[0].session_metadata || {},
-                    created_at: new Date().toISOString()
-                  } as Session
-                  db.sessions.set(session.id, session)
-                  return { data: session, error: null }
-                }
-
-                if (table === 'tramite_session_events') {
-                  const event = {
-                    id: values[0].id || 'evt-' + Math.random().toString(36).substr(2, 9),
-                    session_id: values[0].session_id,
-                    user_id: values[0].user_id,
-                    type: values[0].type,
-                    payload: values[0].payload || {},
-                    event_index: values[0].event_index,
-                    previous_hash: values[0].previous_hash,
-                    hash: values[0].hash,
-                    timestamp: values[0].timestamp || new Date().toISOString()
-                  } as SessionEvent
-
-                  const existing = db.events.get(event.session_id) || []
-                  existing.push(event)
-                  db.events.set(event.session_id, existing)
-                  return { data: event, error: null }
-                }
-
-                return { data: null, error: { message: 'Insert not supported' } }
+                const res = executeInsert()
+                return { data: res, error: null }
               }
             }
+          },
+          async then(resolve: any) {
+            const res = executeInsert()
+            resolve({ data: res, error: null })
           }
         }
       }
@@ -158,6 +186,14 @@ export function createMockSupabaseClient(db: MockSupabaseDatabase) {
                 resolve({ data: null, error: null })
               }
             }
+          }
+        }
+      }
+
+      chain.upsert = (values: any) => {
+        return {
+          async then(resolve: any) {
+            resolve({ data: values, error: null })
           }
         }
       }

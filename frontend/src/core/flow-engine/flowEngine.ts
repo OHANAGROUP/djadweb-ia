@@ -105,6 +105,19 @@ export async function processFlowAction(
     throw new Error('Sesión no encontrada.')
   }
 
+  // 1.1 Ejecutar supervisión de seguridad mediante el RuntimeGuardian
+  const { RuntimeGuardian } = await import('@/core/guardian/runtimeGuardian')
+  const guardian = new RuntimeGuardian(supabase)
+  const validation = await guardian.validateSession(sessionId, userId)
+
+  if (validation.action === 'FROZEN_ROLLBACK' || validation.action === 'FROZEN_DRIFT') {
+    return {
+      type: 'error',
+      content: `Transición suspendida por el supervisor de seguridad: ${validation.message}`,
+      session: validation.session
+    }
+  }
+
   let currentTramiteId = session.tramite_id
   let currentStepId = session.current_step
 
