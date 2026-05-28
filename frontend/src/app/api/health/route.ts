@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
   // 1. Verificar Supabase
   const startSupa = Date.now();
   try {
-    const { data, error } = await supabase.from('chat_sessions').select('id').limit(1);
+    const { data, error } = await supabase.from('tramite_sessions').select('id').limit(1);
     if (error) throw error;
     healthReport.services.supabase.status = 'healthy';
     healthReport.services.supabase.latency_ms = Date.now() - startSupa;

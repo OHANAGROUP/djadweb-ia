@@ -1,11 +1,21 @@
-import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai'
+// frontend/src/services/flowEngine.ts
+/**
+ * FlowEngine v2 — Motor de Flujo Procedimental determinista guiado por Event Sourcing.
+ *
+ * Se integra al 100% con el SessionEngine para basar todo el flujo de trámites
+ * en sesiones persistentes multi-día rehidratables, registrando cada paso y
+ * consulta con cripto-auditoría.
+ */
+
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createAdminClient } from '@/lib/supabase-server'
 import { getTramiteById, getAllTramites } from '@/lib/registry/tramites'
-import crypto from 'crypto'
+import { SessionEngine } from '@/core/session-engine/sessionEngine'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 const supabase = createAdminClient()
-const MODEL_NAME = 'gemini-1.5-flash' // Fast and efficient for classification
+const sessionEngine = new SessionEngine(supabase)
+const MODEL_NAME = 'gemini-1.5-flash'
 
 /**
  * Resuelve la intención del usuario a un trámite específico
@@ -41,7 +51,7 @@ Mensaje del usuario: "${mensaje}"
 }
 
 /**
- * Brinda asistencia contextual sobre un paso
+ * Brinda asistencia contextual sobre un paso específico de un trámite
  */
 async function asistenciaContextual(mensaje: string, tramiteId: string, stepId: string): Promise<string> {
   const tramite = getTramiteById(tramiteId)
@@ -76,64 +86,73 @@ Responde la pregunta del usuario usando el contexto de este paso de manera direc
 }
 
 /**
- * Procesa la interacción del usuario con el Flow Engine
+ * Procesa la interacción del usuario con el Flow Engine (Session-First)
  */
 export async function processFlowAction(
   sessionId: string,
   userId: string,
-  action: string, // Mensaje del usuario o comandos como '__ACTION__NEXT__'
+  action: string, // Comandos internos (__ACTION__*) o chat del usuario
   payload?: any
 ) {
-  // 1. Obtener la sesión
-  const { data: session, error: sessionError } = await supabase
-    .from('chat_sessions')
-    .select('*')
-    .eq('id', sessionId)
-    .single()
+  // 1. Rehidratar la sesión y su historial
+  const { session, events } = await sessionEngine.resumeSession(sessionId)
 
-  if (sessionError || !session) {
+  if (!session) {
     throw new Error('Sesión no encontrada.')
   }
 
-  // 2. Si no hay trámite asignado, intentar clasificar
-  let currentTramiteId = session.workflow_type
-  let currentStepId = session.current_stage
+  let currentTramiteId = session.tramite_id
+  let currentStepId = session.current_step
 
-  if (!currentTramiteId || currentTramiteId === 'default' || currentTramiteId === 'inicio_actividades_sii') {
-    // Si la acción no es un comando interno, es el primer mensaje
+  // 2. Si no hay trámite asignado, intentar clasificar
+  if (currentTramiteId === 'default' || !currentTramiteId) {
     if (!action.startsWith('__ACTION__')) {
       const detectedId = await clasificarIntencionTramite(action)
-      
-      // Actualizar la base de datos
-      await supabase.from('chat_sessions').update({
-        workflow_type: detectedId,
-        current_stage: detectedId !== 'unknown' ? getTramiteById(detectedId)?.steps[0].id : 'inicial'
-      }).eq('id', sessionId)
-      
-      currentTramiteId = detectedId
-      currentStepId = detectedId !== 'unknown' ? getTramiteById(detectedId)?.steps[0].id : 'inicial'
-
-      // Registrar mensaje del usuario
-      await supabase.from('chat_messages').insert({
-        session_id: sessionId,
-        role: 'user',
-        content: action,
-      })
 
       if (detectedId === 'unknown') {
-        const respuesta = "Lo siento, no he entendido qué trámite necesitas realizar o aún no lo tenemos disponible. ¿Puedes ser más específico?"
-        await supabase.from('chat_messages').insert({
-          session_id: sessionId,
-          role: 'assistant',
-          content: respuesta,
-          tokens_used: 0,
+        const respuesta = 'Lo siento, no he entendido qué trámite necesitas realizar o aún no lo tenemos disponible. ¿Puedes ser más específico?'
+        
+        // Registrar evento de intento fallido
+        await sessionEngine.addEvent(sessionId, userId, 'INTENT_CLASSIFICATION_FAILED', {
+          query: action,
+          response: respuesta
         })
+
         return { type: 'chat', content: respuesta }
       }
 
-      // Crear Outcome Tracking al iniciar flujo
       const detectedTramite = getTramiteById(detectedId)
-      if (detectedTramite) {
+      if (!detectedTramite) {
+        return { type: 'error', content: 'Trámite detectado pero no configurado.' }
+      }
+
+      const firstStepId = detectedTramite.steps[0].id
+
+      // Actualizar la sesión con el trámite y el primer paso
+      await supabase
+        .from('tramite_sessions')
+        .update({
+          tramite_id: detectedId,
+          current_step: firstStepId,
+          progress: 0
+        })
+        .eq('id', sessionId)
+
+      // Registrar evento de inicio de trámite guiado
+      await sessionEngine.addEvent(sessionId, userId, 'TRAMITE_STARTED', {
+        tramite_id: detectedId,
+        starting_step: firstStepId,
+        user_query: action
+      })
+
+      // También registrar en tramite_outcomes si no existe
+      const { data: existingOutcome } = await supabase
+        .from('tramite_outcomes')
+        .select('*')
+        .eq('session_id', sessionId)
+        .eq('tramite_id', detectedId)
+
+      if (!existingOutcome || existingOutcome.length === 0) {
         await supabase.from('tramite_outcomes').insert({
           user_id: userId,
           session_id: sessionId,
@@ -142,11 +161,11 @@ export async function processFlowAction(
           category: detectedTramite.category,
           status: 'in_progress',
           steps_completed: 0,
-          total_steps: detectedTramite.steps.length,
+          total_steps: detectedTramite.steps.length
         })
       }
 
-      return { type: 'flow_started', tramiteId: currentTramiteId, stepId: currentStepId }
+      return { type: 'flow_started', tramiteId: detectedId, stepId: firstStepId }
     }
   }
 
@@ -155,47 +174,71 @@ export async function processFlowAction(
     return { type: 'error', content: 'Trámite no válido.' }
   }
 
-  // 3. Manejar avance de paso explícito
+  // 3. Avance de Paso Explícito
   if (action === '__ACTION__NEXT__') {
     const currentIndex = tramite.steps.findIndex(s => s.id === currentStepId)
+    
     if (currentIndex >= 0 && currentIndex < tramite.steps.length - 1) {
       const nextStepId = tramite.steps[currentIndex + 1].id
-      await supabase.from('chat_sessions').update({
-        current_stage: nextStepId
-      }).eq('id', sessionId)
+      const progress = Math.round(((currentIndex + 1) / tramite.steps.length) * 100)
 
-      // Actualizar Outcome: incrementar steps_completed
-      await supabase.from('tramite_outcomes').update({
-        steps_completed: currentIndex + 2  // +1 por 0-index, +1 por avance
-      }).eq('session_id', sessionId).eq('tramite_id', currentTramiteId)
+      // Registrar evento y actualizar sesión
+      await sessionEngine.addEvent(sessionId, userId, 'STEP_ADVANCED', {
+        previousStep: currentStepId,
+        currentStep: nextStepId,
+        progress
+      })
+
+      // Actualizar Outcome
+      await supabase
+        .from('tramite_outcomes')
+        .update({
+          steps_completed: currentIndex + 2
+        })
+        .eq('session_id', sessionId)
+        .eq('tramite_id', currentTramiteId)
 
       return { type: 'step_advanced', tramiteId: currentTramiteId, stepId: nextStepId }
     } else if (currentIndex === tramite.steps.length - 1) {
-      // Marcar Outcome como completado
-      await supabase.from('tramite_outcomes').update({
-        status: 'completed',
-        completed_at: new Date().toISOString(),
-        steps_completed: tramite.steps.length
-      }).eq('session_id', sessionId).eq('tramite_id', currentTramiteId)
+      // Completar sesión
+      await sessionEngine.completeSession(sessionId, userId)
+
+      // Actualizar Outcome a completado
+      await supabase
+        .from('tramite_outcomes')
+        .update({
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          steps_completed: tramite.steps.length
+        })
+        .eq('session_id', sessionId)
+        .eq('tramite_id', currentTramiteId)
 
       return { type: 'flow_completed', tramiteId: currentTramiteId }
     }
-    return { type: 'error', content: 'No se puede avanzar.' }
+    return { type: 'error', content: 'No se puede avanzar más.' }
   }
 
+  // 4. Retroceso de Paso Explícito
   if (action === '__ACTION__PREV__') {
     const currentIndex = tramite.steps.findIndex(s => s.id === currentStepId)
+    
     if (currentIndex > 0) {
       const prevStepId = tramite.steps[currentIndex - 1].id
-      await supabase.from('chat_sessions').update({
-        current_stage: prevStepId
-      }).eq('id', sessionId)
+      const progress = Math.round(((currentIndex - 1) / tramite.steps.length) * 100)
+
+      await sessionEngine.addEvent(sessionId, userId, 'STEP_REGRESSED', {
+        previousStep: currentStepId,
+        currentStep: prevStepId,
+        progress
+      })
+
       return { type: 'step_regressed', tramiteId: currentTramiteId, stepId: prevStepId }
     }
     return { type: 'error', content: 'No se puede retroceder más.' }
   }
 
-  // 4. Manejar solicitud heurística de ayuda UI (__ACTION__HELP__)
+  // 5. Asistencia Contextual de UI (__ACTION__HELP__)
   if (action === '__ACTION__HELP__') {
     const pasoActual = tramite.steps.find(s => s.id === currentStepId)
     const promptHelp = `El usuario no encuentra cómo proceder en este paso de la pantalla oficial.
@@ -204,33 +247,37 @@ Instrucción original: ${pasoActual?.instruction}
 
 Por favor, dale instrucciones extremadamente tácticas y simples de interfaz de usuario. Por ejemplo: "Busca un botón verde en la esquina superior derecha" o "Revisa en el menú lateral bajo la sección X". Responde de forma directa, sin saludos.`
 
+    // Registrar inicio de consulta de asistencia
+    await sessionEngine.addEvent(sessionId, userId, 'HELP_REQUESTED', {
+      currentStep: currentStepId,
+      promptHelp
+    })
+
     const respuesta = await asistenciaContextual(promptHelp, currentTramiteId, currentStepId)
-    
-    await supabase.from('chat_messages').insert({
-      session_id: sessionId,
-      role: 'assistant',
-      content: respuesta,
-      tokens_used: 0,
+
+    // Registrar respuesta del LLM
+    await sessionEngine.addEvent(sessionId, userId, 'LLM_CALLED', {
+      model: MODEL_NAME,
+      query: promptHelp,
+      response: respuesta
     })
 
     return { type: 'chat', content: respuesta, tramiteId: currentTramiteId, stepId: currentStepId }
   }
 
-  // 5. Si es un mensaje de texto normal durante el flujo, dar asistencia contextual
+  // 6. Mensaje de Texto Libre (Consultas generales durante el paso)
   if (!action.startsWith('__ACTION__')) {
-    await supabase.from('chat_messages').insert({
-      session_id: sessionId,
-      role: 'user',
-      content: action,
+    // Registrar consulta del usuario
+    await sessionEngine.addEvent(sessionId, userId, 'USER_CHAT_RECEIVED', {
+      message: action
     })
 
     const respuesta = await asistenciaContextual(action, currentTramiteId, currentStepId)
 
-    await supabase.from('chat_messages').insert({
-      session_id: sessionId,
-      role: 'assistant',
-      content: respuesta,
-      tokens_used: 0,
+    // Registrar respuesta del LLM
+    await sessionEngine.addEvent(sessionId, userId, 'LLM_ASSIST_RESPONDED', {
+      model: MODEL_NAME,
+      response: respuesta
     })
 
     return { type: 'chat', content: respuesta, tramiteId: currentTramiteId, stepId: currentStepId }
