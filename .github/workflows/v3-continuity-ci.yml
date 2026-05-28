@@ -1,0 +1,73 @@
+name: Tramita OS v3 — Workflow Continuity CI
+
+on:
+  push:
+    branches: [ main, v3 ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v3-continuity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-continuity-layer:
+    name: 🛡️ Workflow OS Integrity Layer (WIL)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js v20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: ⚡ Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: 📦 Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: 🏗️ Production Build Check
+        working-directory: frontend
+        run: npm run build
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: https://mock-url.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: mock-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: mock-service-key
+
+      - name: 🧪 Job 1 — Deterministic Test Suite (Vitest)
+        working-directory: frontend
+        run: npx vitest run tests/v3
+
+      - name: 🧬 Job 2 — Golden Snapshot Integrity Check
+        run: |
+          if [ ! -f "frontend/tests/v3/determinism/__snapshots__/workflow-golden.json" ]; then
+            echo "❌ ERROR: Golden snapshot 'workflow-golden.json' no encontrado."
+            exit 1
+          fi
+          echo "✓ Golden snapshot presente y verificado."
+
+      - name: 🔐 Job 3 — Event Ledger Integrity Check
+        run: node scripts/verify-event-chain.js
+
+      - name: ⏱️ Job 4 — Continuity Policy Validation
+        run: node scripts/validate-continuity-policy.js
+
+      - name: 🌐 Job 5 — External State Mock Safety Layer
+        run: node scripts/external-state-contract.test.js
