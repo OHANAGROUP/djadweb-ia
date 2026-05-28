@@ -1,0 +1,33 @@
+{
+  "sessionState": {
+    "tramiteId": "sii_declaracion_f29",
+    "currentStep": "declaration",
+    "progress": 25,
+    "status": "active",
+    "stepsCompleted": 1
+  },
+  "eventChain": [
+    {
+      "event_index": 0,
+      "type": "SESSION_CREATED",
+      "hash": "848bf9b794101e8fb363d6f1ebdbb8eb97a1772eb0f576e987c1fdb1680abff8"
+    },
+    {
+      "event_index": 1,
+      "type": "TRAMITE_STARTED",
+      "hash": "8d3d9d30040dfbeffcc480fa86dd3b2b8c2c8f8bde4bb6e08c028ba891cbbfe1"
+    },
+    {
+      "event_index": 2,
+      "type": "STEP_ADVANCED",
+      "hash": "63b38c23f2f81156d10dbbb8e2e2a86c0e5a9bfe18e8062e78c8d8b8aabcbfe3"
+    }
+  ],
+  "continuityFlags": {
+    "revalidationThresholdMs": 86400000,
+    "requires_revalidation": false,
+    "last_external_check": "2026-05-27T20:00:00.000Z"
+  },
+  "hashChainRoot": "63b38c23f2f81156d10dbbb8e2e2a86c0e5a9bfe18e8062e78c8d8b8aabcbfe3",
+  "seed": "tramita-v3-deterministic"
+}

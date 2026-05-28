@@ -1,0 +1,14 @@
+{
+  "id": "e3e8f815-321a-4c28-9844-f805d0f784a9",
+  "user_id": "aa3a8630-f21e-450e-8fb8-db3f3b9c7b99",
+  "tramite_id": "sii_declaracion_f29",
+  "status": "active",
+  "current_step": "onboarding",
+  "progress": 0,
+  "started_at": "2026-05-27T10:00:00.000Z",
+  "last_active_at": "2026-05-27T12:00:00.000Z",
+  "session_metadata": {
+    "declaredAmount": 150000
+  },
+  "created_at": "2026-05-27T10:00:00.000Z"
+}
