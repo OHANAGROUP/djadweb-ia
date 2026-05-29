@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { createAdminClient } from '@/lib/supabase-server'
+import { PRICE_TO_PLAN } from '@/lib/plans'
+import type { Plan } from '@/lib/plans'
 
 const MP_ACCESS_TOKEN  = process.env.MP_ACCESS_TOKEN  || ''
 const MP_WEBHOOK_SECRET = process.env.MP_WEBHOOK_SECRET || ''
@@ -29,7 +31,7 @@ function verifySignature(
   }
 
   const { ts, v1 } = parts
-  if (!ts || !v1) return { valid: false, reason: 'Formato inválido' }
+  if (!ts || !v1) return { valid: false, reason: 'Formato invalido' }
 
   const signedAt = parseInt(ts, 10) * 1000
   const delta = Math.abs(Date.now() - signedAt)
@@ -53,7 +55,7 @@ export async function POST(request: Request) {
   try {
     const rawBody = await request.text()
     let body: any
-    try { body = JSON.parse(rawBody) } catch { return NextResponse.json({ error: 'Body inválido' }, { status: 400 }) }
+    try { body = JSON.parse(rawBody) } catch { return NextResponse.json({ error: 'Body invalido' }, { status: 400 }) }
 
     const { type, data } = body
     if (type !== 'payment') return NextResponse.json({ received: true })
@@ -66,7 +68,7 @@ export async function POST(request: Request) {
     const { valid } = verifySignature(signature, requestId, paymentId, MP_WEBHOOK_SECRET)
 
     if (!valid) {
-      return NextResponse.json({ error: 'Firma inválida' }, { status: 401 })
+      return NextResponse.json({ error: 'Firma invalida' }, { status: 401 })
     }
 
     const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -89,9 +91,16 @@ export async function POST(request: Request) {
 
     const supabase = createAdminClient()
 
-    // Para el MVP de monetización, seteamos is_pro = true en profiles
+    // Determinar el plan segun el monto pagado (fuente unica de verdad: plans.ts)
+    const amountPaid: number = payment.transaction_details?.total_paid_amount
+      ?? payment.transaction_amount
+      ?? 0
+    const resolvedPlan: Plan = PRICE_TO_PLAN[amountPaid] ?? 'basic'
+    const isPro = resolvedPlan === 'premium'
+
+    // Actualizar perfil
     const { error: upsertError } = await supabase.from('profiles').update({
-      is_pro: true,
+      is_pro: isPro,
       updated_at: new Date().toISOString()
     }).eq('id', userId)
 
@@ -100,12 +109,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'DB error' }, { status: 500 })
     }
 
-    // Registramos en subscriptions para historial (opcional, pero util para idempotencia luego)
+    // Registrar en subscriptions (idempotente por user_id)
     const periodEnd = new Date()
     periodEnd.setMonth(periodEnd.getMonth() + 1)
     await supabase.from('subscriptions').upsert({
       user_id: userId,
-      plan: 'premium',
+      plan: resolvedPlan,
       status: 'active',
       mp_subscription_id: payment.id?.toString(),
       current_period_start: new Date().toISOString(),
@@ -113,8 +122,8 @@ export async function POST(request: Request) {
       updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id' })
 
-    console.log(`[MP Webhook] Pase Pro activado para usuario ${userId}`)
-    return NextResponse.json({ received: true, is_pro: true, user_id: userId })
+    console.log(`[MP Webhook] Plan "${resolvedPlan}" activado para usuario ${userId} (monto: ${amountPaid})`)
+    return NextResponse.json({ received: true, plan: resolvedPlan, is_pro: isPro, user_id: userId })
 
   } catch (err) {
     console.error('[MP Webhook] Error:', err)

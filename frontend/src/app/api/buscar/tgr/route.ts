@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
+import { PLAN_QUOTAS } from '@/lib/plans';
+import type { Plan } from '@/lib/plans';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -18,15 +20,42 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { rut } = body;
 
-    if (!rut) {
+    if (!rut || typeof rut !== 'string' || !rut.trim()) {
       return NextResponse.json({ error: 'RUT requerido' }, { status: 400 });
+    }
+
+    // Gate de plan: TGR requiere plan PYME o Contadores
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('plan, status')
+      .eq('user_id', user.id)
+      .single();
+
+    const plan = ((sub?.plan ?? 'free') as Plan);
+    const quota = PLAN_QUOTAS[plan];
+
+    if (!quota.portales.includes('TGR')) {
+      return NextResponse.json(
+        {
+          error: `Tu plan "${plan}" no incluye consultas a TGR. Actualiza a Plan PYME o Contadores para acceder.`,
+          upgrade_required: true,
+        },
+        { status: 403 }
+      );
+    }
+
+    if (sub?.status !== 'active' && sub?.status !== 'trialing') {
+      return NextResponse.json(
+        { error: 'Tu suscripcion no esta activa.' },
+        { status: 403 }
+      );
     }
 
     // Save query
     await supabase.from('tgr_queries').insert({
       user_id: user.id,
       tipo_consulta: 'deuda_simple',
-      rut_consultado: rut
+      rut_consultado: rut.trim()
     });
 
     // Proxy to scraper
@@ -36,7 +65,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/json',
         'X-API-Key': SCRAPER_API_KEY || ''
       },
-      body: JSON.stringify({ rut }),
+      body: JSON.stringify({ rut: rut.trim() }),
       signal: AbortSignal.timeout(45000)
     });
 
