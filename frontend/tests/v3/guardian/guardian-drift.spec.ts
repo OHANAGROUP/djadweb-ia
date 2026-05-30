@@ -1,5 +1,5 @@
 // tests/v3/guardian/guardian-drift.spec.ts
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { MockSupabaseDatabase, createMockSupabaseClient } from '../utils/supabase-mock'
 import { RuntimeGuardian } from '@/core/guardian/runtimeGuardian'
 import { SessionEngine } from '@/core/session-engine/sessionEngine'
@@ -43,6 +43,10 @@ describe('v3/guardian - Drift Detector Tests', () => {
     vi.setSystemTime(initialTime)
   })
 
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it('debería detectar TEMPORAL_DRIFT y suspender la sesión si la inactividad excede las 72 horas', async () => {
     // last_active_at in fixture is: 2026-05-27T12:00:00.000Z
     // Simulate time at +80 hours later
@@ -51,11 +55,8 @@ describe('v3/guardian - Drift Detector Tests', () => {
 
     const result = await guardian.validateSession(sessionFixture.id, sessionFixture.user_id)
     
-    // Inactivity of 80h is a high severity temporal drift, but since it is temporal and not a critical structural drift, 
-    // it proceeds but logs/reports it. Wait, in driftDetector.ts we set TEMPORAL_DRIFT severity to 'HIGH'.
-    // In runtimeGuardian.ts, only 'CRITICAL' drift triggers FROZEN_DRIFT. So TEMPORAL_DRIFT proceeds (action PROCEED).
-    // Let's verify this is exactly correct.
-    expect(result.action).toBe('PROCEED')
+    // Under v2, a critical temporal drift (>72h) triggers a FROZEN_DRIFT to ensure system-wide safety.
+    expect(result.action).toBe('FROZEN_DRIFT')
   })
 
   it('debería detectar STRUCTURAL_DRIFT y congelar la sesión ante discrepancias de punteros', async () => {

@@ -105,9 +105,41 @@ export async function processFlowAction(
     throw new Error('Sesión no encontrada.')
   }
 
-  // 1.1 Ejecutar supervisión de seguridad mediante el RuntimeGuardian
+  // 1.05 Evaluar invariantes operacionales del FVL Layer
   const { RuntimeGuardian } = await import('@/core/guardian/runtimeGuardian')
   const guardian = new RuntimeGuardian(supabase)
+  
+  const invariantCheck = await guardian.evaluateInvariants(
+    sessionId,
+    userId,
+    { type: action, payload },
+    'live'
+  )
+
+  if (!invariantCheck.passed) {
+    const { session: updatedSession } = await continuityEngine.rehydrateAndValidateSession(sessionId, userId)
+    return {
+      type: 'error',
+      content: `Acción bloqueada por violación formal de invariantes: ${invariantCheck.violations[0].description}`,
+      session: updatedSession
+    }
+  }
+
+  // 1.06 Evaluar Causal Execution Graph Engine (CEGE v1)
+  const { CausalExecutionEngine } = await import('@/core/causal-engine/causalExecutionEngine')
+  const cege = new CausalExecutionEngine()
+  const cegeCheck = cege.simulate(session, events, action)
+
+  if (!cegeCheck.passed) {
+    const { session: updatedSession } = await continuityEngine.rehydrateAndValidateSession(sessionId, userId)
+    return {
+      type: 'error',
+      content: `Acción bloqueada por fallo en pre-computación causal (CEGE): Rama no segura o pre-computada.`,
+      session: updatedSession
+    }
+  }
+
+  // 1.1 Ejecutar supervisión de seguridad mediante el RuntimeGuardian
   const validation = await guardian.validateSession(sessionId, userId)
 
   if (validation.action === 'FROZEN_ROLLBACK' || validation.action === 'FROZEN_DRIFT') {

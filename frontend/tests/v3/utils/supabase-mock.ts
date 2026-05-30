@@ -7,12 +7,14 @@ export class MockSupabaseDatabase {
   public events: Map<string, SessionEvent[]> = new Map()
   public credentials: Map<string, any[]> = new Map()
   public executionLogs: Set<string> = new Set() // Track event execution logs in memory!
+  public guardianStates: Map<string, any> = new Map()
 
   public reset() {
     this.sessions.clear()
     this.events.clear()
     this.credentials.clear()
     this.executionLogs.clear()
+    this.guardianStates.clear()
   }
 }
 
@@ -29,6 +31,11 @@ export function createMockSupabaseClient(db: MockSupabaseDatabase) {
               single: async () => {
                 if (table === 'tramite_sessions') {
                   const s = db.sessions.get(value)
+                  if (!s) return { data: null, error: { message: 'Not found' } }
+                  return { data: { ...s }, error: null }
+                }
+                if (table === 'guardian_state') {
+                  const s = db.guardianStates.get(value)
                   if (!s) return { data: null, error: { message: 'Not found' } }
                   return { data: { ...s }, error: null }
                 }
@@ -191,9 +198,19 @@ export function createMockSupabaseClient(db: MockSupabaseDatabase) {
       }
 
       chain.upsert = (values: any) => {
+        const executeUpsert = () => {
+          if (table === 'guardian_state') {
+            const list = Array.isArray(values) ? values : [values]
+            for (const val of list) {
+              db.guardianStates.set(val.session_id, val)
+            }
+          }
+          return values
+        }
         return {
           async then(resolve: any) {
-            resolve({ data: values, error: null })
+            const data = executeUpsert()
+            resolve({ data, error: null })
           }
         }
       }

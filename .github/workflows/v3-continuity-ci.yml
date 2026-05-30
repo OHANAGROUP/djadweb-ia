@@ -51,11 +51,11 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: mock-anon-key
           SUPABASE_SERVICE_ROLE_KEY: mock-service-key
 
-      - name: 🧪 Job 1 — Deterministic Test Suite (Vitest)
+      - name: 🧪 Deterministic Test Suite (Vitest)
         working-directory: frontend
         run: npx vitest run tests/v3
 
-      - name: 🧬 Job 2 — Golden Snapshot Integrity Check
+      - name: 🧬 Golden Snapshot Integrity Check
         run: |
           if [ ! -f "frontend/tests/v3/determinism/__snapshots__/workflow-golden.json" ]; then
             echo "❌ ERROR: Golden snapshot 'workflow-golden.json' no encontrado."
@@ -63,11 +63,34 @@ jobs:
           fi
           echo "✓ Golden snapshot presente y verificado."
 
-      - name: 🔐 Job 3 — Event Ledger Integrity Check
+      - name: 🔐 Event Ledger Integrity Check
         run: node scripts/verify-event-chain.js
 
-      - name: ⏱️ Job 4 — Continuity Policy Validation
+      - name: ⏱️ Continuity Policy Validation
         run: node scripts/validate-continuity-policy.js
 
-      - name: 🌐 Job 5 — External State Mock Safety Layer
+      - name: 🌐 External State Mock Safety Layer
         run: node scripts/external-state-contract.test.js
+
+      - name: 🟣 Guardian Drift Validation
+        working-directory: frontend
+        run: npx vitest run tests/v3/guardian-v2/drift-classifier.spec.ts
+
+      - name: 🔒 Event Chain Integrity Check
+        working-directory: frontend
+        run: npx vitest run tests/v3/guardian-v2/ci-guardian-gate.spec.ts
+
+      - name: 🛡️ Idempotency Firewall Test
+        working-directory: frontend
+        run: npx vitest run tests/v3/guardian/guardian-idempotency.spec.ts
+
+      - name: 🧠 Safe State Regression Test
+        working-directory: frontend
+        run: npx vitest run tests/v3/guardian-v2/safe-state-registry.spec.ts
+
+      - name: 🛡️ Invariant Verification Gate
+        run: node scripts/verify-invariants.js
+
+      - name: 🌳 Causal Engine Verification Gate
+        run: node scripts/verify-causal-engine.js
+

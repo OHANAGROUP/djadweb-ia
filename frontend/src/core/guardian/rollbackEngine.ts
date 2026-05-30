@@ -89,4 +89,42 @@ export class RollbackEngine {
     const { session: freshSession } = await this.sessionEngine.resumeSession(sessionId)
     return freshSession
   }
+
+  /**
+   * Ejecuta un rollback inteligente basado en la clasificación del desvío (DriftType).
+   * Resguarda estrictamente la inmutabilidad y previene re-ejecutar efectos secundarios nocivos (UNSAFE).
+   */
+  public async rollbackByDrift(
+    sessionId: string,
+    userId: string,
+    driftType: string,
+    lastSafeIndex: number
+  ): Promise<Session> {
+    const { session, events } = await this.sessionEngine.resumeSession(sessionId)
+
+    // Regla crítica: Cero re-ejecución de efectos secundarios nocivos
+    const unsafeTypes = ['PAYMENT', 'SIGNATURE', 'EXTERNAL_SUBMISSION']
+    const hasUnsafeEvents = events.slice(lastSafeIndex + 1).some(e => 
+      unsafeTypes.some(type => e.type.includes(type))
+    )
+
+    if (hasUnsafeEvents) {
+      console.warn(
+        `[RollbackEngine] ALERTA CRÍTICA: Se detectaron eventos de efectos secundarios (UNSAFE) en el rango de rollback (${driftType}). Se mantendrán inalterados en el ledger sin re-ejecución.`
+      )
+    }
+
+    // Ejecutar el rollback utilizando la lógica base determinista
+    const updatedSession = await this.rollbackToLastSafe(sessionId, userId, lastSafeIndex)
+
+    // Guardar en el log del guardián o metadata
+    await this.supabase.from('guardian_state').upsert({
+      session_id: sessionId,
+      state: 'active',
+      last_safe_event_index: lastSafeIndex,
+      updated_at: new Date().toISOString()
+    })
+
+    return updatedSession
+  }
 }

@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Invariant DSL Schema v1.1",
+  "description": "Esquema formal que valida la sintaxis no-Turing-completa de las invariantes de correctitud de Tramita OS.",
+  "type": "object",
+  "required": ["system", "version", "invariants"],
+  "properties": {
+    "system": {
+      "type": "string",
+      "enum": ["Tramita OS"]
+    },
+    "version": {
+      "type": "string"
+    },
+    "invariants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Invariant"
+      }
+    }
+  },
+  "definitions": {
+    "Invariant": {
+      "type": "object",
+      "required": ["id", "domain", "severity", "violationAction", "assertion", "description"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_]+$"
+        },
+        "domain": {
+          "type": "string",
+          "enum": ["continuity", "idempotency", "drift", "rollback"]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "violationAction": {
+          "type": "string",
+          "enum": ["warn", "freeze", "rollback", "block"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "assertion": {
+          "$ref": "#/definitions/ASTNode"
+        }
+      }
+    },
+    "ASTNode": {
+      "type": "object",
+      "required": ["operator"],
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "EQUALS",
+            "NOT_EQUALS",
+            "AND",
+            "OR",
+            "NOT",
+            "NOT_EXISTS_IN_HISTORY",
+            "GREATER_THAN",
+            "LESS_THAN"
+          ]
+        },
+        "field": {
+          "type": "string"
+        },
+        "left": {
+          "type": "string"
+        },
+        "right": {
+          "type": ["string", "number", "boolean", "null"]
+        },
+        "value": {
+          "type": ["string", "number", "boolean", "null", "object"]
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ASTNode"
+          }
+        }
+      }
+    }
+  }
+}
